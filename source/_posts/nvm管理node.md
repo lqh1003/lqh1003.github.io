@@ -4,22 +4,22 @@ date: 2025-07-14 10:41:46
 tags: nvm
 ---
 
-##### 1、安装nvm 
+#### 1、安装nvm 
 + https://github.com/coreybutler/nvm-windows/releases
-![](images/nvmNode/node.png)
+![](images/nvm管理node/node.png)
 
-+ 点击.exe文件 -> accept -> nvm的安装路径 (D:\NVM\nvm) -> 创建nodejs文件放在D:\NVM\nvm下 -> 一直点击next安装完成
++ 点击`.exe`文件 -> `accept` -> nvm的安装路径 (`D:\NVM\nvm`) -> 创建nodejs文件放在`D:\NVM\nvm`下 -> 一直点击`next`安装完成
 
-##### 2、给该文件添加这两行命令
+#### 2、给该文件添加这两行命令
 node_mirror: https://npm.taobao.org/mirrors/node/
 npm_mirror: https://npm.taobao.org/mirrors/npm/
-![](images/nvmNode/nvms1.png)
-![](images/nvmNode/nvms2.png)
+![](images/nvm管理node/nvms1.png)
+![](images/nvm管理node/nvms2.png)
 
-##### 3、配置环境变量
-![](images/nvmNode/path1.png)
+#### 3、配置环境变量
+![](images/nvm管理node/path1.png)
 
-##### 4、测试一下
+#### 4、测试一下
 ```javascript
   nvm -v  // 查看当前版本
   nvm --config 
@@ -33,9 +33,9 @@ npm_mirror: https://npm.taobao.org/mirrors/npm/
   node -v  // 查看node版本
 ```
 
-##### Tips: 如果原本电脑已安装某个版本的nodejs
+#### Tips: 如果原本电脑已安装某个版本的nodejs
 * 在安装nvm会检测是否安装某个版本的nodejs, 并提示该版本是否需要被nvm管理，如果选择是，该node的安装路径会自动变到对应的nvm安装目录下
-![](images/nvmNode/nvms3.png)
-* 当"nvm install node版本"时报错，可以改一下node镜像
-![](images/nvmNode/path2.png)
+![](images/nvm管理node/nvms3.png)
+* 当 "`nvm install node版本`" 时报错，可以改一下node镜像
+![](images/nvm管理node/path2.png)
 
