@@ -1,0 +1,24 @@
+# 启用评论系统
+comments:
+  use: waline # 指定使用 Waline
+
+# Waline 专属配置
+waline:
+  serverURL: 'https://lqh-blog-comments.vercel.app' # 替换为你的 Vercel 服务端地址
+  emoji: [
+      '//unpkg.com/@waline/emojis@1.1.0/weibo',
+      '//unpkg.com/@waline/emojis@1.2.0/qq',
+      '//unpkg.com/@waline/emojis@1.2.0/bmoji',
+    ] # 表情包
+  placeholder: '欢迎留言...' # 评论框占位符
+  avatar: 'mm' # 默认头像风格
+  meta: ['nick', 'mail'] # 评论框显示的输入项
+  requiredMeta: ['nick', 'mail'] # 必填字段（评论者信息：昵称、邮箱email、网址link）
+  it: 0 # 评论字数限制，0为无限制
+  pageSize: 10 # 每页评论数
+  lang: 'en-US' # 语言 zh-CN
+  visitor: true # 启用访问量统计
+  comment: true # 评论数统计
+  highlight: true #
+  avatarCDN: '' # 头像 CDN
+  emojiCDN: '' # 表情 CDN

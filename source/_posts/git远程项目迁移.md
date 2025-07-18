@@ -16,11 +16,11 @@ git clone --mirror https://xxx/xxx/oldProject.git
 
 #### 4、在oldProject.git 命令窗口下
 + 执行下方命令修改git地址为新项目地址：
-```
+```bash
 git remote set-url origin https://xxx/xxx/newProject.git
 ```
 + 推送已修改git到新地址，完成迁移
-```
+```bash
 git push -f origin --mirror
 ```
 
