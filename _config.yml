@@ -3,15 +3,16 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Hexo
+title: LQH的博客
 subtitle: ''
 description: ''
 keywords:
 author: liqinghua
-language: en
+# language: en
+language: zh-CN
 timezone: ''
 
-# URL
+# URL (文章链接)
 ## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
 url: https://lqh1003-gitlab-io-cd3511.gitlab.io
 permalink: :year/:month/:day/:title/

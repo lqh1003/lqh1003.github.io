@@ -2,6 +2,7 @@
 title: nvm管理node
 date: 2025-07-14 10:41:46
 tags: nvm
+cover: /images/nvm管理node/cover.jpg
 ---
 
 #### 1、安装nvm 
