@@ -24,7 +24,7 @@ menu:
   #   Movie: /movies/ || fas fa-video
 
 # --------------------------------------
-# Code Blocks Settings
+# Code Blocks Settings 代码块的设置
 # --------------------------------------
 
 code_blocks:
@@ -35,7 +35,7 @@ code_blocks:
   height_limit: false
   word_wrap: false
 
-  # Toolbar
+  # Toolbar 代码块的工具
   copy: true
   language: true
   # true: shrink the code blocks | false: expand the code blocks | none: expand code blocks and hide the button
@@ -53,25 +53,27 @@ social:
 # Image Settings
 # --------------------------------------
 
-favicon: /img/favicon.png
+favicon: /theme_images/f.ico
 
 avatar:
-  img: /img/butterfly-icon.png
+  img: /theme_images/avatar.jpg
   effect: false
 
-# Disable all banner images
+# 顶部图，如果如果不需要设置为true
 disable_top_img: false
 
-# If the banner of page not setting, it will show the default_top_img
-default_top_img:
+# 图片优先级：(.md文章内的)cover/top_img > index_img/archive_img/tag_img > default_top_img
 
-# The banner image of index page
-index_img:
+# 如果(index/archive/tag等)页面的 banner 没有设置，它将显示 default_top_img (默认背景)
+default_top_img: /theme_images/default_top_img.jpg
 
-# The banner image of archive page
-archive_img:
+# The banner image of index page (首页背景)
+index_img: /theme_images/index_top_img.jpg
 
-# Note: tag page, not tags page
+# The banner image of archive page (归档页背景)
+archive_img: /theme_images/archive_top_img.jpg
+
+# Note: tag page, not tags page (标签页背景)
 tag_img:
 
 # The banner image of tag page, you can set the banner image for each tag
@@ -79,7 +81,7 @@ tag_img:
 #  - tag name: xxxxx
 tag_per_img:
 
-# Note: category page, not categories page
+# Note: category page, not categories page (分类页背景)
 category_img:
 
 # The banner image of category page, you can set the banner image for each category
@@ -88,18 +90,35 @@ category_img:
 category_per_img:
 
 # The background image of footer
-footer_img: false
+footer_img: /theme_images/footer.jpg
 
 # Website Background
-# Can set it to color or image url
+# 全局背景图
 background:
+  # # 是否启用背景
+  # enable: true
+  # # 背景类型：color(纯色) | image(图片)
+  # type: image
+  # # 背景图片URL（支持本地[放在source/images目录下]和网络图片）
+  # image: /theme_images/bg.jpg
+
+  # # 背景图片显示方式
+  # display: fixed # fixed(固定) | scroll(滚动) | local(局部滚动)
+  # # 背景位置
+  # position: center # center | top | left | right | bottom
+  # # 背景大小
+  # size: cover # cover | contain | auto
+  # # 背景重复
+  # repeat: no-repeat # repeat | repeat-x | repeat-y | no-repeat
+  # # 背景混合模式
+  # blend_mode: normal # normal | multiply | screen | overlay等
 
 cover:
   # Disable the cover or not
   index_enable: true
   aside_enable: true
   archives_enable: true
-  # When cover is not set, the default cover is displayed
+  # 当未设置封面cover时，将显示默认封面（可设置图片/颜色/渐变色）
   default_cover:
     # - xxx.jpg
 
@@ -114,6 +133,7 @@ error_404:
   subtitle: 'Page Not Found'
   background: /img/error-page.png
 
+# 页面的meta展示
 post_meta:
   # Home Page
   page:
@@ -136,43 +156,47 @@ post_meta:
     label: true
 
 # --------------------------------------
-# Index page settings
+# Index page settings (index_page 页面设置)
 # --------------------------------------
 
-# The top_img settings of home page
-# default: top img - full screen, site info - middle
-# The position of site info, eg: 300px/300em/300rem/10%
+# (home page)主页的顶部图片设置
+# # 默认设置：顶部图片 - 全屏显示，网站信息 - 居中显示
+# 网站信息的位置(距离顶部的距离), eg: 300px/300em/300rem/10%
 index_site_info_top:
-# The height of top_img, eg: 300px/300em/300rem
+# top_img 的高height, eg: 300px/300em/300rem
 index_top_img_height:
 
-# The subtitle on homepage
+# 主页上的副标题
 subtitle:
-  enable: false
-  # Typewriter Effect
+  enable: true
+  # Typewriter Effect (打字效果)
   effect: true
   # Customize typed.js
   # https://github.com/mattboldt/typed.js/#customization
   typed_option:
-  # Source - Call the third-party service API (Chinese only)
-  # It will show the source first, then show the content of sub
-  # Choose: false/1/2/3
-  # false - disable the function
-  # 1 - hitokoto.cn
-  # 2 - https://api.aa1.cn/doc/yiyan.html
-  # 3 - jinrishici.com
-  source: false
-  # If you close the typewriter effect, the subtitle will only show the first line of sub
-  sub:
 
-# Article layout on the homepage
-# 1: Cover on the left, info on the right
-# 2: Cover on the right, info on the left
-# 3: Cover and info alternate between left and right
-# 4: Cover on top, info on the bottom
-# 5: Info displayed on the cover
-# 6: Masonry layout - Cover on top, info on the bottom
-# 7: Masonry layout - Info displayed on the cover
+  # 源 - 调用第三方服务API（仅限中文）
+  # subtitle它将首先展示源代码source，然后展示子内容sub
+  # 选择: false/1/2/3
+  # false - 禁用该功能
+  # 1 - 调用一言网的一句话（简体）hitokoto.cn
+  # 2 - 调用一句网（简体）https://api.aa1.cn/doc/yiyan.html
+  # 3 - 调用今日诗词（简体）jinrishici.com
+  source:
+
+  # 如果关闭打字机效果，字幕将只显示子标题的第一行
+  sub:
+    - 今日事&#44;今日毕
+    - Never put off till tomorrow what you can do today
+
+# 主页上的文章布局
+# 1：封面在左，信息在右
+# 2：封面在右，信息在左
+# 3：封面和信息在左右两侧交替显示
+# 4：封面在上，信息在下
+# 5：信息展示在封面上(封面为背景图)
+# 6：瀑布流布局 - 封面在上，信息在下
+# 7：瀑布流布局 - 信息展示在封面上(封面为背景图)
 index_layout: 3
 
 # Display the article introduction on homepage
@@ -200,12 +224,12 @@ toc:
 
 post_copyright:
   enable: true
-  decode: false
+  decode: true # 是否进行文章URL解码
   author_href:
   license: CC BY-NC-SA 4.0
   license_url: https://creativecommons.org/licenses/by-nc-sa/4.0/
 
-# Sponsor/reward
+# 赞助商/奖励
 reward:
   enable: false
   text:
@@ -218,7 +242,7 @@ reward:
     #   text: alipay
 
 # Post edit
-# Easily browse and edit blog source code online.
+# 轻松在线浏览和编辑博客源代码
 post_edit:
   enable: false
   # url: https://github.com/user-name/repo-name/edit/branch-name/subdirectory-name/
@@ -233,10 +257,10 @@ related_post:
   # Choose: created / updated
   date_type: created
 
-# Choose: 1 / 2 / false
-# 1: The 'next post' will link to old post
-# 2: The 'next post' will link to new post
-# false: disable pagination
+# 选择: 1 / 2 / false （分页按钮）
+# 1: 下一篇是旧文章
+# 2: 下一篇是新文章
+# false: 关闭分页按钮
 post_pagination: 1
 
 # Displays outdated notice for a post
@@ -263,10 +287,10 @@ footer:
   copyright:
     enable: true
     version: true
-  custom_text:
+  custom_text: Hi, 欢迎来到我的 <a href="/">博客</a>!
 
 # --------------------------------------
-# Aside Settings
+# Aside Settings （侧边栏设置）
 # --------------------------------------
 
 aside:
@@ -276,7 +300,7 @@ aside:
   button: true
   mobile: true
   # Position: left / right
-  position: right
+  position: left # 在左侧、右侧
   display:
     archive: true
     tag: true
@@ -317,7 +341,7 @@ aside:
     enable: true
     # If set 0 will show all
     limit: 40
-    color: false
+    color: true # 标签的颜色
     # Order of tags, random/name/length
     orderby: random
     # Sort of order. 1, asc for ascending; -1, desc for descending
@@ -359,12 +383,12 @@ aside:
 # The distance between the bottom right button and the bottom (default unit: px)
 rightside_bottom:
 
-# Conversion between Traditional and Simplified Chinese
+# 繁体中文与简体中文的转换
 translate:
   enable: false
   # The text of a button
-  default: 繁
-  # the language of website (1 - Traditional Chinese/ 2 - Simplified Chinese）
+  default: 簡
+  # #网站默认语言，1:繁体中文，2:简体中文
   defaultEncoding: 2
   # Time delay
   translateDelay: 0
@@ -425,14 +449,14 @@ copy:
     enable: false
     limit_count: 150
 
-# Need to install the hexo-wordcount plugin
+# 需要安装hexo-wordcount插件
 wordcount:
   enable: false
-  # Display the word count of the article in post meta
+  # 在文章页面的meta上显示字数
   post_wordcount: true
-  # Display the time to read the article in post meta
+  # 在文章页面的meta上显示阅读时间
   min2read: true
-  # Display the total word count of the website in aside's webinfo
+  # 在aside的webinfo中显示网站的总字数
   total_wordcount: true
 
 # Busuanzi count for PV / UV in site
@@ -591,12 +615,12 @@ valine:
 # Waline 评论配置
 waline:
   enable: true
-  serverURL: "https://lqh-blog-comments.vercel.app" # 替换为你的实际地址
+  serverURL: 'https://lqh-blog-comments.vercel.app' # 替换为你的实际地址
   locale:
-    placeholder: "欢迎留言..." # 评论框提示文字
+    placeholder: '欢迎留言...' # 评论框提示文字
   commentCount: true # 显示评论数
   pageview: true # 显示阅读量
-  emoji: 
+  emoji:
     - https://unpkg.com/@waline/emojis@1.1.0/weibo
     - https://unpkg.com/@waline/emojis@1.1.0/alus
   meta: ['nick', 'mail', 'link'] # 评论者信息
@@ -761,26 +785,27 @@ site_verification:
 # Beautify / Effect
 # --------------------------------------
 
-# Theme color for customize
-# Notice: color value must in double quotes like "#000" or may cause error!
+#自定义主题颜色
+#注意：颜色值必须用双引号括起来，如"#000"，否则可能会导致错误！
+# 天蓝色#49B1F5、浅绿色#00c4b6、橙色#FF7242
 
-# theme_color:
-#   enable: true
-#   main: "#49B1F5"
-#   paginator: "#00c4b6"
-#   button_hover: "#FF7242"
-#   text_selection: "#00c4b6"
-#   link_color: "#99a9bf"
-#   meta_color: "#858585"
-#   hr_color: "#A4D8FA"
-#   code_foreground: "#F47466"
-#   code_background: "rgba(27, 31, 35, .05)"
-#   toc_color: "#00c4b6"
-#   blockquote_padding_color: "#49b1f5"
-#   blockquote_background_color: "#49b1f5"
-#   scrollbar_color: "#49b1f5"
-#   meta_theme_color_light: "ffffff"
-#   meta_theme_color_dark: "#0d0d0d"
+theme_color:
+  enable: true
+  main: "#77a931"   # 主题色
+  paginator: "#77a931"   # 分页器颜色
+  button_hover: "#97bf5e"   # 按鈕 hover 颜色
+  text_selection: "#97bf5e"   # 文字选中颜色
+  # link_color: "#99a9bf"   # 链接颜色
+  # meta_color: "#858585"   # 文章元数据颜色
+  hr_color: "#77a931"   # 分割线颜色
+  # code_foreground: "#F47466"   # 代码前景色
+  # code_background: "rgba(27, 31, 35, .05)"   # 代码背景色
+  toc_color: "#77a931"   # 目录颜色
+  # blockquote_padding_color: "#49b1f5"   # 引用边框颜色
+  # blockquote_background_color: "#49b1f5"   # 应用背景色
+  # scrollbar_color: "#49b1f5"   # 滚动条颜色
+  # meta_theme_color_light: "ffffff"   # light mode 主题色
+  # meta_theme_color_dark: "#0d0d0d"   # dark mode 主题色
 
 # The user interface setting of category and tag page
 # Choose: index - same as Homepage UI / default - same as archives UI
@@ -845,21 +870,21 @@ hr_icon:
   icon:
   icon_top:
 
-# Typewriter Effect
+# Typewriter Effect （评论框：打字效果）
 # https://github.com/disjukr/activate-power-mode
 activate_power_mode:
-  enable: false
-  colorful: true
-  shake: true
-  mobile: false
+  enable: true
+  colorful: true  # 是否开启冒光特效
+  shake: false  # 是否开启抖动特效
+  mobile: false  # 是否在移动端开启打字效果
 
 # Background effects
 # --------------------------------------
 
-# canvas_ribbon
+# 好看的彩带背景，可设置每次刷新更换彩带，或者每次点击更换彩带
 # See: https://github.com/hustcc/ribbon.js
 canvas_ribbon:
-  enable: false
+  enable: true
   # The size of ribbon
   size: 150
   # The opacity of ribbon (0 ~ 1)
@@ -887,26 +912,32 @@ canvas_nest:
   count: 99
   mobile: false
 
-# Mouse click effects: fireworks
+# 鼠标点击效果: fireworks
 fireworks:
   enable: false
   zIndex: 9999
   mobile: false
 
-# Mouse click effects: Heart symbol
+# 鼠标点击效果: Heart symbol 爱心
 click_heart:
   enable: false
   mobile: false
 
-# Mouse click effects: words
+# 鼠标点击效果: 文字
 clickShowText:
-  enable: false
+  enable: true
   text:
-    # - I
-    # - LOVE
-    # - YOU
+    - 厉害
+    - 强
+    - 好
+    - wonderful
+    - 点赞
+    - Great
+    - 棒
+    - Good
+    - 精彩
   fontSize: 15px
-  random: false
+  random: false  # 文字随机显示
   mobile: false
 
 # --------------------------------------
