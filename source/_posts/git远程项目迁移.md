@@ -2,6 +2,7 @@
 title: git远程项目迁移
 date: 2025-07-11 18:22:52
 tags: git
+cover: /images/git远程项目迁移/cover.jpg # 封面图
 ---
 
 #### 1、克隆待迁移的 git 项目到本地
