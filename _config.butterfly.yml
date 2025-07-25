@@ -93,31 +93,15 @@ category_per_img:
 footer_img: /theme_images/footer.jpg
 
 # Website Background
-# 全局背景图
-background:
-  # # 是否启用背景
-  # enable: true
-  # # 背景类型：color(纯色) | image(图片)
-  # type: image
-  # # 背景图片URL（支持本地[放在source/images目录下]和网络图片）
-  # image: /theme_images/bg.jpg
+# 全局背景图: color(纯色) | image(图片) 为空则背景留白
+# background: /theme_images/bg.jpg
+background: '#97bf5e42'
 
-  # # 背景图片显示方式
-  # display: fixed # fixed(固定) | scroll(滚动) | local(局部滚动)
-  # # 背景位置
-  # position: center # center | top | left | right | bottom
-  # # 背景大小
-  # size: cover # cover | contain | auto
-  # # 背景重复
-  # repeat: no-repeat # repeat | repeat-x | repeat-y | no-repeat
-  # # 背景混合模式
-  # blend_mode: normal # normal | multiply | screen | overlay等
-
+# 封面是否显示
 cover:
-  # Disable the cover or not
-  index_enable: true
-  aside_enable: true
-  archives_enable: true
+  index_enable: true  # 首页是否展示文章封面
+  aside_enable: false  # aside的 "最新文章" 区域是否展示文章封面
+  archives_enable: true # 归档是否展示文章封面
   # 当未设置封面cover时，将显示默认封面（可设置图片/颜色/渐变色）
   default_cover:
     # - xxx.jpg
