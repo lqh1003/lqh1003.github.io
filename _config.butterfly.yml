@@ -480,7 +480,7 @@ math:
 search:
   # Choose: algolia_search / local_search / docsearch
   # leave it empty if you don't need search
-  use:
+  use: local_search
   placeholder:
 
   # Algolia Search
@@ -490,13 +490,17 @@ search:
 
   # Local Search
   local_search:
-    # Preload the search data when the page loads.
-    preload: false
-    # Show top n results per article, show all results by setting to -1
+    enable: true
+    # 在页面加载时预加载搜索数据
+    preload: true
+    # 显示每篇文章的前 n 个结果，设置为 -1 则显示所有结果
     top_n_per_article: 1
-    # Unescape html strings to the readable one.
+    # 将 html 字符串取消转义，使其变为可读的字符串。
     unescape: false
-    CDN:
+
+    # 搜索库CDN（默认使用本地）
+    # js: https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.min.js
+    CDN: 
 
   # Docsearch
   # https://docsearch.algolia.com/
