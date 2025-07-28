@@ -170,6 +170,7 @@ subtitle:
 
   # 如果关闭打字机效果，字幕将只显示子标题的第一行
   sub:
+    - 相信自己
     - 今日事&#44;今日毕
     - Never put off till tomorrow what you can do today
 
@@ -271,7 +272,7 @@ footer:
   copyright:
     enable: true
     version: true
-  custom_text: Hi, 欢迎来到我的 <a href="/">博客</a>!
+  custom_text: Hi, 欢迎来到我的 <a href="/">博客</a>
 
 # --------------------------------------
 # Aside Settings （侧边栏设置）
@@ -284,7 +285,7 @@ aside:
   button: true
   mobile: true
   # Position: left / right
-  position: left # 在左侧、右侧
+  position: right # 在左侧、右侧
   display:
     archive: true
     tag: true
