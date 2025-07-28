@@ -4,7 +4,6 @@ date: 2025-07-14 11:59:44
 tags:
   - forEach
   - async/await
-comments: true
 ---
 
 #### forEach 的设计是同步执行回调函数：
