@@ -28,18 +28,21 @@ menu:
 # --------------------------------------
 
 code_blocks:
-  # Code block theme: darker / pale night / light / ocean / false
-  theme: light
+  # 代码块主题: darker / pale night / light / ocean / false
+  theme: pale night
   macStyle: false
   # Code block height limit (unit: px)
   height_limit: false
-  word_wrap: false
+  word_wrap: false # 是否自动换行
 
   # Toolbar 代码块的工具
+  # 是否展示复制按钮
   copy: true
+  # 是否展示语言标签
   language: true
-  # true: shrink the code blocks | false: expand the code blocks | none: expand code blocks and hide the button
+  # true: 收缩代码块 | false: 展开代码块 | none: 展开代码块并隐藏按钮
   shrink: false
+  # 是否全屏展示代码块
   fullpage: false
 
 # Social media links
@@ -113,8 +116,8 @@ error_img:
 
 # A simple 404 page
 error_404:
-  enable: false
-  subtitle: 'Page Not Found'
+  enable: true
+  subtitle: '页面没有找到'
   background: /img/error-page.png
 
 # 页面的meta展示
