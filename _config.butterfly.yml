@@ -29,10 +29,10 @@ menu:
 
 code_blocks:
   # 代码块主题: darker / pale night / light / ocean / false
-  theme: pale night
+  theme: light
   macStyle: false
-  # Code block height limit (unit: px)
-  height_limit: false
+  # 代码块高度设置，超过高度出现展开按钮  数字或者false  (unit: px)
+  height_limit: 230
   word_wrap: false # 是否自动换行
 
   # Toolbar 代码块的工具
@@ -98,6 +98,7 @@ footer_img: /theme_images/footer.jpg
 # Website Background
 # 全局背景图: color(纯色) | image(图片) 为空则背景留白
 # background: /theme_images/bg.jpg
+# background: 'linear-gradient(180deg, #B9D394 30%, #D2E3B9 100%)'
 background: '#97bf5e42'
 
 # 封面是否显示

@@ -26,7 +26,7 @@ for (var i = 0; i < 5; i++) {
 
 ```javascript
 // 修改后的代码
-for (var i = 0; i < 5; i++) {
+for (let i = 0; i < 5; i++) {
 	setTimeout(function () {
 		console.log(i)
 	}, i * 1000)
