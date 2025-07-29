@@ -18,10 +18,13 @@ nav:
   fixed: false
 
 menu:
-  # Home: / || fas fa-home
-  # List||fas fa-list:
-  #   Music: /music/ || fas fa-music
-  #   Movie: /movies/ || fas fa-video
+  首页: / || fas fa-home
+  页面 || fas fa-book:
+    归档: /archives/ || fas fa-archive
+    标签: /tags/ || fas fa-tags
+    分类: /categories/ || fas fa-folder-open
+  链接: /link || fas fa-link
+  关于: /about || fas fa-heart
 
 # --------------------------------------
 # Code Blocks Settings 代码块的设置
@@ -79,7 +82,7 @@ archive_img: /theme_images/archive_top_img.jpg
 # Note: tag page, not tags page (标签页背景)
 tag_img:
 
-# The banner image of tag page, you can set the banner image for each tag
+# 标签页面的banner图片，您可以为每个标签设置横幅图片
 # Format:
 #  - tag name: xxxxx
 tag_per_img:
