@@ -1,0 +1,27 @@
+- class_name: 友情链接
+  class_desc: 那些人，那些事，那些好用的官网...
+  link_list:
+    - name: Hexo
+      link: https://hexo.io/zh-cn/
+      avatar: https://d33wubrfki0l68.cloudfront.net/6657ba50e702d84afb32fe846bed54fba1a77add/827ae/logo.svg
+      descr: 快速、简洁且高效的博客框架
+    - name: Butterfly主题官网
+      link: https://butterfly.js.org/posts/21cfbf15/
+      avatar: https://butterfly.js.org/img/butterfly-icon.png
+      descr: 一款专为 Hexo 静态博客引擎设计的高颜值现代化主题
+    - name: Waline
+      link: https://waline.js.org/guide/get-started/
+      avatar: https://waline.js.org/logo.png
+      descr: 一款简洁、安全的评论系统
+
+- class_name: 网站
+  class_desc: 值得推荐的网站
+  link_list:
+    - name: Youtube
+      link: https://www.youtube.com/
+      avatar: https://i.loli.net/2020/05/14/9ZkGg8v3azHJfM1.png
+      descr: 视频网站
+    - name: Weibo
+      link: https://www.weibo.com/
+      avatar: https://i.loli.net/2020/05/14/TLJBum386vcnI1P.png
+      descr: 中国最大社交分享平台
