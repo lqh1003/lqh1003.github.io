@@ -113,3 +113,21 @@ search:
   field: all # 可选: post/page/all
   content: true
   format: html
+
+
+live2d:
+  pluginRootPath: live2dw/
+  pluginJsPath: lib/
+  pluginModelPath: assets/
+  tagMode: false
+  use: live2d-widget-model-hibiki  # 模型名称
+  display:
+    position: left # 左右位置（left/right）
+    width: 230      # 宽度
+    height: 370     # 高度
+    hOffset: 50     # 水平偏移（px）
+    vOffset: 0    # 垂直偏移（px，负数向上移动）
+    zIndex: 100     # 层级
+  mobile:
+    show: false      # 移动端是否显示
+    scale: 0.5      # 移动端缩放比例
