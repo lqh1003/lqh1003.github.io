@@ -1,0 +1,42 @@
+name: 部署到GitHub Pages
+
+# 关键：添加权限配置，允许 Actions 写入仓库内容
+permissions:
+  contents: write  # 授予写入内容的权限(包括推送分支)
+
+on:
+  push:  # 常用事件：push(代码推送)、pull_request(PR 操作)、schedule(定时任务)、workflow_dispatch(手动触发)
+    branches: [ main ]  # 推送到main分支时触发
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest  # 运行环境(ubuntu-latest(推荐/速度快)/windows-latest/macos-latest)；github提供的虚拟服务器
+    steps:
+      - name: 拉取 Hexo 源码
+        uses: actions/checkout@v4  # 官方动作：拉取仓库代码
+        with:
+          fetch-depth: 0
+
+      - name: 安装Node.js环境
+        uses: actions/setup-node@v4  # 官方动作：配置 Node 环境
+        with:
+          node-version: 18.x
+          cache: 'npm'
+
+      - name: 安装Hexo及项目依赖
+        run: |
+          npm install -g hexo-cli  # 全局安装 Hexo 命令行工具
+          npm install
+
+      - name: 生成静态文件（public 目录）
+        run: |
+          hexo clean   # 清除缓存和旧静态文件（避免残留问题）
+          hexo generate   # 生成新静态文件（输出到 public 目录）
+
+      - name: 将静态文件部署到GitHub Pages分支
+        uses: peaceiris/actions-gh-pages@v4   # 第三方动作：简化 Pages 部署with
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}  # 部署授权：使用GitHub内置秘钥(无需手动生成，自动生效)
+          publish_dir: ./public  #  待部署的静态文件目录（Hexo 生成的 public 目录）
+          publish_branch: gh-pages  # 目标分支(GitHub Pages读取的分支，与源分支 main 区分)
+          force_orphan: true  # 可选：强制创建独立分支，避免历史冲突
