@@ -1,7 +1,9 @@
 ---
 title: css切割属性clip-path
 date: 2025-08-07 15:46:30
-tags: css
+tags:
+	- css
+	- clip-path
 categories: css
 cover: /images/css切割属性clip-path/cover.jpg # 封面图
 ---
@@ -47,110 +49,110 @@ cover: /images/css切割属性clip-path/cover.jpg # 封面图
 ### 示例 1
 
 - 效果
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<style>
-		:root {
-			--clicp-width: 50px; /* 剪切区域宽度 */
-			--elem-padding: 10px; /* 元素内边距 */
-			--active-bg-color: #6f3ce7;
-		}
-		.clippedBox {
-			display: flex;
-			position: relative;
-			margin: 30px;
-		}
-		.clipped-element1,
-		.clipped-element2,
-		.clipped-element3 {
-			width: 260px;
-			height: 70px;
-			display: flex;
-			align-items: center;
-			box-sizing: border-box;
-			background-color: #999;
-			position: relative;
-			color: white;
-			font-weight: bold;
-			justify-content: center;
-		}
-		/* 内边距 */
-		.clipped-element1 {
-			padding: 0 calc(var(--elem-padding) + var(--clicp-width)) 0 var(--elem-padding);
-		}
-		.clipped-element2 {
-			margin: 0 calc(calc(var(--clicp-width) - 10px) * -1);
-			padding: 0 calc(var(--elem-padding) + var(--clicp-width));
-		}
-		.clipped-element3 {
-			padding: 0 var(--elem-padding) 0 calc(var(--elem-padding) + var(--clicp-width));
-		}
-		/* 第一个元素 */
-		.clipped-element1 {
-			border-radius: 10px 0 0 10px;
-			clip-path: polygon(
-				0 0,
-				calc(100% - var(--clicp-width)) 0,
-				100% 50%,
-				calc(100% - var(--clicp-width)) 100%,
-				0 100%
-			);
-		}
-		/* 第二个元素 */
-		.clipped-element2 {
-			clip-path: polygon(
-				0 0,
-				calc(100% - var(--clicp-width)) 0,
-				100% 50%,
-				calc(100% - var(--clicp-width)) 100%,
-				0 100%,
-				var(--clicp-width) 50%
-			);
-		}
-		/* 第三个元素 */
-		.clipped-element3 {
-			border-radius: 0 10px 10px 0;
-			clip-path: polygon(
-				0 0,
-				100% 0,
-				100% 100%,
-				0 100%,
-				var(--clicp-width) 50%
-			);
-		}
-		/* 添加悬停效果 */
-		.clipped-element1:hover,
-		.clipped-element2:hover,
-		.clipped-element3:hover {
-			background-color: var(--active-bg-color);
-			transform: scale(1.02);
-			transition: all 0.3s ease;
-		}
-	</style>
-</head>
-<body>
-	<div class="clippedBox">
-		<div class="clipped-element1" onclick="clinkBtn(event)">未开始</div>
-		<div class="clipped-element2" onclick="clinkBtn(event)">进行中</div>
-		<div class="clipped-element3" onclick="clinkBtn(event)">已完成</div>
-	</div>
-</body>
-<script>
-	function clinkBtn(event) {
-		const target = event.target
-		if (target.classList.contains('clipped-element1')) {
-			alert('未开始')
-		} else if (target.classList.contains('clipped-element2')) {
-			alert('进行中')
-		} else if (target.classList.contains('clipped-element3')) {
-			alert('已完成')
-		}
-	}
-</script>
-</html>
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+  	<meta charset="UTF-8" />
+  	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  	<style>
+  		:root {
+  			--clicp-width: 50px; /* 剪切区域宽度 */
+  			--elem-padding: 10px; /* 元素内边距 */
+  			--active-bg-color: #6f3ce7;
+  		}
+  		.clippedBox {
+  			display: flex;
+  			position: relative;
+  			margin: 30px;
+  		}
+  		.clipped-element1,
+  		.clipped-element2,
+  		.clipped-element3 {
+  			width: 260px;
+  			height: 70px;
+  			display: flex;
+  			align-items: center;
+  			box-sizing: border-box;
+  			background-color: #999;
+  			position: relative;
+  			color: white;
+  			font-weight: bold;
+  			justify-content: center;
+  		}
+  		/* 内边距 */
+  		.clipped-element1 {
+  			padding: 0 calc(var(--elem-padding) + var(--clicp-width)) 0 var(--elem-padding);
+  		}
+  		.clipped-element2 {
+  			margin: 0 calc(calc(var(--clicp-width) - 10px) * -1);
+  			padding: 0 calc(var(--elem-padding) + var(--clicp-width));
+  		}
+  		.clipped-element3 {
+  			padding: 0 var(--elem-padding) 0 calc(var(--elem-padding) + var(--clicp-width));
+  		}
+  		/* 第一个元素 */
+  		.clipped-element1 {
+  			border-radius: 10px 0 0 10px;
+  			clip-path: polygon(
+  				0 0,
+  				calc(100% - var(--clicp-width)) 0,
+  				100% 50%,
+  				calc(100% - var(--clicp-width)) 100%,
+  				0 100%
+  			);
+  		}
+  		/* 第二个元素 */
+  		.clipped-element2 {
+  			clip-path: polygon(
+  				0 0,
+  				calc(100% - var(--clicp-width)) 0,
+  				100% 50%,
+  				calc(100% - var(--clicp-width)) 100%,
+  				0 100%,
+  				var(--clicp-width) 50%
+  			);
+  		}
+  		/* 第三个元素 */
+  		.clipped-element3 {
+  			border-radius: 0 10px 10px 0;
+  			clip-path: polygon(
+  				0 0,
+  				100% 0,
+  				100% 100%,
+  				0 100%,
+  				var(--clicp-width) 50%
+  			);
+  		}
+  		/* 添加悬停效果 */
+  		.clipped-element1:hover,
+  		.clipped-element2:hover,
+  		.clipped-element3:hover {
+  			background-color: var(--active-bg-color);
+  			transform: scale(1.02);
+  			transition: all 0.3s ease;
+  		}
+  	</style>
+  </head>
+  <body>
+  	<div class="clippedBox">
+  		<div class="clipped-element1" onclick="clinkBtn(event)">未开始</div>
+  		<div class="clipped-element2" onclick="clinkBtn(event)">进行中</div>
+  		<div class="clipped-element3" onclick="clinkBtn(event)">已完成</div>
+  	</div>
+  </body>
+  <script>
+  	function clinkBtn(event) {
+  		const target = event.target
+  		if (target.classList.contains('clipped-element1')) {
+  			alert('未开始')
+  		} else if (target.classList.contains('clipped-element2')) {
+  			alert('进行中')
+  		} else if (target.classList.contains('clipped-element3')) {
+  			alert('已完成')
+  		}
+  	}
+  </script>
+  </html>
 
 - 代码
 
@@ -268,56 +270,56 @@ cover: /images/css切割属性clip-path/cover.jpg # 封面图
 ### 示例 2
 
 - 效果
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<style>
-		.imgError {
-				background-color: #ededed;
-			border-radius: 10px;
-				position: relative;
-			width: 600px;
-			height: 360px;
-			margin: 30px;
-			overflow: hidden;
-		}
-			.clipped1, .clipped2 {
-				position: absolute;
-				top: 0;
-				left: 0;
-			width: 100%;
-			height: 100%;
-				background-color: rgba(95, 74, 254, 0.283);
-				mask: linear-gradient(to left, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.2));
-			}
-		.clipped1 {
-			clip-path: ellipse(33% 40% at 31.5% 110%);
-		}
-		.clipped2 {
-			clip-path: ellipse(55% 60% at 96% 110%);
-		}
-		.clipped3 {
-				position: absolute;
-				top: 0;
-				left: 0;
-			width: 100%;
-			height: 100%;
-			background-color: rgb(249, 88, 70);
-			clip-path: circle(45px at 30% 20%);
-				/* mask: linear-gradient(to left, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.8)); */
-		}
-	</style>
-</head>
-<body>
-	<div class="imgError">
-		<div class="clipped1"></div>
-		<div class="clipped2"></div>
-		<div class="clipped3"></div>
-	</div>
-</body>
-</html>
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+  	<meta charset="UTF-8" />
+  	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  	<style>
+  		.imgError {
+  				background-color: #ededed;
+  			border-radius: 10px;
+  				position: relative;
+  			width: 600px;
+  			height: 360px;
+  			margin: 30px;
+  			overflow: hidden;
+  		}
+  			.clipped1, .clipped2 {
+  				position: absolute;
+  				top: 0;
+  				left: 0;
+  			width: 100%;
+  			height: 100%;
+  				background-color: rgba(95, 74, 254, 0.283);
+  				mask: linear-gradient(to left, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.2));
+  			}
+  		.clipped1 {
+  			clip-path: ellipse(33% 40% at 31.5% 110%);
+  		}
+  		.clipped2 {
+  			clip-path: ellipse(55% 60% at 96% 110%);
+  		}
+  		.clipped3 {
+  				position: absolute;
+  				top: 0;
+  				left: 0;
+  			width: 100%;
+  			height: 100%;
+  			background-color: rgb(249, 88, 70);
+  			clip-path: circle(45px at 30% 20%);
+  				/* mask: linear-gradient(to left, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.8)); */
+  		}
+  	</style>
+  </head>
+  <body>
+  	<div class="imgError">
+  		<div class="clipped1"></div>
+  		<div class="clipped2"></div>
+  		<div class="clipped3"></div>
+  	</div>
+  </body>
+  </html>
 
 - 代码
 
