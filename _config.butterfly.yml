@@ -32,7 +32,7 @@ menu:
 
 code_blocks:
   # 代码块主题: darker / pale night / light / ocean / false
-  theme: light
+  theme: darker
   macStyle: false
   # 代码块高度设置，超过高度出现展开按钮  数字或者false  (unit: px)
   height_limit: 230
