@@ -1,0 +1,246 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Event事件循环 | 😊Saraの记录</title><meta name="author" content="sara"><meta name="copyright" content="sara"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="123456789101112131415161718console.log(&#x27;Start&#x27;)setTimeout(() &#x3D;&gt; &#123;	console.log(&#x27;Timeout1&#x27;)&#125;, 10000)Promise.resolve().then(() &#x3D;&gt; &#123;	console.log(&#x27;Promise1&amp;#x2">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Event事件循环">
+<meta property="og:url" content="https://lqh1003.github.io/2025/07/29/Event%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF/index.html">
+<meta property="og:site_name" content="😊Saraの记录">
+<meta property="og:description" content="123456789101112131415161718console.log(&#x27;Start&#x27;)setTimeout(() &#x3D;&gt; &#123;	console.log(&#x27;Timeout1&#x27;)&#125;, 10000)Promise.resolve().then(() &#x3D;&gt; &#123;	console.log(&#x27;Promise1&amp;#x2">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://lqh1003.github.io/images/Event%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF/cover.jpg">
+<meta property="article:published_time" content="2025-07-29T10:51:52.000Z">
+<meta property="article:modified_time" content="2025-09-19T10:22:16.984Z">
+<meta property="article:author" content="sara">
+<meta property="article:tag" content="event loop">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://lqh1003.github.io/images/Event%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF/cover.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Event事件循环",
+  "url": "https://lqh1003.github.io/2025/07/29/Event%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF/",
+  "image": "https://lqh1003.github.io/images/Event%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF/cover.jpg",
+  "datePublished": "2025-07-29T10:51:52.000Z",
+  "dateModified": "2025-09-19T10:22:16.984Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "sara",
+      "url": "https://lqh1003.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/theme_images/f.ico"><link rel="canonical" href="https://lqh1003.github.io/2025/07/29/Event%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":230,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Event事件循环',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-color: #97bf5e42;"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/theme_images/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">23</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">33</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">10</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-book"></i><span> 页面</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link"><i class="fa-fw fas fa-link"></i><span> 链接</span></a></div><div class="menus_item"><a class="site-page" href="/about"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/images/Event%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF/cover.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">😊Saraの记录</span></a><a class="nav-page-title" href="/"><span class="site-name">Event事件循环</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-book"></i><span> 页面</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link"><i class="fa-fw fas fa-link"></i><span> 链接</span></a></div><div class="menus_item"><a class="site-page" href="/about"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Event事件循环</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-07-29T10:51:52.000Z" title="发表于 2025-07-29 10:51:52">2025-07-29</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-09-19T10:22:16.984Z" title="更新于 2025-09-19 10:22:16">2025-09-19</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Javascript/">Javascript</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span class="waline-pageview-count" data-path="/2025/07/29/Event%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF/"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Start&#x27;</span>)</span><br><span class="line"><span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">	<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Timeout1&#x27;</span>)</span><br><span class="line">&#125;, <span class="number">10000</span>)</span><br><span class="line"><span class="title class_">Promise</span>.<span class="title function_">resolve</span>().<span class="title function_">then</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">	<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Promise1&#x27;</span>)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">	<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Timeout2&#x27;</span>)</span><br><span class="line">&#125;, <span class="number">0</span>)</span><br><span class="line"><span class="keyword">const</span> timmer = <span class="built_in">setInterval</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">	<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Interval&#x27;</span>)</span><br><span class="line">&#125;, <span class="number">3000</span>)</span><br><span class="line"><span class="title class_">Promise</span>.<span class="title function_">resolve</span>().<span class="title function_">then</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">	<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Promise2&#x27;</span>)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;End&#x27;</span>)</span><br><span class="line"><span class="built_in">clearInterval</span>()</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>问题：请解释上述代码的执行顺序，为什么会按照这样的顺序输出结果？</li>
+</ul>
+<hr>
+<ul>
+<li><p>Event Loop：在事件循环机制中，任务分为 微任务(Promise 回调、DOM 变化监听等) 和 宏任务(setTimeout&#x2F;setInterval、DOM 事件回调 click&#x2F;scroll 等)</p>
+</li>
+<li><p>解答：</p>
+<ul>
+<li>代码开始执行，首先输出 <code>Start</code></li>
+<li>遇到  <code>setTimeout(() =&gt; &#123; console.log(&#39;Timeout1&#39;); &#125;, 10000)</code>，它会在 10 秒后将回调函数  () &#x3D;&gt; { console.log(‘Timeout1’); }  放入宏任务队列</li>
+<li>接着  <code>Promise.resolve().then(() =&gt; &#123; console.log(&#39;Promise1&#39;); &#125;)</code>，Promise.resolve()  会返回一个已解决的  Promise  对象，其  then  方法里的回调函数  () &#x3D;&gt; { console.log(‘Promise1’); }  会被添加到微任务队列</li>
+<li>再碰到 <code>setTimeout(() =&gt; &#123; console.log(&#39;Timeout2&#39;); &#125;, 0)</code>，尽管延迟时间设为 0 毫秒，在 0 秒把回调函数  () &#x3D;&gt; { console.log(‘Timeout2’); }  放入宏任务队列</li>
+<li>之后是 <code>setInterval(() =&gt; &#123; console.log(&#39;Interval&#39;); &#125;, 3000)</code>，它会在 3 秒后将回调函数  () &#x3D;&gt; { console.log(‘Interval’); }  放入宏任务队列，并且之后每隔 3 秒放入一次</li>
+<li>又遇到 <code>Promise.resolve().then(() =&gt; &#123; console.log(&#39;Promise2&#39;); &#125;)</code>，then  方法的回调函数  () &#x3D;&gt; { console.log(‘Promise2’); }  会被加入微任务队列</li>
+<li>接着输出 <code>End</code></li>
+<li>接着执行 <code>clearInterval()</code> (clearInterval 是同步)，无任何入参，所以它不会清除任何定时器，也不会抛出错误</li>
+<li><strong>当主线程的同步代码执行完后，事件循环会优先处理微任务队列</strong>，会输出  Promise1、接着输出 Promise2</li>
+<li><strong>微任务队列处理完毕后，事件循环会从宏任务队列中取出任务执行</strong>，所以最后输出 Timeout2、3 次 Interval、Timeout1、n 次 Interval</li>
+<li>综上所述，代码的输出顺序为 <code>Start、End、Promise1、Promise2、Timeout2、Interval、Interval、Interval、Timeout1、Interval、Interval、Interval...</code></li>
+</ul>
+</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://lqh1003.github.io">sara</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://lqh1003.github.io/2025/07/29/Event%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF/">https://lqh1003.github.io/2025/07/29/Event事件循环/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://lqh1003.github.io" target="_blank">😊Saraの记录</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/event-loop/">event loop</a></div><div class="post-share"><div class="social-share" data-image="/images/Event%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF/cover.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2025/07/30/%E6%8E%A5%E5%85%A5Google%E5%9C%B0%E5%9B%BE/" title="接入Google地图"><img class="cover" src="/images/%E6%8E%A5%E5%85%A5Google%E5%9C%B0%E5%9B%BE/cover.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">接入Google地图</div></div><div class="info-2"><div class="info-item-1">准备工作 Google API 秘钥  地址信息：经纬度、地点名称等   获取 Google API 密钥 前往 Google Cloud 控制台。  创建或选择一个项目。  点击继续，启用 API 和任何相关服务。  在凭据页面上，获取 API 密钥（并设置 API 密钥限制）。注意：如果您已有不受限的 API 密钥或存在浏览器限制的密钥，可以使用相应密钥。  如需防止配额盗用并保护 API 密钥，请参阅使用 API 密钥。  启用结算功能。如需了解详情，请参阅用量和结算。  现在，您可以使用 API 密钥了。   接入 Google 地图 获取经纬度  在地图上搜索地名，导航栏上会出现地名所在的经纬度   vue 项目接入 Google 地图  下载依赖：  1npm install @googlemaps/js-api-loader   新建 GoogleMaps.vue 文件  12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535...</div></div></div></a><a class="pagination-related" href="/2025/07/28/setTimeout%E4%B8%8E%E9%97%AD%E5%8C%85/" title="setTimeout与闭包"><img class="cover" src="/images/setTimeout%E4%B8%8E%E9%97%AD%E5%8C%85/cover.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">setTimeout与闭包</div></div><div class="info-2"><div class="info-item-1">12345for (var i = 0; i &lt; 5; i++) &#123;	setTimeout(function () &#123;		console.log(i)	&#125;, i * 1000)&#125;   问题：上述代码的输出结果是什么？如何修改代码使其按预期输出 0 到 4？    答案：输出结果是连续输出 5 个 5  原因：var 声明的变量没有块级作用域，setTimeout 中的回调函数会在循环结束(同步代码执行完成，异步队列开始轮训 setTimeout)后才执行，此时 i 的值已经变为 5  修改方案 1：可以使用 let 声明变量来解决这个问题，因为 let 有块级作用域，每个回调函数都会捕获到不同的 i 值   123456// 修改后的代码for (let i = 0; i &lt; 5; i++) &#123;	setTimeout(function () &#123;		console.log(i)	&#125;, i * 1000)&#125;   修改方案 2：使用 setTimeout 的第三个参数，作为回调函数的参数传递进去...</div></div></div></a></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/theme_images/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">sara</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">23</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">33</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">10</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/19/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E2%80%94%E5%AE%9E%E6%88%98%E6%80%9D%E8%B7%AF/" title="前端性能优化—实战思路">前端性能优化—实战思路</a><time datetime="2025-09-19T12:23:28.000Z" title="发表于 2025-09-19 12:23:28">2025-09-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/16/%E5%89%8D%E7%AB%AF%E8%B7%AF%E7%94%B1%E7%9A%84hash+history%E6%A8%A1%E5%BC%8F/" title="前端路由的hash+history模式">前端路由的hash+history模式</a><time datetime="2025-09-16T10:29:10.000Z" title="发表于 2025-09-16 10:29:10">2025-09-16</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/15/%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E6%95%85%E9%9A%9C%E6%95%88%E6%9E%9C%E7%9A%84%E6%8C%89%E9%92%AE/" title="实现一个故障效果的按钮">实现一个故障效果的按钮</a><time datetime="2025-09-15T10:29:59.000Z" title="发表于 2025-09-15 10:29:59">2025-09-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/13/hexo%E5%8D%9A%E5%AE%A2%E9%A1%B9%E7%9B%AE%E6%94%B9%E7%94%A8Github%E6%89%98%E7%AE%A1/" title="hexo博客项目改用Github托管">hexo博客项目改用Github托管</a><time datetime="2025-09-13T17:20:30.000Z" title="发表于 2025-09-13 17:20:30">2025-09-13</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/13/%E5%89%8D%E7%AB%AF%E5%AE%9E%E7%8E%B0%E5%AF%BC%E5%87%BAxlsx%E8%A1%A8%E6%A0%BC/" title="前端实现导出xlsx表格">前端实现导出xlsx表格</a><time datetime="2025-09-13T10:08:19.000Z" title="发表于 2025-09-13 10:08:19">2025-09-13</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/theme_images/footer.jpg);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;2025 By sara</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.4.2</a></span></div><div class="footer_custom_text">Hi, 欢迎来到我的 <a href="/">博客</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const destroyWaline = ele => ele.destroy()
+
+  const initWaline = (Fn, el = document, path = window.location.pathname) => {
+    const waline = Fn({
+      el: el.querySelector('#waline-wrap'),
+      serverURL: 'https://lqh-blog-comments.vercel.app',
+      pageview: true,
+      dark: 'html[data-theme="dark"]',
+      comment: false,
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyWaline = () => {
+        destroyWaline(waline)
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+  }
+
+  const loadWaline = (el, path) => {
+    if (initFn) initWaline(initFn, el, path)
+    else {
+      btf.getCSS('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.css')
+        .then(() => import('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.js'))
+        .then(({ init }) => {
+          initFn = init || Waline.init
+          initWaline(initFn, el, path)
+          window.walineFn = initFn
+        })
+    }
+  }
+
+  if (isShuoshuo) {
+    'Waline' === 'Waline'
+      ? window.shuoshuoComment = { loadComment: loadWaline } 
+      : window.loadOtherComment = loadWaline
+    return
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="false" data-text="厉害,强,好,wonderful,点赞,Great,棒,Good,精彩" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"use":"live2d-widget-model-hibiki","display":{"position":"left","width":230,"height":370,"hOffset":50,"vOffset":0,"zIndex":100},"mobile":{"show":false,"scale":0.5},"log":false});</script></body></html>

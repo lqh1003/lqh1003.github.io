@@ -1,0 +1,400 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>【微信小程序实战】之准备工作详解 | 😊Saraの记录</title><meta name="author" content="sara"><meta name="copyright" content="sara"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="✍️ 小程序和普通网页的区别 运行环境不同 网页运行在浏览器环境中 小程序运行在微信小程序中   API 不同 小程序：由于运行环境不同，所以在小程序中无法调用 DOM 和 BOM 的 API 但是，小程序可以调用微信环境提供的各种 API 地理定位 扫码 支付 …     开发模式不同 网页开发模式：浏览器+代码编辑器(Vscode、Cursor…) 小程序有自己的一套标准开发模式： 申请小程序">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【微信小程序实战】之准备工作详解">
+<meta property="og:url" content="https://lqh1003.github.io/2025/07/31/%E3%80%90%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%AE%9E%E6%88%98%E3%80%91%E4%B9%8B%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C%E8%AF%A6%E8%A7%A3/index.html">
+<meta property="og:site_name" content="😊Saraの记录">
+<meta property="og:description" content="✍️ 小程序和普通网页的区别 运行环境不同 网页运行在浏览器环境中 小程序运行在微信小程序中   API 不同 小程序：由于运行环境不同，所以在小程序中无法调用 DOM 和 BOM 的 API 但是，小程序可以调用微信环境提供的各种 API 地理定位 扫码 支付 …     开发模式不同 网页开发模式：浏览器+代码编辑器(Vscode、Cursor…) 小程序有自己的一套标准开发模式： 申请小程序">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://lqh1003.github.io/images/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%AE%9E%E6%88%98/%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C/cover.jpg">
+<meta property="article:published_time" content="2025-07-31T11:03:53.000Z">
+<meta property="article:modified_time" content="2025-09-19T10:22:16.985Z">
+<meta property="article:author" content="sara">
+<meta property="article:tag" content="微信小程序">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://lqh1003.github.io/images/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%AE%9E%E6%88%98/%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C/cover.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "【微信小程序实战】之准备工作详解",
+  "url": "https://lqh1003.github.io/2025/07/31/%E3%80%90%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%AE%9E%E6%88%98%E3%80%91%E4%B9%8B%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C%E8%AF%A6%E8%A7%A3/",
+  "image": "https://lqh1003.github.io/images/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%AE%9E%E6%88%98/%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C/cover.jpg",
+  "datePublished": "2025-07-31T11:03:53.000Z",
+  "dateModified": "2025-09-19T10:22:16.985Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "sara",
+      "url": "https://lqh1003.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/theme_images/f.ico"><link rel="canonical" href="https://lqh1003.github.io/2025/07/31/%E3%80%90%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%AE%9E%E6%88%98%E3%80%91%E4%B9%8B%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C%E8%AF%A6%E8%A7%A3/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":230,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '【微信小程序实战】之准备工作详解',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-color: #97bf5e42;"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/theme_images/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">23</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">33</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">10</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-book"></i><span> 页面</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link"><i class="fa-fw fas fa-link"></i><span> 链接</span></a></div><div class="menus_item"><a class="site-page" href="/about"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/images/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%AE%9E%E6%88%98/%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C/cover.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">😊Saraの记录</span></a><a class="nav-page-title" href="/"><span class="site-name">【微信小程序实战】之准备工作详解</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-book"></i><span> 页面</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link"><i class="fa-fw fas fa-link"></i><span> 链接</span></a></div><div class="menus_item"><a class="site-page" href="/about"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">【微信小程序实战】之准备工作详解</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-07-31T11:03:53.000Z" title="发表于 2025-07-31 11:03:53">2025-07-31</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-09-19T10:22:16.985Z" title="更新于 2025-09-19 10:22:16">2025-09-19</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%B0%8F%E7%A8%8B%E5%BA%8F/">小程序</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span class="waline-pageview-count" data-path="/2025/07/31/%E3%80%90%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%AE%9E%E6%88%98%E3%80%91%E4%B9%8B%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C%E8%AF%A6%E8%A7%A3/"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h3 id="✍️-小程序和普通网页的区别"><a href="#✍️-小程序和普通网页的区别" class="headerlink" title="✍️ 小程序和普通网页的区别"></a>✍️ 小程序和普通网页的区别</h3><ul>
+<li>运行环境不同<ul>
+<li>网页运行在浏览器环境中</li>
+<li>小程序运行在微信小程序中</li>
+</ul>
+</li>
+<li>API 不同<ul>
+<li>小程序：由于运行环境不同，所以在小程序中无法调用 DOM 和 BOM 的 API</li>
+<li>但是，小程序可以调用微信环境提供的各种 API<ul>
+<li>地理定位</li>
+<li>扫码</li>
+<li>支付</li>
+<li>…</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>开发模式不同<ul>
+<li>网页开发模式：浏览器+代码编辑器(Vscode、Cursor…)</li>
+<li>小程序有自己的一套标准开发模式：<ul>
+<li>申请小程序开发账号</li>
+<li>安装小程序开发者工具</li>
+<li>创建和配置小程序项目</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="✍️-申请小程序账号"><a href="#✍️-申请小程序账号" class="headerlink" title="✍️ 申请小程序账号"></a>✍️ 申请小程序账号</h3><ul>
+<li><p>开发微信小程序的第一步，是需要在<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/">微信公众平台</a>先申请一个小程序的账号，通过这个账号可以管理自己的小程序<br><img src="/images/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%AE%9E%E6%88%98/%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C/wxgzpt.png"></p>
+</li>
+<li><p>点击“立即注册” → 选择注册账号类型，微信公众平台提供了四种类型的账号注册，分别为：订阅号、服务号、小程序、企业微信</p>
+
+  <!-- ![](/images/微信小程序实战/准备工作/wxtype4.png) -->
+  
+<img src="/images/微信小程序实战/准备工作/wxtype4.png" alt="image" class="max600"/>
+
+<ul>
+<li>订阅号，对所有主体开放，包括政府、企事业单位、非盈利性机构、社会组织、媒体、个人等，推送消息在用户消息盒子中显示，每天可以推送一次，对开发者提供的开放能力有限</li>
+<li>服务号，不对个人主体开放，只对组织主体开放注册，包括政府、企事业单位、非盈利性机构、社会组织、媒体，推送消息在用户的消息列表中显示，对开发者提供更全面的开放能力</li>
+<li>小程序，一种全新的连接用户与服务的方式，具有更加出色的交互体验，小程序内具有调用手机硬件能力，适合所有主体注册，为了保护用户隐私，尽量减少对用户的打扰，小程序不支持信息推送</li>
+<li>企业微信，为企业提供更高效的协同办公体验，只对企业及组织开发注册权限</li>
+</ul>
+</li>
+<li><p>注册小程序</p>
+<ul>
+<li><p>小程序注册规则：</p>
+<ul>
+<li>小程序的注册上限：<ul>
+<li>1）同一个邮箱只能申请 1 个小程序</li>
+<li>2）同一个手机号码可绑定 5 个小程序</li>
+<li>3）同一身份证注册个人类型小程序数量上限为 5 个</li>
+<li>4）同一企业、政府、媒体、其他组织资料注册小程序数量上限为 50 个</li>
+<li>5）同一个体工商户注册小程序数量上限为 5 个</li>
+</ul>
+</li>
+<li>小程序的绑定上限：<ul>
+<li>1）同一身份证可绑定 5 个小程序</li>
+<li>2）同一手机号可绑定 5 个小程序</li>
+<li>3）同一微信号可绑定 5 个小程序</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>账号信息：填写邮箱&#x2F;验证码&#x2F;密码 → 注册<br><img src="/images/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%AE%9E%E6%88%98/%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C/registerAccount.png"></p>
+</li>
+<li><p>信息登记：选择主体类型”个人” → 填写姓名&#x2F;身份证号&#x2F;手机号&#x2F;短信验证 → 扫码(扫码的微信号成为小程序账号的管理员) → 继续<br><img src="/images/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%AE%9E%E6%88%98/%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C/infoRecord.png"></p>
+</li>
+<li><p>主体一旦提交并认证成功之后，被认证的主体信息不可变更</p>
+<img src="/images/微信小程序实战/准备工作/confirmInfo.png" alt="image" class="max450"/>
+</li>
+<li><p>提交后，等待官方对注册主体的认证结果，认证成功后，注册过程就结束了，就有了自己的小程序账号<br><img src="/images/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%AE%9E%E6%88%98/%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C/accountManage.png"></p>
+</li>
+</ul>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/">微信公众平台</a></p>
+<ul>
+<li>两种登录方式：邮箱+密码登录 、 微信扫码登录</li>
+</ul>
+</li>
+</ul>
+<h3 id="✍️-微信开发者工具下载与安装"><a href="#✍️-微信开发者工具下载与安装" class="headerlink" title="✍️ 微信开发者工具下载与安装"></a>✍️ 微信开发者工具下载与安装</h3><ul>
+<li><p><a target="_blank" rel="noopener" href="https://developers.weixin.qq.com/miniprogram/dev/devtools/download.html">微信开发者工具</a>下载<br><img src="/images/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%AE%9E%E6%88%98/%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C/wxtooldowload.png"></p>
+</li>
+<li><p>安装步骤很简单：选择安装路径，一直下一步就好了<br><img src="/images/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%AE%9E%E6%88%98/%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C/wxtoolexe.png"></p>
+</li>
+<li><p>微信扫码登录开发工具(游客模式功能受限)</p>
+<img src="/images/微信小程序实战/准备工作/wxtool.png" alt="image" class="max600"/></li>
+</ul>
+<h3 id="✍️-编写第一个小程序"><a href="#✍️-编写第一个小程序" class="headerlink" title="✍️ 编写第一个小程序"></a>✍️ 编写第一个小程序</h3><ul>
+<li><p>点击”+”创建小程序，AppId 填写刚申请的小程序账号上的，项目名称、后端服务、模板等都可以自行选择<br><img src="/images/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%AE%9E%E6%88%98/%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C/createProject1.png"><br><img src="/images/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%AE%9E%E6%88%98/%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C/createProject0.png"></p>
+</li>
+<li><p>默认项目效果如图：<br><img src="/images/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%AE%9E%E6%88%98/%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C/createProject2.png"></p>
+</li>
+<li><p>熟悉：微信开发者工具的使用</p>
+</li>
+<li><p>预览：微信开发者工具提供了两种在真机中预览小程序的方式</p>
+<ul>
+<li>扫描二维码预览</li>
+<li>自动预览，免去了每次看效果时都要扫码的步骤，点击工具栏中的“预览”按钮，然后在手机中保持微信的前台运行状态既可以自动唤出小程序<br><img src="/images/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%AE%9E%E6%88%98/%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C/preview.png"></li>
+</ul>
+</li>
+<li><p>上传代码</p>
+<ul>
+<li><p>填写版本号和 commit 备注信息<br><img src="/images/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%AE%9E%E6%88%98/%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C/uploadcode.png"></p>
+</li>
+<li><p>上传成功之后：微信公众平台(小程序管理后台) → 版本管理 → 需要管理员将本次上传设置为体验版本<br><img src="/images/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%AE%9E%E6%88%98/%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C/updateVersion.png"></p>
+</li>
+<li><p>体验版本：有一个二维码，扫码即可体验小程序<br><img src="/images/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%AE%9E%E6%88%98/%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C/updateVersion2.png"></p>
+</li>
+</ul>
+</li>
+<li><p>发布小程序：在后台中提交审核，待审核通过后即实现小程序的发布上线</p>
+<ul>
+<li><p>【注】提交审核前，小程序还需备案，填写小程序的基本设置、第三方设置、关联设置等等<br><img src="/images/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%AE%9E%E6%88%98/%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C/release.png"></p>
+</li>
+<li><p>小程序的基本信息填写之后：小程序的名称和 logo 就出现在登录账号上了(可以更清晰的区分小程序了)<br><img src="/images/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%AE%9E%E6%88%98/%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C/release1.png"></p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="✍️-代码管理-远程仓库"><a href="#✍️-代码管理-远程仓库" class="headerlink" title="✍️ 代码管理(远程仓库)"></a>✍️ 代码管理(远程仓库)</h3><ul>
+<li><p>详细步骤可以在 <a target="_blank" rel="noopener" href="https://developers.weixin.qq.com/miniprogram/dev/devtools/wechatvcs.html">微信官方文档&#x2F;微信开发者·代码管理</a> 这里查看</p>
+</li>
+<li><p>我的步骤：</p>
+<ul>
+<li><p><a target="_blank" rel="noopener" href="https://git.weixin.qq.com/">微信开发者·代码管理</a>，然后微信授权登录，面板如下所示：【和 gitlab、gitee、github 是一样的代码托管平台】<br><img src="/images/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%AE%9E%E6%88%98/%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C/wx_git_magage.png"></p>
+</li>
+<li><p>Git 初始化：输入一个账号名称 lqh_wx (自定义)</p>
+<img src="/images/微信小程序实战/准备工作/wx_git_account.png" alt="image" class="max500"/>
+</li>
+<li><p>Git 初始化：个人设置 → 账户 → 设置密码(自定义)</p>
+<img src="/images/微信小程序实战/准备工作/wx_git_password.png" alt="image" class="max500"/>
+</li>
+<li><p>新建一个项目 wxDemo</p>
+<img src="/images/微信小程序实战/准备工作/wx_git_newproject.png" alt="image" class="max600"/>
+</li>
+<li><p>在本地项目 wxDemo 中，执行 git 命令连接远程仓库 (第一次推送代码到远程需要账号&#x2F;密码验证)</p>
+<img src="/images/微信小程序实战/准备工作/wx_git_link_origin.png" alt="image" class="max500"/>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git init</span><br><span class="line">git remote add origin https://git.weixin.qq.com/lqh_wx/wxDemo.git</span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;第一次提交&quot;</span></span><br><span class="line">git push -u origin master</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%AE%9E%E6%88%98/%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C/wx_git_push_origin.png"></p>
+</li>
+<li><p>代码推送到远程仓库，成功<br><img src="/images/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%AE%9E%E6%88%98/%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C/wx_git_push_origin2.png"></p>
+</li>
+<li><p>后续开发提交远程，可以使用”版本管理”功能【类似于 Sourcetree】，也可在终端使用 git 命令推送代码<br><img src="/images/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%AE%9E%E6%88%98/%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C/wx_git_version.png"></p>
+</li>
+</ul>
+</li>
+</ul>
+
+<!-- 防止 Hexo 标签冲突：Hexo 使用 {% %} 作为标签语法 -->
+<div id="box">🔒点击一下我</div><span id="tips"></span>
+<script>
+  document.getElementById('box').onclick = function(event) {
+    var tips = document.getElementById('tips')
+    if(!tips.innerText) {
+      tips.innerText = '🔑看到这里，你真是太棒了👍┗(•̀ᴗ•́)┛👍'
+    }
+    else {
+      tips.innerText = ''
+    }
+  }
+</script>
+<style>
+  #box {
+    display: inline-block;
+    border: 1px solid #666;
+    border-radius: 5px;
+    padding: 4px 12px;
+    margin-top: 20px;
+    cursor: pointer;
+  }
+  #tips {
+    margin: 0 0 0 15px;
+  }
+</style>
+
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://lqh1003.github.io">sara</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://lqh1003.github.io/2025/07/31/%E3%80%90%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%AE%9E%E6%88%98%E3%80%91%E4%B9%8B%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C%E8%AF%A6%E8%A7%A3/">https://lqh1003.github.io/2025/07/31/【微信小程序实战】之准备工作详解/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://lqh1003.github.io" target="_blank">😊Saraの记录</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F/">微信小程序</a></div><div class="post-share"><div class="social-share" data-image="/images/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%AE%9E%E6%88%98/%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C/cover.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2025/08/07/css%E5%88%87%E5%89%B2%E5%B1%9E%E6%80%A7clip-path/" title="css切割属性clip-path"><img class="cover" src="/images/css%E5%88%87%E5%89%B2%E5%B1%9E%E6%80%A7clip-path/cover.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">css切割属性clip-path</div></div><div class="info-2"><div class="info-item-1">clip-path 属性切割图形123456789101112131415161718192021222324252627282930313233.clipped-element &#123;	width: 300px;	height: 200px;	background-color: rgb(232, 53, 53);	/* 切割 clip-path */	clip-path: none | circle | ellipse | inset | polygon | path(&#x27;d&#x27;);	/* 1、默认值none, 不切割 */	clip-path: none;	/* 2、圆形 circle(radius at position) */	/* 默认 (以中心为圆心，元素短边的一半为半径)*/	clip-path: circle();	/* 切割一个以(10px, 30px)为圆心、半径为50px的圆，超出部分不可见，position的值：left、right、top、bottom、 x% y% 、x y */	clip-path: circle(50px at...</div></div></div></a><a class="pagination-related" href="/2025/07/30/%E6%8E%A5%E5%85%A5Google%E5%9C%B0%E5%9B%BE/" title="接入Google地图"><img class="cover" src="/images/%E6%8E%A5%E5%85%A5Google%E5%9C%B0%E5%9B%BE/cover.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">接入Google地图</div></div><div class="info-2"><div class="info-item-1">准备工作 Google API 秘钥  地址信息：经纬度、地点名称等   获取 Google API 密钥 前往 Google Cloud 控制台。  创建或选择一个项目。  点击继续，启用 API 和任何相关服务。  在凭据页面上，获取 API 密钥（并设置 API 密钥限制）。注意：如果您已有不受限的 API 密钥或存在浏览器限制的密钥，可以使用相应密钥。  如需防止配额盗用并保护 API 密钥，请参阅使用 API 密钥。  启用结算功能。如需了解详情，请参阅用量和结算。  现在，您可以使用 API 密钥了。   接入 Google 地图 获取经纬度  在地图上搜索地名，导航栏上会出现地名所在的经纬度   vue 项目接入 Google 地图  下载依赖：  1npm install @googlemaps/js-api-loader   新建 GoogleMaps.vue 文件  12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535...</div></div></div></a></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/theme_images/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">sara</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">23</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">33</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">10</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9C%8D%EF%B8%8F-%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%99%AE%E9%80%9A%E7%BD%91%E9%A1%B5%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">1.</span> <span class="toc-text">✍️ 小程序和普通网页的区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9C%8D%EF%B8%8F-%E7%94%B3%E8%AF%B7%E5%B0%8F%E7%A8%8B%E5%BA%8F%E8%B4%A6%E5%8F%B7"><span class="toc-number">2.</span> <span class="toc-text">✍️ 申请小程序账号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9C%8D%EF%B8%8F-%E5%BE%AE%E4%BF%A1%E5%BC%80%E5%8F%91%E8%80%85%E5%B7%A5%E5%85%B7%E4%B8%8B%E8%BD%BD%E4%B8%8E%E5%AE%89%E8%A3%85"><span class="toc-number">3.</span> <span class="toc-text">✍️ 微信开发者工具下载与安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9C%8D%EF%B8%8F-%E7%BC%96%E5%86%99%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%B0%8F%E7%A8%8B%E5%BA%8F"><span class="toc-number">4.</span> <span class="toc-text">✍️ 编写第一个小程序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9C%8D%EF%B8%8F-%E4%BB%A3%E7%A0%81%E7%AE%A1%E7%90%86-%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93"><span class="toc-number">5.</span> <span class="toc-text">✍️ 代码管理(远程仓库)</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/19/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E2%80%94%E5%AE%9E%E6%88%98%E6%80%9D%E8%B7%AF/" title="前端性能优化—实战思路">前端性能优化—实战思路</a><time datetime="2025-09-19T12:23:28.000Z" title="发表于 2025-09-19 12:23:28">2025-09-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/16/%E5%89%8D%E7%AB%AF%E8%B7%AF%E7%94%B1%E7%9A%84hash+history%E6%A8%A1%E5%BC%8F/" title="前端路由的hash+history模式">前端路由的hash+history模式</a><time datetime="2025-09-16T10:29:10.000Z" title="发表于 2025-09-16 10:29:10">2025-09-16</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/15/%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E6%95%85%E9%9A%9C%E6%95%88%E6%9E%9C%E7%9A%84%E6%8C%89%E9%92%AE/" title="实现一个故障效果的按钮">实现一个故障效果的按钮</a><time datetime="2025-09-15T10:29:59.000Z" title="发表于 2025-09-15 10:29:59">2025-09-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/13/hexo%E5%8D%9A%E5%AE%A2%E9%A1%B9%E7%9B%AE%E6%94%B9%E7%94%A8Github%E6%89%98%E7%AE%A1/" title="hexo博客项目改用Github托管">hexo博客项目改用Github托管</a><time datetime="2025-09-13T17:20:30.000Z" title="发表于 2025-09-13 17:20:30">2025-09-13</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/13/%E5%89%8D%E7%AB%AF%E5%AE%9E%E7%8E%B0%E5%AF%BC%E5%87%BAxlsx%E8%A1%A8%E6%A0%BC/" title="前端实现导出xlsx表格">前端实现导出xlsx表格</a><time datetime="2025-09-13T10:08:19.000Z" title="发表于 2025-09-13 10:08:19">2025-09-13</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/theme_images/footer.jpg);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;2025 By sara</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.4.2</a></span></div><div class="footer_custom_text">Hi, 欢迎来到我的 <a href="/">博客</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const destroyWaline = ele => ele.destroy()
+
+  const initWaline = (Fn, el = document, path = window.location.pathname) => {
+    const waline = Fn({
+      el: el.querySelector('#waline-wrap'),
+      serverURL: 'https://lqh-blog-comments.vercel.app',
+      pageview: true,
+      dark: 'html[data-theme="dark"]',
+      comment: false,
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyWaline = () => {
+        destroyWaline(waline)
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+  }
+
+  const loadWaline = (el, path) => {
+    if (initFn) initWaline(initFn, el, path)
+    else {
+      btf.getCSS('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.css')
+        .then(() => import('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.js'))
+        .then(({ init }) => {
+          initFn = init || Waline.init
+          initWaline(initFn, el, path)
+          window.walineFn = initFn
+        })
+    }
+  }
+
+  if (isShuoshuo) {
+    'Waline' === 'Waline'
+      ? window.shuoshuoComment = { loadComment: loadWaline } 
+      : window.loadOtherComment = loadWaline
+    return
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="false" data-text="厉害,强,好,wonderful,点赞,Great,棒,Good,精彩" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"use":"live2d-widget-model-hibiki","display":{"position":"left","width":230,"height":370,"hOffset":50,"vOffset":0,"zIndex":100},"mobile":{"show":false,"scale":0.5},"log":false});</script></body></html>

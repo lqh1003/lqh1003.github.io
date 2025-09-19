@@ -1,0 +1,242 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>😊Saraの记录</title><meta name="author" content="sara"><meta name="copyright" content="sara"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta property="og:type" content="website">
+<meta property="og:title" content="😊Saraの记录">
+<meta property="og:url" content="https://lqh1003.github.io/index.html">
+<meta property="og:site_name" content="😊Saraの记录">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://lqh1003.github.io/theme_images/avatar.jpg">
+<meta property="article:author" content="sara">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://lqh1003.github.io/theme_images/avatar.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "😊Saraの记录",
+  "url": "https://lqh1003.github.io/"
+}</script><link rel="shortcut icon" href="/theme_images/f.ico"><link rel="canonical" href="https://lqh1003.github.io/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":230,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '😊Saraの记录',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'home'
+}</script><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-color: #97bf5e42;"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/theme_images/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">23</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">33</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">10</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-book"></i><span> 页面</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link"><i class="fa-fw fas fa-link"></i><span> 链接</span></a></div><div class="menus_item"><a class="site-page" href="/about"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="full_page" id="page-header" style="background-image: url(/theme_images/index_top_img.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">😊Saraの记录</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-book"></i><span> 页面</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link"><i class="fa-fw fas fa-link"></i><span> 链接</span></a></div><div class="menus_item"><a class="site-page" href="/about"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="site-info"><h1 id="site-title">😊Saraの记录</h1><div id="site-subtitle"><span id="subtitle"></span></div></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts nc" id="recent-posts"><div class="recent-post-items"><div class="recent-post-item"><div class="post_cover left"><a href="/2025/09/19/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E2%80%94%E5%AE%9E%E6%88%98%E6%80%9D%E8%B7%AF/" title="前端性能优化—实战思路"><img class="post-bg" src="/images/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E2%80%94%E5%AE%9E%E6%88%98%E6%80%9D%E8%B7%AF/cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="前端性能优化—实战思路"></a></div><div class="recent-post-info"><a class="article-title" href="/2025/09/19/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E2%80%94%E5%AE%9E%E6%88%98%E6%80%9D%E8%B7%AF/" title="前端性能优化—实战思路">前端性能优化—实战思路</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-09-19T12:23:28.000Z" title="发表于 2025-09-19 12:23:28">2025-09-19</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/">性能优化</a></span></div><div class="content"> 打开速度怎么变快 —— 首屏加载优化 再次打开速度怎么变快 —— 缓存优化 操作怎么才顺滑 —— 渲染优化 动画怎么保证流畅 —— 长任务拆分  前端性能优化 —— 实战思路⚙️ 开发一个 SEO 要求高、首屏加载快的新网站 首选终极方案：SSR 服务端渲染，静态站点生成 SSG  ⚙️ 对一个现成的网站进行性能和 SEO 优化性能指标衡量 ⭐ FCP（First Contentful Paint）—— 用户导航到你页面后浏览器呈现第一块 DOM 内容所花费的时间 ⭐ LCP（Largest Contentful Paint） —— 指页面渲染出最大文本或图片的时间 SI（Speed Index） —— 指界面可见内容的显示速度 TTI（Time to Interactive） —— 指网页需要多长时间才能提供完整的交互功能 TBT（Total Blocking Time） —— 度量页面被阻止响应用户输入（如鼠标单击、屏幕点击或键盘按下）的总时间 这个综合是通过在 FCP 和可交互时间之间添加所有长任务的阻塞部分来计算的 任何执行时间超过 50ms 的任务都是长任务，50ms...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/2025/09/16/%E5%89%8D%E7%AB%AF%E8%B7%AF%E7%94%B1%E7%9A%84hash+history%E6%A8%A1%E5%BC%8F/" title="前端路由的hash+history模式"><img class="post-bg" src="/images/%E5%89%8D%E7%AB%AF%E8%B7%AF%E7%94%B1%E7%9A%84hash+history%E6%A8%A1%E5%BC%8F/cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="前端路由的hash+history模式"></a></div><div class="recent-post-info"><a class="article-title" href="/2025/09/16/%E5%89%8D%E7%AB%AF%E8%B7%AF%E7%94%B1%E7%9A%84hash+history%E6%A8%A1%E5%BC%8F/" title="前端路由的hash+history模式">前端路由的hash+history模式</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-09-16T10:29:10.000Z" title="发表于 2025-09-16 10:29:10">2025-09-16</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Vue-Router/">Vue-Router</a></span></div><div class="content">前端路由的两种核心实现方式（hash 哈希模式、history 模式），主要用于管理 URL 与组件之间的映射关系，核心区别：  URL 格式 底层原理 服务器依赖（hash ❌ 、history ✅） 功能限制  👉 URL 格式 hash 模式  URL 包含 #，# 后面的部分为路由路径 http://example.com/#/home #及其后面的内容不会被发送到服务器，仅由前端路由解析   history 模式  URL 不包含 #，路径格式与传统 URL 一致 http://example.com/home 路径看起来更 “整洁” ，符合用户对 URL 的常规认知    👉 底层原理 hash 模式  基于浏览器的 哈希值（window.location.hash） 实现 哈希值的变化会触发 hashchange 事件，Vue Router 监听该事件并匹配对应的路由组件 特点 # 后面的内容不会被包含在 HTTP 请求中，仅在客户端解析 即使刷新页面，浏览器也不会向服务器请求该路径，而是直接加载当前页面并由前端路由处理     history 模式  基于 H...</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/2025/09/15/%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E6%95%85%E9%9A%9C%E6%95%88%E6%9E%9C%E7%9A%84%E6%8C%89%E9%92%AE/" title="实现一个故障效果的按钮"><img class="post-bg" src="/images/%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E6%95%85%E9%9A%9C%E6%95%88%E6%9E%9C%E7%9A%84%E6%8C%89%E9%92%AE/cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="实现一个故障效果的按钮"></a></div><div class="recent-post-info"><a class="article-title" href="/2025/09/15/%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E6%95%85%E9%9A%9C%E6%95%88%E6%9E%9C%E7%9A%84%E6%8C%89%E9%92%AE/" title="实现一个故障效果的按钮">实现一个故障效果的按钮</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-09-15T10:29:59.000Z" title="发表于 2025-09-15 10:29:59">2025-09-15</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/css/">css</a></span></div><div class="content">🚀 故障按钮效果  	 		 		 		 			.faultBox { 				padding: 20px; 				margin: 0; 				display: flex; 				justify-content: center; 			}     		.fault-btn,     		.fault-btn::after {     			padding: 13px 36px;     			border: none;     			outline: transparent;     			background: linear-gradient(     				45deg,     				transparent 5%,     				#ff013c 5%     			); /* 0-5%透明 5%-100%红色*/     			box-shadow: 6px 0 #00e6f6;     			font-family: 'Bebas Neue', monospace;     			font-weight: bold;     			display: flex;...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/2025/09/13/hexo%E5%8D%9A%E5%AE%A2%E9%A1%B9%E7%9B%AE%E6%94%B9%E7%94%A8Github%E6%89%98%E7%AE%A1/" title="hexo博客项目改用Github托管"><img class="post-bg" src="/images/hexo%E5%8D%9A%E5%AE%A2%E9%A1%B9%E7%9B%AE%E6%94%B9%E7%94%A8Github%E6%89%98%E7%AE%A1/cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="hexo博客项目改用Github托管"></a></div><div class="recent-post-info"><a class="article-title" href="/2025/09/13/hexo%E5%8D%9A%E5%AE%A2%E9%A1%B9%E7%9B%AE%E6%94%B9%E7%94%A8Github%E6%89%98%E7%AE%A1/" title="hexo博客项目改用Github托管">hexo博客项目改用Github托管</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-09-13T17:20:30.000Z" title="发表于 2025-09-13 17:20:30">2025-09-13</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Hexo/">Hexo</a></span></div><div class="content">常用的静态页面托管服务 Gitee Pages gitee.com Gitee Pages 2024.05 已暂停服务，无法使用   Gitlab Pages gitlab.com 2025.09.07 已停止向大陆内地提供服务 jihulab.com、gitlab.hk 90 天免费试用，后续需付费试用   GitHub Pages 免费版 ✅ github.com 付费版    📝 之前我使用 Gitlab 托管 hexo 博客项目，而 Gitlab.com 已暂停向大陆内地提供服务，需要迁移，我选择 Github  旧博客链接 Gitlab 新博客链接 GitHub  新建仓库&#x2F;代码迁移 github.com 登录 → 新建仓库 “用户名.github.io“ → 仓库状态设置为 public 状态  远程迁移仓库（Gitlab → GitHub） 123git clone --mirror https://gitee.com/oldProject.gitlab.io.gitgit remote set-url origin git@github.com:new...</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/2025/09/13/%E5%89%8D%E7%AB%AF%E5%AE%9E%E7%8E%B0%E5%AF%BC%E5%87%BAxlsx%E8%A1%A8%E6%A0%BC/" title="前端实现导出xlsx表格"><img class="post-bg" src="/images/%E5%89%8D%E7%AB%AF%E5%AE%9E%E7%8E%B0%E5%AF%BC%E5%87%BAxlsx%E8%A1%A8%E6%A0%BC/cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="前端实现导出xlsx表格"></a></div><div class="recent-post-info"><a class="article-title" href="/2025/09/13/%E5%89%8D%E7%AB%AF%E5%AE%9E%E7%8E%B0%E5%AF%BC%E5%87%BAxlsx%E8%A1%A8%E6%A0%BC/" title="前端实现导出xlsx表格">前端实现导出xlsx表格</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-09-13T10:08:19.000Z" title="发表于 2025-09-13 10:08:19">2025-09-13</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E4%B8%8A%E4%BC%A0-%E5%AF%BC%E5%87%BA/">上传/导出</a></span></div><div class="content">前端根据后端接口返回的数据（数组 &#x2F; 文件本身 &#x2F; 链接）做对应的下载处理： 👉 根据接口返回的数据数组(表格&#x2F;列表数据)，前端自己实现 excel 表格下载（1）下载依赖 1npm install xlsx file-saver  （2）编写保存函数 htmlToExcel.js 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475import FileSaver, &#123; saveAs &#125; from &#x27;file-saver&#x27;import * as XLSX from &#x27;xlsx&#x27;import &#123; ElMessage &#125; from &#x27;element-plus&#x27;export default &#123;	downloadXlsx...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/2025/09/12/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" title="前端性能优化"><img class="post-bg" src="/images/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="前端性能优化"></a></div><div class="recent-post-info"><a class="article-title" href="/2025/09/12/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" title="前端性能优化">前端性能优化</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-09-12T15:49:53.000Z" title="发表于 2025-09-12 15:49:53">2025-09-12</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/">性能优化</a></span></div><div class="content">前端性能优化是提升用户体验的核心环节，直接影响页面加载速度、交互流畅度和用户留存率。优化需覆盖资源加载、渲染执行、运行时效率三大阶段，结合量化指标（如 Core Web Vitals）制定针对性方案。以下是系统的前端性能优化策略详解： 资源加载阶段优化（减少加载时间）加载阶段是用户对性能的第一感知，目标是降低首屏加载时间（FCP）和资源传输成本 （1）资源体积优化  代码压缩与混淆  JS：使用 Terser 压缩(移除空格&#x2F;换行&#x2F;注释，缩短变量名)，Webpack&#x2F;Vite 生产模式默认开启 CSS：通过 CSSNano 压缩，配合 PostCSS 移除冗余规则 HTML：使用 html-minifier 压缩，移除空白字符和注释👉 效果：通常可减少 30%-60% 的资源体积   图片与媒体优化  采用精灵图，减少 http 请求次数  使用 svg 图，体积小  格式转换：优先使用 WebP&#x2F;AVIF（比 JPG 小 30%-50%），通过&lt;picture&gt;标签兼容旧浏览器   12345&lt;picture&gt;	...</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/2025/09/11/SEO%E4%BC%98%E5%8C%96/" title="SEO优化"><img class="post-bg" src="/images/SEO%E4%BC%98%E5%8C%96/cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="SEO优化"></a></div><div class="recent-post-info"><a class="article-title" href="/2025/09/11/SEO%E4%BC%98%E5%8C%96/" title="SEO优化">SEO优化</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-09-11T10:26:11.000Z" title="发表于 2025-09-11 10:26:11">2025-09-11</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/SEO/">SEO</a></span></div><div class="content">🔍 前端开发 SEO 优化策略详解🔹 HTML 页面结构与标签优化(1) 语义化 HTML  使用正确的语义化标签：&lt;header&gt;、&lt;nav&gt;、&lt;main&gt;、&lt;article&gt;、&lt;section&gt;、&lt;footer&gt;  文章标题用 h1-h6：&lt;h1&gt;（一个页面仅一个，包含主要关键词），子标题 &lt;h2&gt; - &lt;h6&gt; 标题层级合理分布  列表数据用 &lt;ul&gt; / &lt;ol&gt;，强调用 &lt;strong&gt; 而不是 &lt;b&gt;  所有 &lt;img&gt; 标签都添加 alt 文本描述属性（内容包含关键词）  &lt;a&gt;链接：需添加 href（避免javascript:void(0)），锚文本需描述目标页面内容，title 鼠标悬停时显示的提示信息  避免用图片替代文字：如标题、按钮文本需用 HTML 文字，而非图片（蜘蛛无法识别图片中的文字）   👉 好处：提升爬虫理解页面结构的能力 (2) Meta 标签 (辅助手段) ...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/2025/09/03/%E7%80%91%E5%B8%83%E6%B5%81%E5%B8%83%E5%B1%80/" title="瀑布流布局"><img class="post-bg" src="/images/%E7%80%91%E5%B8%83%E6%B5%81%E5%B8%83%E5%B1%80/cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="瀑布流布局"></a></div><div class="recent-post-info"><a class="article-title" href="/2025/09/03/%E7%80%91%E5%B8%83%E6%B5%81%E5%B8%83%E5%B1%80/" title="瀑布流布局">瀑布流布局</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-09-03T15:19:04.000Z" title="发表于 2025-09-03 15:19:04">2025-09-03</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Javascript/">Javascript</a></span></div><div class="content">瀑布流布局（Waterfall Layout）是一种流行的网页布局方式，核心特点是不规则的多列网格结构 —— 每列中的内容块高度不同，内容块会像瀑布流水一样，自动填充到当前高度最低的列中，最终形成错落有致、视觉丰富的布局效果。它广泛应用于图片展示、商品列表、内容卡片等场景（如 Pinterest、Unsplash、小红书的首页 &#x2F; 搜索页）。 🔥 CSS Grid 实现（简单高效） CSS Grid 的 grid-template-rows: masonry（砖石布局）特性，这是 CSS 原生支持的瀑布流方案，无需 JS 计算。 优点: 纯 CSS 实现，代码简洁，性能优异，自动适应容器宽度 缺点: 浏览器兼容性有限（Chrome 87+、Firefox 77+ 支持，Safari 暂不支持） 适用场景: 对兼容性要求不高的现代网站，快速实现瀑布流    1234567891011121314151617181920212223242526272829303132333435363738394041&lt;template&gt;	&lt;div class=&quo...</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/2025/08/21/%E8%AF%8D%E4%BA%91%E5%9B%BE/" title="词云图"><img class="post-bg" src="/images/%E8%AF%8D%E4%BA%91%E5%9B%BE/cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="词云图"></a></div><div class="recent-post-info"><a class="article-title" href="/2025/08/21/%E8%AF%8D%E4%BA%91%E5%9B%BE/" title="词云图">词云图</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-08-21T17:43:10.000Z" title="发表于 2025-08-21 17:43:10">2025-08-21</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Javascript/">Javascript</a></span></div><div class="content">首先确保 echarts 和 echarts-wordcloud 都已正确安装，且版本兼容（echarts-wordcloud 需要与 echarts 主版本匹配）。12# 安装兼容版本（推荐最新稳定版）npm install echarts@5.4.3 echarts-wordcloud@2.1.0 --save  使用(vue3 语法 + Element-Plus)12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485868788899091929394959697989910010110210310410510610710810911011111211311411511611711811912012112212312412512612712812913013113213313413513613713813914...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/2025/08/12/input%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" title="input文件上传"><img class="post-bg" src="/images/input%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="input文件上传"></a></div><div class="recent-post-info"><a class="article-title" href="/2025/08/12/input%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" title="input文件上传">input文件上传</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-08-12T17:34:48.000Z" title="发表于 2025-08-12 17:34:48">2025-08-12</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E4%B8%8A%E4%BC%A0-%E5%AF%BC%E5%87%BA/">上传/导出</a></span></div><div class="content">*** Base64 的格式入参 ***123456&lt;img :src=&quot;iconFile&quot; alt=&quot;&quot; @click=&quot;getResoureUrl(1)&quot; /&gt;&lt;img :src=&quot;iconCamera&quot; alt=&quot;&quot; @click=&quot;getResoureUrl(2)&quot; /&gt;&lt;img :src=&quot;iconVideo&quot; alt=&quot;&quot; @click=&quot;getResoureUrl(3)&quot; /&gt;&lt;input type=&quot;file&quot; id=&quot;fileUpload&quot; v-show=&quot;false&quot; /&gt;&lt;input type=&quot;file&quot; id=&quot;imageUpload&quot; accept=&quot;image/*&quot; v-show=&quot;false...</div></div></div></div><nav id="pagination"><div class="pagination"><span class="page-number current">1</span><a class="page-number" href="/page/2/#content-inner">2</a><a class="page-number" href="/page/3/#content-inner">3</a><a class="extend next" rel="next" href="/page/2/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/theme_images/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">sara</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">23</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">33</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">10</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/19/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E2%80%94%E5%AE%9E%E6%88%98%E6%80%9D%E8%B7%AF/" title="前端性能优化—实战思路">前端性能优化—实战思路</a><time datetime="2025-09-19T12:23:28.000Z" title="发表于 2025-09-19 12:23:28">2025-09-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/16/%E5%89%8D%E7%AB%AF%E8%B7%AF%E7%94%B1%E7%9A%84hash+history%E6%A8%A1%E5%BC%8F/" title="前端路由的hash+history模式">前端路由的hash+history模式</a><time datetime="2025-09-16T10:29:10.000Z" title="发表于 2025-09-16 10:29:10">2025-09-16</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/15/%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E6%95%85%E9%9A%9C%E6%95%88%E6%9E%9C%E7%9A%84%E6%8C%89%E9%92%AE/" title="实现一个故障效果的按钮">实现一个故障效果的按钮</a><time datetime="2025-09-15T10:29:59.000Z" title="发表于 2025-09-15 10:29:59">2025-09-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/13/hexo%E5%8D%9A%E5%AE%A2%E9%A1%B9%E7%9B%AE%E6%94%B9%E7%94%A8Github%E6%89%98%E7%AE%A1/" title="hexo博客项目改用Github托管">hexo博客项目改用Github托管</a><time datetime="2025-09-13T17:20:30.000Z" title="发表于 2025-09-13 17:20:30">2025-09-13</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/13/%E5%89%8D%E7%AB%AF%E5%AE%9E%E7%8E%B0%E5%AF%BC%E5%87%BAxlsx%E8%A1%A8%E6%A0%BC/" title="前端实现导出xlsx表格">前端实现导出xlsx表格</a><time datetime="2025-09-13T10:08:19.000Z" title="发表于 2025-09-13 10:08:19">2025-09-13</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline">
+            <i class="fas fa-folder-open"></i>
+            <span>分类</span>
+            <a class="card-more-btn" href="/categories/" title="查看更多">
+      <i class="fas fa-angle-right"></i></a>
+          </div>
+          <ul class="card-category-list" id="aside-cat-list">
+            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Hexo/"><span class="card-category-list-name">Hexo</span><span class="card-category-list-count">2</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Javascript/"><span class="card-category-list-name">Javascript</span><span class="card-category-list-count">6</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/SEO/"><span class="card-category-list-name">SEO</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Vue/"><span class="card-category-list-name">Vue</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Vue-Router/"><span class="card-category-list-name">Vue-Router</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/axios/"><span class="card-category-list-name">axios</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/css/"><span class="card-category-list-name">css</span><span class="card-category-list-count">2</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E4%B8%8A%E4%BC%A0-%E5%AF%BC%E5%87%BA/"><span class="card-category-list-name">上传/导出</span><span class="card-category-list-count">2</span></a></li>
+          </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/git/" style="font-size: 1.15em; color: rgb(66, 105, 173);">git</a><a href="/tags/forEach/" style="font-size: 1.15em; color: rgb(182, 152, 198);">forEach</a><a href="/tags/async-await/" style="font-size: 1.15em; color: rgb(50, 66, 116);">async/await</a><a href="/tags/nvm/" style="font-size: 1.15em; color: rgb(122, 50, 50);">nvm</a><a href="/tags/nodejs/" style="font-size: 1.15em; color: rgb(57, 133, 169);">nodejs</a><a href="/tags/axios/" style="font-size: 1.15em; color: rgb(50, 136, 100);">axios</a><a href="/tags/get/" style="font-size: 1.15em; color: rgb(164, 174, 76);">get</a><a href="/tags/post/" style="font-size: 1.15em; color: rgb(181, 82, 101);">post</a><a href="/tags/hexo/" style="font-size: 1.3em; color: rgb(138, 62, 50);">hexo</a><a href="/tags/gitlab/" style="font-size: 1.15em; color: rgb(182, 152, 114);">gitlab</a><a href="/tags/Gitlab-Pages/" style="font-size: 1.15em; color: rgb(110, 74, 167);">Gitlab Pages</a><a href="/tags/vite/" style="font-size: 1.15em; color: rgb(124, 80, 91);">vite</a><a href="/tags/vue-cli/" style="font-size: 1.15em; color: rgb(73, 182, 87);">vue-cli</a><a href="/tags/setTimeout/" style="font-size: 1.15em; color: rgb(53, 50, 103);">setTimeout</a><a href="/tags/event-loop/" style="font-size: 1.15em; color: rgb(50, 111, 103);">event loop</a><a href="/tags/Google-Maps/" style="font-size: 1.15em; color: rgb(151, 146, 130);">Google Maps</a><a href="/tags/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F/" style="font-size: 1.15em; color: rgb(159, 154, 170);">微信小程序</a><a href="/tags/css/" style="font-size: 1.45em; color: rgb(80, 50, 55);">css</a><a href="/tags/clip-path/" style="font-size: 1.3em; color: rgb(124, 66, 149);">clip-path</a><a href="/tags/echarts-wordcloud/" style="font-size: 1.15em; color: rgb(87, 50, 123);">echarts-wordcloud</a><a href="/tags/echarts/" style="font-size: 1.15em; color: rgb(164, 65, 54);">echarts</a><a href="/tags/%E4%B8%8A%E4%BC%A0/" style="font-size: 1.15em; color: rgb(50, 188, 67);">上传</a><a href="/tags/input/" style="font-size: 1.15em; color: rgb(188, 89, 180);">input</a><a href="/tags/%E7%80%91%E5%B8%83%E6%B5%81%E5%B8%83%E5%B1%80/" style="font-size: 1.15em; color: rgb(149, 103, 50);">瀑布流布局</a><a href="/tags/SEO/" style="font-size: 1.15em; color: rgb(95, 50, 120);">SEO</a><a href="/tags/github/" style="font-size: 1.15em; color: rgb(50, 162, 136);">github</a><a href="/tags/Github-Pages/" style="font-size: 1.15em; color: rgb(50, 73, 161);">Github Pages</a><a href="/tags/export/" style="font-size: 1.15em; color: rgb(70, 172, 148);">export</a><a href="/tags/xlsx/" style="font-size: 1.15em; color: rgb(61, 174, 181);">xlsx</a><a href="/tags/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" style="font-size: 1.3em; color: rgb(141, 167, 50);">性能优化</a><a href="/tags/Vue-Router/" style="font-size: 1.15em; color: rgb(50, 50, 50);">Vue-Router</a><a href="/tags/Hash/" style="font-size: 1.15em; color: rgb(178, 101, 92);">Hash</a><a href="/tags/History/" style="font-size: 1.15em; color: rgb(115, 180, 167);">History</a></div></div><div class="card-widget card-archives">
+    <div class="item-headline">
+      <i class="fas fa-archive"></i>
+      <span>归档</span>
+      
+    </div>
+  
+    <ul class="card-archive-list">
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2025/09/">
+            <span class="card-archive-list-date">
+              九月 2025
+            </span>
+            <span class="card-archive-list-count">8</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2025/08/">
+            <span class="card-archive-list-date">
+              八月 2025
+            </span>
+            <span class="card-archive-list-count">3</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2025/07/">
+            <span class="card-archive-list-date">
+              七月 2025
+            </span>
+            <span class="card-archive-list-count">12</span>
+          </a>
+        </li>
+      
+    </ul>
+  </div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站信息</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">23</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总浏览量 :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2025-09-19T10:22:33.753Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/theme_images/footer.jpg);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;2025 By sara</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.4.2</a></span></div><div class="footer_custom_text">Hi, 欢迎来到我的 <a href="/">博客</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>window.typedJSFn = {
+  init: str => {
+    window.typed = new Typed('#subtitle', Object.assign({
+      strings: str,
+      startDelay: 300,
+      typeSpeed: 150,
+      loop: true,
+      backSpeed: 50,
+    }, null))
+  },
+  run: subtitleType => {
+    if (true) {
+      if (typeof Typed === 'function') {
+        subtitleType()
+      } else {
+        btf.getScript('https://cdn.jsdelivr.net/npm/typed.js/dist/typed.umd.min.js').then(subtitleType)
+      }
+    } else {
+      subtitleType()
+    }
+  },
+  processSubtitle: (content, extraContents = []) => {
+    if (true) {
+      const sub = ["相信自己","今日事&#44;今日毕","Never put off till tomorrow what you can do today","I'm the best"].slice()
+
+      if (extraContents.length > 0) {
+        sub.unshift(...extraContents)
+      }
+
+      if (typeof content === 'string') {
+        sub.unshift(content)
+      } else if (Array.isArray(content)) {
+        sub.unshift(...content)
+      }
+
+      sub.length > 0 && typedJSFn.init(sub)
+    } else {
+      document.getElementById('subtitle').textContent = typeof content === 'string' ? content :
+        (Array.isArray(content) && content.length > 0 ? content[0] : '')
+    }
+  }
+}
+btf.addGlobalFn('pjaxSendOnce', () => { typed.destroy() }, 'typedDestroy')
+</script><script>function subtitleType () {
+  typedJSFn.processSubtitle(["相信自己","今日事&#44;今日毕","Never put off till tomorrow what you can do today","I'm the best"])
+}
+typedJSFn.run(subtitleType)</script></div><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="false" data-text="厉害,强,好,wonderful,点赞,Great,棒,Good,精彩" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"use":"live2d-widget-model-hibiki","display":{"position":"left","width":230,"height":370,"hOffset":50,"vOffset":0,"zIndex":100},"mobile":{"show":false,"scale":0.5},"log":false});</script></body></html>

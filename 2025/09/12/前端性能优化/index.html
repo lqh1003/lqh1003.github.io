@@ -1,0 +1,423 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>前端性能优化 | 😊Saraの记录</title><meta name="author" content="sara"><meta name="copyright" content="sara"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="前端性能优化是提升用户体验的核心环节，直接影响页面加载速度、交互流畅度和用户留存率。优化需覆盖资源加载、渲染执行、运行时效率三大阶段，结合量化指标（如 Core Web Vitals）制定针对性方案。以下是系统的前端性能优化策略详解： 资源加载阶段优化（减少加载时间）加载阶段是用户对性能的第一感知，目标是降低首屏加载时间（FCP）和资源传输成本 （1）资源体积优化  代码压缩与混淆  JS：使用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="前端性能优化">
+<meta property="og:url" content="https://lqh1003.github.io/2025/09/12/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/index.html">
+<meta property="og:site_name" content="😊Saraの记录">
+<meta property="og:description" content="前端性能优化是提升用户体验的核心环节，直接影响页面加载速度、交互流畅度和用户留存率。优化需覆盖资源加载、渲染执行、运行时效率三大阶段，结合量化指标（如 Core Web Vitals）制定针对性方案。以下是系统的前端性能优化策略详解： 资源加载阶段优化（减少加载时间）加载阶段是用户对性能的第一感知，目标是降低首屏加载时间（FCP）和资源传输成本 （1）资源体积优化  代码压缩与混淆  JS：使用">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://lqh1003.github.io/images/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/cover.jpg">
+<meta property="article:published_time" content="2025-09-12T15:49:53.000Z">
+<meta property="article:modified_time" content="2025-09-19T10:22:16.985Z">
+<meta property="article:author" content="sara">
+<meta property="article:tag" content="性能优化">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://lqh1003.github.io/images/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/cover.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "前端性能优化",
+  "url": "https://lqh1003.github.io/2025/09/12/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/",
+  "image": "https://lqh1003.github.io/images/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/cover.jpg",
+  "datePublished": "2025-09-12T15:49:53.000Z",
+  "dateModified": "2025-09-19T10:22:16.985Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "sara",
+      "url": "https://lqh1003.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/theme_images/f.ico"><link rel="canonical" href="https://lqh1003.github.io/2025/09/12/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":230,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '前端性能优化',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-color: #97bf5e42;"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/theme_images/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">23</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">33</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">10</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-book"></i><span> 页面</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link"><i class="fa-fw fas fa-link"></i><span> 链接</span></a></div><div class="menus_item"><a class="site-page" href="/about"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/images/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/cover.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">😊Saraの记录</span></a><a class="nav-page-title" href="/"><span class="site-name">前端性能优化</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-book"></i><span> 页面</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link"><i class="fa-fw fas fa-link"></i><span> 链接</span></a></div><div class="menus_item"><a class="site-page" href="/about"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">前端性能优化</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-09-12T15:49:53.000Z" title="发表于 2025-09-12 15:49:53">2025-09-12</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-09-19T10:22:16.985Z" title="更新于 2025-09-19 10:22:16">2025-09-19</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/">性能优化</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span class="waline-pageview-count" data-path="/2025/09/12/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>前端性能优化是提升用户体验的核心环节，直接影响<strong>页面加载速度、交互流畅度和用户留存率</strong>。<br>优化需覆盖<strong>资源加载、渲染执行、运行时效率</strong>三大阶段，结合量化指标（如 Core Web Vitals）制定针对性方案。以下是系统的前端性能优化策略详解：</p>
+<h2 id="资源加载阶段优化（减少加载时间）"><a href="#资源加载阶段优化（减少加载时间）" class="headerlink" title="资源加载阶段优化（减少加载时间）"></a>资源加载阶段优化（减少加载时间）</h2><p>加载阶段是用户对性能的第一感知，目标是<strong>降低首屏加载时间（FCP）和资源传输成本</strong></p>
+<p><strong>（1）资源体积优化</strong></p>
+<ul>
+<li><p><strong>代码压缩与混淆</strong></p>
+<ul>
+<li>JS：使用 Terser 压缩(移除空格&#x2F;换行&#x2F;注释，缩短变量名)，Webpack&#x2F;Vite 生产模式默认开启</li>
+<li>CSS：通过 CSSNano 压缩，配合 PostCSS 移除冗余规则</li>
+<li>HTML：使用 html-minifier 压缩，移除空白字符和注释<br>👉 效果：通常可减少 30%-60% 的资源体积</li>
+</ul>
+</li>
+<li><p><strong>图片与媒体优化</strong></p>
+<ul>
+<li><p>采用精灵图，减少 http 请求次数</p>
+</li>
+<li><p>使用 svg 图，体积小</p>
+</li>
+<li><p><strong>格式转换</strong>：优先使用 WebP&#x2F;AVIF（比 JPG 小 30%-50%），通过<code>&lt;picture&gt;</code>标签兼容旧浏览器</p>
+</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">picture</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">source</span> <span class="attr">srcset</span>=<span class="string">&quot;image.avif&quot;</span> <span class="attr">type</span>=<span class="string">&quot;image/avif&quot;</span> /&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">source</span> <span class="attr">srcset</span>=<span class="string">&quot;image.webp&quot;</span> <span class="attr">type</span>=<span class="string">&quot;image/webp&quot;</span> /&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;image.jpg&quot;</span> <span class="attr">alt</span>=<span class="string">&quot;描述文本&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">picture</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>分辨率适配</strong>：用 srcset 和 sizes 提供多分辨率图片，避免大图片在小屏幕上加载</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">img</span></span></span><br><span class="line"><span class="tag">	<span class="attr">src</span>=<span class="string">&quot;pic-800.jpg&quot;</span></span></span><br><span class="line"><span class="tag">	<span class="attr">srcset</span>=<span class="string">&quot;pic-400.jpg 400w, pic-800.jpg 800w&quot;</span></span></span><br><span class="line"><span class="tag">	<span class="attr">sizes</span>=<span class="string">&quot;(max-width: 600px) 400px, 800px&quot;</span></span></span><br><span class="line"><span class="tag">/&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>压缩处理</strong>：通过 Sharp（Node.js 库）或 TinyPNG 批量压缩图片，保留视觉质量的同时减小体积</li>
+</ul>
+</li>
+<li><p><strong>Tree Shaking（树摇）</strong><br>移除未引用的代码（如未使用的函数、库），需满足:</p>
+<ul>
+<li>使用 ES6 模块（import&#x2F;export）而非 CommonJS（require）</li>
+<li>配置 package.json 的 sideEffects: false（标记无副作用文件）</li>
+<li>Webpack&#x2F;Vite 生产模式自动启用</li>
+</ul>
+</li>
+</ul>
+<p><strong>（2）资源加载策略</strong></p>
+<ul>
+<li><p><strong>按需加载</strong></p>
+</li>
+<li><p><strong>预加载与预连接</strong></p>
+<ul>
+<li>preload：提前加载关键资源（如首屏 CSS、字体），优先级高于普通资源</li>
+<li>preconnect：提前建立与第三方域名的连接（如 CDN、API 服务器），减少 DNS 解析和 TCP 握手耗时</li>
+</ul>
+</li>
+<li><p><strong>懒加载（Lazy Load）</strong><br>延迟加载非首屏资源，减少初始请求数</p>
+<ul>
+<li>图片 &#x2F; 视频：使用 loading&#x3D;”lazy”属性（浏览器原生支持）</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;below-fold.jpg&quot;</span> <span class="attr">loading</span>=<span class="string">&quot;lazy&quot;</span> <span class="attr">alt</span>=<span class="string">&quot;折叠区域图片&quot;</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>组件：通过 IntersectionObserver 观察者监听元素可见性后加载</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> observer = <span class="keyword">new</span> <span class="title class_">IntersectionObserver</span>(<span class="function">(<span class="params">entries</span>) =&gt;</span> &#123;</span><br><span class="line">	entries.<span class="title function_">forEach</span>(<span class="function">(<span class="params">entry</span>) =&gt;</span> &#123;</span><br><span class="line">		<span class="keyword">if</span> (entry.<span class="property">isIntersecting</span>) &#123;</span><br><span class="line">			<span class="keyword">import</span>(<span class="string">&#x27;./LazyComponent&#x27;</span>).<span class="title function_">then</span>(<span class="function">(<span class="params"><span class="variable language_">module</span></span>) =&gt;</span> &#123;</span><br><span class="line">				<span class="comment">// 渲染组件</span></span><br><span class="line">			&#125;)</span><br><span class="line">			observer.<span class="title function_">unobserve</span>(entry.<span class="property">target</span>)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;)</span><br><span class="line">&#125;)</span><br><span class="line">observer.<span class="title function_">observe</span>(<span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;lazy-container&#x27;</span>))</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p><strong>（3）网络传输优化</strong></p>
+<ul>
+<li><p><strong>CDN 分发静态资源</strong><br>将 JS、CSS、图片等静态资源部署到 CDN（如 Cloudflare、阿里云 CDN），用户从最近的节点加载，减少网络延迟（尤其跨地区用户）</p>
+</li>
+<li><p><strong>启用 HTTP&#x2F;2 或 HTTP&#x2F;3</strong></p>
+<ul>
+<li>HTTP&#x2F;2：支持多路复用（同一连接并发请求），解决 HTTP&#x2F;1.1 的队头阻塞问题</li>
+<li>HTTP&#x2F;3：基于 QUIC 协议（UDP），进一步优化丢包恢复和连接建立速度<br>👉 实施：Nginx&#x2F;Apache 配置启用，大型应用可借助 Cloudflare 等服务商快速支持</li>
+</ul>
+</li>
+<li><p><strong>缓存策略优化</strong></p>
+<ul>
+<li><strong>强缓存</strong>：静态资源（JS&#x2F;CSS&#x2F; 图片）设置长期缓存</li>
+</ul>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">Cache-Control</span><span class="punctuation">: </span>max-age=31536000, immutable  # 缓存1年，不验证</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>协商缓存</strong>：API 数据或频繁更新的资源用 ETag 或 Last-Modified</li>
+</ul>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">ETag</span><span class="punctuation">: </span>&quot;abc123&quot;  # 资源唯一标识，内容变化则更新</span><br><span class="line"><span class="attribute">Last-Modified</span><span class="punctuation">: </span>Tue, 11 Sep 2024 08:00:00 GMT</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>缓存更新</strong>：通过文件名哈希（如 app.8f3d.js）实现缓存击穿，内容变化时文件名更新</li>
+</ul>
+</li>
+</ul>
+<h2 id="渲染阶段优化（提升渲染效率）"><a href="#渲染阶段优化（提升渲染效率）" class="headerlink" title="渲染阶段优化（提升渲染效率）"></a>渲染阶段优化（提升渲染效率）</h2><p>渲染阶段优化的核心是<strong>减少重排（Reflow）和重绘（Repaint）</strong>，提升页面渲染速度和流畅度<br><strong>（1）DOM 优化</strong></p>
+<ul>
+<li><strong>减少 DOM 节点数量与层级</strong><br>DOM 节点越多，浏览器构建渲染树（Render Tree）的耗时越长。优化方向：<ul>
+<li>避免无意义嵌套（如<code>&lt;div&gt;&lt;span&gt;文本&lt;/span&gt;&lt;/div&gt;</code>简化为<code>&lt;span&gt;文本&lt;/span&gt;</code>）</li>
+<li>用 CSS Grid&#x2F;Flex 替代多层嵌套的布局结构</li>
+<li>大型列表使用虚拟列表（如 react-window），仅渲染可视区域节点</li>
+</ul>
+</li>
+<li><strong>批量操作 DOM</strong><br>频繁修改 DOM 会触发多次重排，建议批量操作：<ul>
+<li>使用 documentFragment 或离线 DOM（如 div.innerHTML）暂存修改，完成后一次性插入文档：<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> fragment = <span class="variable language_">document</span>.<span class="title function_">createDocumentFragment</span>()</span><br><span class="line">data.<span class="title function_">forEach</span>(<span class="function">(<span class="params">item</span>) =&gt;</span> &#123;</span><br><span class="line">	<span class="keyword">const</span> li = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;li&#x27;</span>)</span><br><span class="line">	li.<span class="property">textContent</span> = item.<span class="property">name</span></span><br><span class="line">	fragment.<span class="title function_">appendChild</span>(li)</span><br><span class="line">&#125;)</span><br><span class="line">list.<span class="title function_">appendChild</span>(fragment) <span class="comment">// 仅触发1次重排</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<p><strong>（2）CSS 优化</strong></p>
+<ul>
+<li><strong>简化选择器与样式</strong><ul>
+<li>避免复杂选择器（如 div:nth-child(2) &gt; .class ~ span），改用类选择器（.item）</li>
+<li>减少通配符（*）和属性选择器（[type&#x3D;”text”]）的使用，匹配效率低</li>
+<li>合并重复样式，使用 CSS 变量（–primary: #000）减少代码冗余</li>
+</ul>
+</li>
+<li><strong>避免触发重排的属性</strong><ul>
+<li>修改布局属性（width、height、margin 等）会触发重排，优先使用仅触发合成（Composite）的属性：</li>
+<li>位移：用 transform: translate(Xpx, Ypx)替代 top&#x2F;left</li>
+<li>透明度：用 opacity 替代 visibility（后者仍会触发重绘）</li>
+</ul>
+</li>
+<li><strong>关键 CSS 内联</strong><br>将首屏必需的 CSS 内联到<code>&lt;style&gt;</code>中，避免外部 CSS 文件加载阻塞渲染：<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="language-css"></span></span><br><span class="line"><span class="language-css">	<span class="comment">/* 首屏关键CSS：导航、Banner等 */</span></span></span><br><span class="line"><span class="language-css">	<span class="selector-class">.header</span> &#123;</span></span><br><span class="line"><span class="language-css">		<span class="attribute">height</span>: <span class="number">60px</span>;</span></span><br><span class="line"><span class="language-css">	&#125;</span></span><br><span class="line"><span class="language-css">	<span class="selector-class">.banner</span> &#123;</span></span><br><span class="line"><span class="language-css">		<span class="attribute">background</span>: <span class="number">#f0f0f0</span>;</span></span><br><span class="line"><span class="language-css">	&#125;</span></span><br><span class="line"><span class="language-css"></span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 非关键CSS异步加载 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">link</span></span></span><br><span class="line"><span class="tag">	<span class="attr">rel</span>=<span class="string">&quot;preload&quot;</span></span></span><br><span class="line"><span class="tag">	<span class="attr">href</span>=<span class="string">&quot;non-critical.css&quot;</span></span></span><br><span class="line"><span class="tag">	<span class="attr">as</span>=<span class="string">&quot;style&quot;</span></span></span><br><span class="line"><span class="tag">	<span class="attr">onload</span>=<span class="string">&quot;this.rel=&#x27;stylesheet&#x27;&quot;</span></span></span><br><span class="line"><span class="tag">/&gt;</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<p><strong>（3）渲染机制优化</strong></p>
+<ul>
+<li><p><strong>使用 CSS Containment 隔离渲染范围</strong><br>告知浏览器某元素的渲染不会影响其他区域，限制重排 &#x2F; 重绘范围：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.widget</span> &#123;</span><br><span class="line">	<span class="attribute">contain</span>: layout paint size; <span class="comment">/* 布局、绘制、尺寸均独立 */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>合理使用合成层（Compositor Layers）</strong><br>将频繁动画的元素（如轮播、弹窗）提升为独立合成层，避免影响其他元素：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.animated-element</span> &#123;</span><br><span class="line">	<span class="attribute">will-change</span>: transform; <span class="comment">/* 提示浏览器该元素将动画，提前准备合成层 */</span></span><br><span class="line">	<span class="comment">/* 或使用 transform: translateZ(0) 强制创建合成层（兼容性更好） */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>👉 注意：合成层过多会占用更多内存，需控制数量</p>
+<h2 id="运行阶段优化（提升交互流畅度）"><a href="#运行阶段优化（提升交互流畅度）" class="headerlink" title="运行阶段优化（提升交互流畅度）"></a>运行阶段优化（提升交互流畅度）</h2><p>运行阶段优化聚焦于<strong>减少主线程阻塞</strong>，确保用户交互（点击、滚动等）响应迅速<br><strong>（1）JavaScript 优化</strong></p>
+<ul>
+<li><p>避免长任务（Long Tasks）<br>主线程执行超过 50ms 的任务会阻塞渲染，优化方案：</p>
+<ul>
+<li><p>拆分长任务：用 setTimeout 或 queueMicrotask 分批次执行：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 拆分大型循环</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">processChunk</span> = (<span class="params">start, end</span>) =&gt; &#123;</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">let</span> i = start; i &lt; end &amp;&amp; i &lt; data.<span class="property">length</span>; i++) &#123;</span><br><span class="line">		<span class="comment">// 处理单个数据</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> (end &lt; data.<span class="property">length</span>) &#123;</span><br><span class="line">		<span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> <span class="title function_">processChunk</span>(end, end + <span class="number">100</span>), <span class="number">0</span>) <span class="comment">// 分批次执行</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="title function_">processChunk</span>(<span class="number">0</span>, <span class="number">100</span>)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>复杂计算移至 Web Worker：避免主线程阻塞（如数据解析、图表渲染）：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 主线程</span></span><br><span class="line"><span class="keyword">const</span> worker = <span class="keyword">new</span> <span class="title class_">Worker</span>(<span class="string">&#x27;data-processor.js&#x27;</span>)</span><br><span class="line">worker.<span class="title function_">postMessage</span>(largeDataset)</span><br><span class="line">worker.<span class="property">onmessage</span> = <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">	<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;处理结果：&#x27;</span>, e.<span class="property">data</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// data-processor.js（Worker线程）</span></span><br><span class="line">self.<span class="property">onmessage</span> = <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">	<span class="keyword">const</span> result = <span class="title function_">heavyComputation</span>(e.<span class="property">data</span>) <span class="comment">// 复杂计算</span></span><br><span class="line">	self.<span class="title function_">postMessage</span>(result)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>防抖（Debounce）与节流（Throttle）<br>限制高频事件（滚动、输入、resize）的执行频率：</p>
+<ul>
+<li>防抖：延迟 n 秒后执行，若 n 秒内再次触发则重新计时（如搜索输入联想）：<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">debounce</span> = (<span class="params">fn, delay</span>) =&gt; &#123;</span><br><span class="line">	<span class="keyword">let</span> timer</span><br><span class="line">	<span class="keyword">return</span> <span class="function">(<span class="params">...args</span>) =&gt;</span> &#123;</span><br><span class="line">		<span class="built_in">clearTimeout</span>(timer)</span><br><span class="line">		timer = <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> fn.<span class="title function_">apply</span>(<span class="variable language_">this</span>, args), delay)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">input.<span class="title function_">addEventListener</span>(<span class="string">&#x27;input&#x27;</span>, <span class="title function_">debounce</span>(handleSearch, <span class="number">500</span>))</span><br></pre></td></tr></table></figure></li>
+<li>节流：每隔 n 秒最多执行一次（如滚动加载）：<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">throttle</span> = (<span class="params">fn, interval</span>) =&gt; &#123;</span><br><span class="line">	<span class="keyword">let</span> lastTime = <span class="number">0</span></span><br><span class="line">	<span class="keyword">return</span> <span class="function">(<span class="params">...args</span>) =&gt;</span> &#123;</span><br><span class="line">		<span class="keyword">const</span> now = <span class="title class_">Date</span>.<span class="title function_">now</span>()</span><br><span class="line">		<span class="keyword">if</span> (now - lastTime &gt;= interval) &#123;</span><br><span class="line">			fn.<span class="title function_">apply</span>(<span class="variable language_">this</span>, args)</span><br><span class="line">			lastTime = now</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&#x27;scroll&#x27;</span>, <span class="title function_">throttle</span>(loadMore, <span class="number">200</span>))</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>优化事件监听</p>
+<ul>
+<li><p>事件委托：将多个子元素的事件绑定到父元素，减少内存占用：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 代替为每个li绑定click</span></span><br><span class="line">ul.<span class="title function_">addEventListener</span>(<span class="string">&#x27;click&#x27;</span>, <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">	<span class="keyword">if</span> (e.<span class="property">target</span>.<span class="property">tagName</span> === <span class="string">&#x27;LI&#x27;</span>) &#123;</span><br><span class="line">		<span class="title function_">handleLiClick</span>(e.<span class="property">target</span>)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>及时解绑：页面卸载或组件销毁时，移除事件监听和定时器：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// React useEffect示例</span></span><br><span class="line"><span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">	<span class="keyword">const</span> timer = <span class="built_in">setInterval</span>(updateData, <span class="number">1000</span>)</span><br><span class="line">	<span class="keyword">return</span> <span class="function">() =&gt;</span> <span class="built_in">clearInterval</span>(timer) <span class="comment">// 组件卸载时清理</span></span><br><span class="line">&#125;, [])</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<p><strong>（2）动画与交互优化</strong></p>
+<ul>
+<li><p>优先使用 CSS 动画<br>CSS 动画由浏览器合成线程处理，不阻塞主线程；JS 动画需频繁触发重绘，优先选择：</p>
+<ul>
+<li>@keyframes 或 transition 实现动画；</li>
+<li>复杂动画用 requestAnimationFrame 替代 setInterval（与浏览器刷新同步）：<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">animate</span> = (<span class="params">timestamp</span>) =&gt; &#123;</span><br><span class="line">	<span class="comment">// 更新动画状态</span></span><br><span class="line">	element.<span class="property">style</span>.<span class="property">transform</span> = <span class="string">`translateX(<span class="subst">$&#123;progress&#125;</span>px)`</span></span><br><span class="line">	<span class="keyword">if</span> (progress &lt; <span class="number">100</span>) &#123;</span><br><span class="line">		<span class="title function_">requestAnimationFrame</span>(animate) <span class="comment">// 下一帧继续</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="title function_">requestAnimationFrame</span>(animate)</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>优化滚动性能<br>滚动时避免 DOM 操作和复杂计算：</p>
+<ul>
+<li><p>用 passive: true 优化触摸滚动（避免滚动阻塞）：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&#x27;scroll&#x27;</span>, handleScroll, &#123; <span class="attr">passive</span>: <span class="literal">true</span> &#125;)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>滚动事件中使用 getBoundingClientRect 时，缓存结果避免频繁重排。</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>（3）内存管理优化</strong></p>
+<ul>
+<li>避免内存泄漏<br>常见内存泄漏场景及解决方案：<ul>
+<li>未清理的定时器 &#x2F; 事件监听：组件卸载时清除</li>
+<li>全局变量：避免意外创建（如 function fn() { a &#x3D; 1; }中的 a）</li>
+<li>闭包引用：避免长期持有 DOM 或大对象引用；</li>
+<li>使用 WeakMap&#x2F;WeakSet 存储临时数据（键为对象时，对象销毁后自动回收）</li>
+</ul>
+</li>
+<li>优化大型列表<br>长列表（1000 + 项）一次性渲染会导致 DOM 过多、内存飙升，解决方案：<ul>
+<li>虚拟列表：仅渲染可视区域项（如 react-window、vue-virtual-scroller）</li>
+<li>分页加载：每次加载 20-50 项，滚动到底部时加载下一页</li>
+</ul>
+</li>
+</ul>
+<h2 id="性能监控与量化指标"><a href="#性能监控与量化指标" class="headerlink" title="性能监控与量化指标"></a>性能监控与量化指标</h2><p>优化需结合量化指标持续迭代，核心关注:</p>
+<ul>
+<li>Core Web Vitals（核心 Web 指标）<ul>
+<li>LCP（最大内容绘制）：目标 &lt; 2.5s（首屏核心内容加载时间）</li>
+<li>FID（首次输入延迟）：目标 &lt; 100ms（用户首次交互响应时间）</li>
+<li>CLS（累积布局偏移）：目标 &lt; 0.1（页面布局稳定性）</li>
+</ul>
+</li>
+<li>监控工具<ul>
+<li>开发阶段：Lighthouse（Chrome 插件）、WebPageTest（详细性能报告）</li>
+<li>生产环境：Chrome User Experience Report（真实用户数据）、Sentry（错误 + 性能监控）</li>
+</ul>
+</li>
+<li>优化流程<ul>
+<li>用 Lighthouse 生成性能报告，定位瓶颈（如大图片未压缩、长任务阻塞）</li>
+<li>按优先级实施优化（先解决核心指标不达标项）</li>
+<li>上线后监控指标变化，持续迭代</li>
+</ul>
+</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>前端性能优化的核心逻辑是：<strong>减少资源体积 → 加速资源传输 → 优化渲染效率 → 避免主线程阻塞</strong>。需结合业务场景（如电商注重首屏加载，后台系统注重交互流畅度）制定优先级，同时通过量化指标验证优化效果。性能优化是持续过程，需随着用户增长和功能迭代不断调整策略</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://lqh1003.github.io">sara</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://lqh1003.github.io/2025/09/12/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/">https://lqh1003.github.io/2025/09/12/前端性能优化/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://lqh1003.github.io" target="_blank">😊Saraの记录</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/">性能优化</a></div><div class="post-share"><div class="social-share" data-image="/images/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/cover.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2025/09/13/%E5%89%8D%E7%AB%AF%E5%AE%9E%E7%8E%B0%E5%AF%BC%E5%87%BAxlsx%E8%A1%A8%E6%A0%BC/" title="前端实现导出xlsx表格"><img class="cover" src="/images/%E5%89%8D%E7%AB%AF%E5%AE%9E%E7%8E%B0%E5%AF%BC%E5%87%BAxlsx%E8%A1%A8%E6%A0%BC/cover.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">前端实现导出xlsx表格</div></div><div class="info-2"><div class="info-item-1">前端根据后端接口返回的数据（数组 &#x2F; 文件本身 &#x2F; 链接）做对应的下载处理： 👉 根据接口返回的数据数组(表格&#x2F;列表数据)，前端自己实现 excel 表格下载（1）下载依赖 1npm install xlsx file-saver  （2）编写保存函数 htmlToExcel.js 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475import FileSaver, &#123; saveAs &#125; from &#x27;file-saver&#x27;import * as XLSX from &#x27;xlsx&#x27;import &#123; ElMessage &#125; from &#x27;element-plus&#x27;export default &#123;	downloadXlsx...</div></div></div></a><a class="pagination-related" href="/2025/09/11/SEO%E4%BC%98%E5%8C%96/" title="SEO优化"><img class="cover" src="/images/SEO%E4%BC%98%E5%8C%96/cover.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">SEO优化</div></div><div class="info-2"><div class="info-item-1">🔍 前端开发 SEO 优化策略详解🔹 HTML 页面结构与标签优化(1) 语义化 HTML  使用正确的语义化标签：&lt;header&gt;、&lt;nav&gt;、&lt;main&gt;、&lt;article&gt;、&lt;section&gt;、&lt;footer&gt;  文章标题用 h1-h6：&lt;h1&gt;（一个页面仅一个，包含主要关键词），子标题 &lt;h2&gt; - &lt;h6&gt; 标题层级合理分布  列表数据用 &lt;ul&gt; / &lt;ol&gt;，强调用 &lt;strong&gt; 而不是 &lt;b&gt;  所有 &lt;img&gt; 标签都添加 alt 文本描述属性（内容包含关键词）  &lt;a&gt;链接：需添加 href（避免javascript:void(0)），锚文本需描述目标页面内容，title 鼠标悬停时显示的提示信息  避免用图片替代文字：如标题、按钮文本需用 HTML 文字，而非图片（蜘蛛无法识别图片中的文字）   👉 好处：提升爬虫理解页面结构的能力 (2) Meta 标签 (辅助手段) ...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2025/09/19/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E2%80%94%E5%AE%9E%E6%88%98%E6%80%9D%E8%B7%AF/" title="前端性能优化—实战思路"><img class="cover" src="/images/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E2%80%94%E5%AE%9E%E6%88%98%E6%80%9D%E8%B7%AF/cover.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-19</div><div class="info-item-2">前端性能优化—实战思路</div></div><div class="info-2"><div class="info-item-1"> 打开速度怎么变快 —— 首屏加载优化 再次打开速度怎么变快 —— 缓存优化 操作怎么才顺滑 —— 渲染优化 动画怎么保证流畅 —— 长任务拆分  前端性能优化 —— 实战思路⚙️ 开发一个 SEO 要求高、首屏加载快的新网站 首选终极方案：SSR 服务端渲染，静态站点生成 SSG  ⚙️ 对一个现成的网站进行性能和 SEO 优化性能指标衡量 ⭐ FCP（First Contentful Paint）—— 用户导航到你页面后浏览器呈现第一块 DOM 内容所花费的时间 ⭐ LCP（Largest Contentful Paint） —— 指页面渲染出最大文本或图片的时间 SI（Speed Index） —— 指界面可见内容的显示速度 TTI（Time to Interactive） —— 指网页需要多长时间才能提供完整的交互功能 TBT（Total Blocking Time） —— 度量页面被阻止响应用户输入（如鼠标单击、屏幕点击或键盘按下）的总时间 这个综合是通过在 FCP 和可交互时间之间添加所有长任务的阻塞部分来计算的 任何执行时间超过 50ms 的任务都是长任务，50ms...</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/theme_images/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">sara</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">23</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">33</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">10</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B5%84%E6%BA%90%E5%8A%A0%E8%BD%BD%E9%98%B6%E6%AE%B5%E4%BC%98%E5%8C%96%EF%BC%88%E5%87%8F%E5%B0%91%E5%8A%A0%E8%BD%BD%E6%97%B6%E9%97%B4%EF%BC%89"><span class="toc-number">1.</span> <span class="toc-text">资源加载阶段优化（减少加载时间）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B8%B2%E6%9F%93%E9%98%B6%E6%AE%B5%E4%BC%98%E5%8C%96%EF%BC%88%E6%8F%90%E5%8D%87%E6%B8%B2%E6%9F%93%E6%95%88%E7%8E%87%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">渲染阶段优化（提升渲染效率）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%90%E8%A1%8C%E9%98%B6%E6%AE%B5%E4%BC%98%E5%8C%96%EF%BC%88%E6%8F%90%E5%8D%87%E4%BA%A4%E4%BA%92%E6%B5%81%E7%95%85%E5%BA%A6%EF%BC%89"><span class="toc-number">3.</span> <span class="toc-text">运行阶段优化（提升交互流畅度）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%A7%E8%83%BD%E7%9B%91%E6%8E%A7%E4%B8%8E%E9%87%8F%E5%8C%96%E6%8C%87%E6%A0%87"><span class="toc-number">4.</span> <span class="toc-text">性能监控与量化指标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">5.</span> <span class="toc-text">总结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/19/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E2%80%94%E5%AE%9E%E6%88%98%E6%80%9D%E8%B7%AF/" title="前端性能优化—实战思路">前端性能优化—实战思路</a><time datetime="2025-09-19T12:23:28.000Z" title="发表于 2025-09-19 12:23:28">2025-09-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/16/%E5%89%8D%E7%AB%AF%E8%B7%AF%E7%94%B1%E7%9A%84hash+history%E6%A8%A1%E5%BC%8F/" title="前端路由的hash+history模式">前端路由的hash+history模式</a><time datetime="2025-09-16T10:29:10.000Z" title="发表于 2025-09-16 10:29:10">2025-09-16</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/15/%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E6%95%85%E9%9A%9C%E6%95%88%E6%9E%9C%E7%9A%84%E6%8C%89%E9%92%AE/" title="实现一个故障效果的按钮">实现一个故障效果的按钮</a><time datetime="2025-09-15T10:29:59.000Z" title="发表于 2025-09-15 10:29:59">2025-09-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/13/hexo%E5%8D%9A%E5%AE%A2%E9%A1%B9%E7%9B%AE%E6%94%B9%E7%94%A8Github%E6%89%98%E7%AE%A1/" title="hexo博客项目改用Github托管">hexo博客项目改用Github托管</a><time datetime="2025-09-13T17:20:30.000Z" title="发表于 2025-09-13 17:20:30">2025-09-13</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/13/%E5%89%8D%E7%AB%AF%E5%AE%9E%E7%8E%B0%E5%AF%BC%E5%87%BAxlsx%E8%A1%A8%E6%A0%BC/" title="前端实现导出xlsx表格">前端实现导出xlsx表格</a><time datetime="2025-09-13T10:08:19.000Z" title="发表于 2025-09-13 10:08:19">2025-09-13</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/theme_images/footer.jpg);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;2025 By sara</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.4.2</a></span></div><div class="footer_custom_text">Hi, 欢迎来到我的 <a href="/">博客</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const destroyWaline = ele => ele.destroy()
+
+  const initWaline = (Fn, el = document, path = window.location.pathname) => {
+    const waline = Fn({
+      el: el.querySelector('#waline-wrap'),
+      serverURL: 'https://lqh-blog-comments.vercel.app',
+      pageview: true,
+      dark: 'html[data-theme="dark"]',
+      comment: false,
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyWaline = () => {
+        destroyWaline(waline)
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+  }
+
+  const loadWaline = (el, path) => {
+    if (initFn) initWaline(initFn, el, path)
+    else {
+      btf.getCSS('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.css')
+        .then(() => import('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.js'))
+        .then(({ init }) => {
+          initFn = init || Waline.init
+          initWaline(initFn, el, path)
+          window.walineFn = initFn
+        })
+    }
+  }
+
+  if (isShuoshuo) {
+    'Waline' === 'Waline'
+      ? window.shuoshuoComment = { loadComment: loadWaline } 
+      : window.loadOtherComment = loadWaline
+    return
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="false" data-text="厉害,强,好,wonderful,点赞,Great,棒,Good,精彩" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"use":"live2d-widget-model-hibiki","display":{"position":"left","width":230,"height":370,"hOffset":50,"vOffset":0,"zIndex":100},"mobile":{"show":false,"scale":0.5},"log":false});</script></body></html>
