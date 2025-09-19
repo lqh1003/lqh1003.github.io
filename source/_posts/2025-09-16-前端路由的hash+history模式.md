@@ -126,13 +126,14 @@ cover: /images/前端路由的hash+history模式/cover.jpg # 封面图
 ![](/images/前端路由的hash+history模式/liveServer.png)
 
 临时解决：使用本地服务器打开，如 serve 或 http-server
-
+- serve 轻量级本地服务器，适合非 Vue 项目或需要独立服务器的场景
 ```bash
 # 安装 serve 工具（需 Node.js）
 npm install -g serve
 # 在 dist 目录运行
 cd dist
 serve -s
+
 # 全局安装
 npm install -g http-server
 # 在 dist 目录运行
