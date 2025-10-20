@@ -54,7 +54,7 @@ cover: /images/前端路由的hash+history模式/cover.jpg # 封面图
 | 兼容性         | 支持所有浏览器（包括 IE8 及以下）      | 仅支持 HTML5 浏览器（IE10+）            |
 | 路径长度限制   | 有（不同浏览器对哈希值长度限制不同）   | 理论上无限制（取决于服务器配置）        |
 | 部署复杂度     | 简单：无需服务器配置                   | 复杂：需服务器配置路由重定向            |
-| 404 处理       | 不会出现 404（始终由前端处理）         | 可能出现 404（需服务器配置兜底页面      |
+| 404 处理       | 不会出现 404（始终由前端处理）         | 可能出现 404（需服务器配置兜底页面）    |
 
 ### 👉 使用场景
 
@@ -126,7 +126,9 @@ cover: /images/前端路由的hash+history模式/cover.jpg # 封面图
 ![](/images/前端路由的hash+history模式/liveServer.png)
 
 临时解决：使用本地服务器打开，如 serve 或 http-server
+
 - serve 轻量级本地服务器，适合非 Vue 项目或需要独立服务器的场景
+
 ```bash
 # 安装 serve 工具（需 Node.js）
 npm install -g serve
