@@ -31,7 +31,8 @@ categories: Hexo # 分类
 - [github.com](https://github.com) 登录 → 新建仓库 "`用户名.github.io`" → 仓库状态设置为 public 状态
 - 远程迁移仓库（Gitlab → GitHub）
   ```bash
-      git clone --mirror https://gitee.com/oldProject.gitlab.io.git
+      git clone --mirror https://gitlab.com/oldProject.gitlab.io.git
+      # 打开 oldProject.gitlab.io.git 命令窗口，执行以下命令
       git remote set-url origin git@github.com:newProject.github.io.git
       git push -f origin --mirror
   ```
