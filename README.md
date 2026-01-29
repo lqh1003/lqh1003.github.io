@@ -14,6 +14,9 @@ git clone https://github.com/lqh1003/lqh1003.github.io
 nvm install 18.0.0
 nvm use 18.0.0
 
+安装hexo脚手架
+npm install -g hexo-cli
+
 安装依赖
 npm install
 

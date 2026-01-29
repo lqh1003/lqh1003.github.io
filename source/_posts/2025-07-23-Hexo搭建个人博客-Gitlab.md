@@ -1,11 +1,11 @@
 ---
-title: 搭建个人博客
+title: Hexo搭建个人博客-Gitlab
 date: 2025-07-23 12:07:48
 tags:
   - hexo
   - gitlab
   - Gitlab Pages
-cover: /images/搭建个人博客/cover.jpg  # 封面图
+cover: /images/Hexo搭建个人博客-Gitlab/cover.jpg  # 封面图
 categories: Hexo   # 分类
 ---
 
@@ -37,7 +37,7 @@ npm i
 hexo server   // 本地预览博客，简写 hexo s
 ```
 
-![](/images/搭建个人博客/hexo_init.png)
+![](/images/Hexo搭建个人博客-Gitlab/hexo_init.png)
 
 ### ***代码托管到 gitlab 或 github
 
@@ -63,7 +63,7 @@ hexo server   // 本地预览博客，简写 hexo s
   ```
 
 - 创建 .gitlab-ci.yml （GitLab 内置功能 CI/CD 的配置文件：代码部署上线全自动化）
-  ![](/images/搭建个人博客/gitlab-ci-yml.png)
+  ![](/images/Hexo搭建个人博客-Gitlab/gitlab-ci-yml.png)
 
 - 推送本地代码到远程
   - 可以新增 .gitignore 文件，忽略 node_modules 等代码提交
@@ -83,14 +83,14 @@ hexo server   // 本地预览博客，简写 hexo s
 
 - 第一次推送代码到远程，我构建失败了(在 Build → Pipelines 下可以查看构建状态)
   - 找到构建失败的原因(我是因为需要进行账号或者身份认证认证)，解决之后重新推送代码即可
-    ![](/images/搭建个人博客/gitRuning0.png)
+    ![](/images/Hexo搭建个人博客-Gitlab/gitRuning0.png)
 - 新增一篇博客内容
   - 执行 "hexo new post 文章标题 xxx" 创建一篇新博客
-    ![](/images/搭建个人博客/firstBlog.png)
+    ![](/images/Hexo搭建个人博客-Gitlab/firstBlog.png)
   - 本地预览效果：hexo clean; hexo g; hexo d; hexo s
   - 推送到远程【每次推送代码会自动触发管道 CI/CI】
     - 当状态 Runing → Passed，即构建成功，刷新线上博客即可看到
-      ![](/images/搭建个人博客/gitRuning.png)
+      ![](/images/Hexo搭建个人博客-Gitlab/gitRuning.png)
 - 更换博客主题，hexo 有很多开源免费的主题：https://hexo.io/themes
   - 使用 npm 方式下载主题依赖，如 butterfly 主题官网 https://butterfly.js.org/
     - 在 Hexo 项目根目录下执行： npm install hexo-theme-butterfly -D
@@ -98,5 +98,5 @@ hexo server   // 本地预览博客，简写 hexo s
     - 修改 Hexo 根目录下的  _config.yml  文件 theme: butterfly
     - 创建主题配置文件 \_config.butterfly.yml，从 node_modules/hexo-theme-butterfly/\_config.yml 复制默认配置到 \_config.butterfly.yml 文件
     - 重启查看效果：hexo clean; hexo g; hexo s (如下：主题修改成功)
-      ![](/images/搭建个人博客/hexo_themes.png)
+      ![](/images/Hexo搭建个人博客-Gitlab/hexo_themes.png)
     - 将代码推送到远程，等构建完成(1-5 分钟)，线上博客链接的主题也完成了更换

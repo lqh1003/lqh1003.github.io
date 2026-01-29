@@ -16,7 +16,7 @@ categories: Hexo # 分类
   - Gitee Pages 2024.05 已暂停服务，无法使用
 - Gitlab Pages
   - [gitlab.com](https://gitlab.com) 2025.09.07 已停止向大陆内地提供服务
-  - [jihulab.com](https://jihulab.com)、[gitlab.hk](https://gitlab.hk) 90 天免费试用，后续需付费试用
+  - [jihulab.com](https://jihulab.com)、[gitlab.hk](https://gitlab.hk) 90 天免费试用，后续需付费使用
 - GitHub Pages
   - 免费版 ✅ [github.com](https://github.com)
   - 付费版
@@ -63,7 +63,7 @@ categories: Hexo # 分类
     └── .github/workflows/ # 后续创建的 Actions 配置目录
   ```
 
-  - 本地已通过 `npm install -g hexo-cli` 安装 Hexo，且能正常生成静态文件（hexo g 无报错
+  - 本地已通过 `npm install -g hexo-cli` 安装 Hexo，且能正常生成静态文件（hexo g 无报错）
   - GitHub 仓库已创建
     - 推荐命名为 用户名.github.io，用于直接通过 https://用户名.github.io 访问
     - 如果用其他命名，链接会比较混乱，看起来没那么简洁
@@ -71,7 +71,7 @@ categories: Hexo # 分类
 - **开始配置 Github Actions**
 
   - 在 Hexo 项目根目录，按路径 **`.github/workflows/deploy.yml`** 创建配置文件
-    - xxx.yml 文件名可以自定义，**当把本地内容推送到远程仓库，github 会自动识别到这两个文件夹和 yml 文件**
+    - xxx.yml 文件名可以自定义，**当把本地内容推送到远程仓库，github 会自动识别到`.github/workflows/`这个目录和目录下的 yml 文件**
 
   ```yml
   name: 部署到GitHub Pages
@@ -113,12 +113,12 @@ categories: Hexo # 分类
           uses: peaceiris/actions-gh-pages@v4 # 第三方动作：简化 Pages 部署with
           with:
             github_token: ${{ secrets.GITHUB_TOKEN }} # 部署授权：使用GitHub内置秘钥(无需手动生成，自动生效)
-            publish_dir: ./public #  待部署的静态文件目录（Hexo 生成的 public 目录）
+            publish_dir: ./public  # 待部署的静态文件目录（Hexo 生成的 public 目录）
             publish_branch: gh-pages # 目标分支(GitHub Pages读取的分支，与源分支 main 区分)
             force_orphan: true # 可选：强制创建独立分支，避免历史冲突
   ```
 
-  - 注意区分源分支和目标分支
+  - ⚡注意区分源分支和目标分支
     - `main` 分支：仅存放 Hexo 源码（源文件）
     - `gh-pages` 分支：仅存放自动生成的静态文件 public（部署的内容），自定义静态文件存放分支
 
