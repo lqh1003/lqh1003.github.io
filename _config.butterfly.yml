@@ -1089,6 +1089,8 @@ inject:
     - <link rel="stylesheet" href="/css/custom.css"> # 这一行告诉主题在页面头部引入自定义的 CSS 文件
   bottom:
     # - <script src="xxxx"></script>
+    # 引入看板娘关闭脚本
+    - <script src="/js/live2d-toggle.js"></script>
 
 # CDN Settings
 # Don't modify the following settings unless you know how they work
