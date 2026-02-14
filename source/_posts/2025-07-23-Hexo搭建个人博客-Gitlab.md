@@ -58,7 +58,7 @@ hexo server   // 本地预览博客，简写 hexo s
   ```yaml
   deploy:
     type: git
-    repository: git@gitlab.com:xxx.gitlab.io.gi
+    repository: git@gitlab.com:xxx.gitlab.io.git
     branch: main
   ```
 

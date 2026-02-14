@@ -146,15 +146,56 @@ Windows/macOS/Linux 三大系统，以下都是Windows系统的安装流程。
 
 ## 📊 博客部署
 ### 🔹为什么选 Github 托管服务🔹
-- Gitee Pages
-  - [gitee.com](https://gitee.com)
-  - Gitee Pages 2024.05 已暂停服务，无法使用
-- Gitlab Pages
-  - [gitlab.com](https://gitlab.com) 2025.09.07 已停止向大陆内地提供服务
-  - [jihulab.com](https://jihulab.com)、[gitlab.hk](https://gitlab.hk) 90 天免费试用，后续需付费使用
-- GitHub Pages
-  - 免费版 ✅ [github.com](https://github.com)
-  - 付费版
+**代码托管平台**：Gitee、极狐GitLab、Github、腾讯云Coding ...
+- **🌐 Gitee**
+  - **Gitee 的版本结构**
+    - ✅ Gitee 社区版（免费）：SaaS 在线服务（在线账号），永久免费，个人/小团队用
+    - Gitee 专业/企业版（付费）：SaaS 在线服务（在线账号），付费订阅，团队/企业用
+    - Gitee 私有化部署版：企业专属，付费定制，**自己服务器安装**
+      - Gitee 官方提供的私有化部署软件包，企业购买后在自己服务器安装、运维
+  - **Gitee Pages** 入口：「[gitee.com](https://gitee.com)」，打开一个 Gitee 仓库 → 点击仓库顶部的「服务」→「Gitee Pages」
+    - Gitee Pages 是完全免费的
+    - Gitee Pages 2024.05 已暂停服务，无法使用
+    - ❌ 2025 年底起，**Gitee Pages（功能已下线）**，仓库顶部「服务」菜单里不再有「Gitee Pages」选项
+  - **Gitee 的腾讯云托管**，适合替代已下线的「Gitee Pages」
+    - 2020-09-29 腾讯云托管服务正式集成到 Gitee 平台，在仓库页面「服务」菜单中出现入口
+    - 是收费的，但是有免费额度
+      - 👉 Hexo 静态博客：正常访问量下，基本可以长期免费使用
+      - 超出后计费（阶梯价，很便宜），个人博客月均通常 几元到十几元
+    - 相比较于 Gitee Pages，需要**腾讯云账号**
+  
+- **🌐 Gitlab**
+  - **Gitlab 的版本结构**
+    - ✅ 在线 SaaS 服务 (在线账号)
+      - 无需安装、注册即用、官方运维、按订阅付费
+      - **无永久免费个人版，仅提供 90 天免费试用**，💰到期需付费或迁移
+      - Pages 试用可用，到期需付费，入口：仓库左侧菜单 → 部署 → Pages
+    - 下载 GitLab 官方开源软件包，私有化，安装在自己的服务器（云服务器、物理机）上
+      - 自托管开源软件：按功能分为 **Free（免费）、Premium（高级）、Ultimate（旗舰）** 三个层级
+        - Free（免费）：极狐 GitLab 社区版（CE），永久免费、功能完整、数据自主
+        - Premium 层级（付费），高级 CI/CD、代码质量管控，适合中大型团队、企业项目
+        - Ultimate 层级（付费，最高级），大型企业、对安全与合规要求高的组织
+
+  - **[gitlab.com](https://gitlab.com) (GitLab 国际版)**
+    - 全球版，但是 2025.09.07 已停止向大陆内地提供服务（未迁移账号永久删除），服务器在海外
+  - **[gitlab.cn](https://gitlab.cn) / [jihulab.com](https://jihulab.com) (极狐 Gitlab)** 
+    - 极狐是 GitLab 在中国的独家授权运营方，服务器在内地
+    - 无永久免费个人版，仅提供 90 天免费试用💰
+  - **[gitlab.hk](https://gitlab.hk)** — 与极狐 Gitlab 一样的策略，链接不太稳定
+    - 极狐 GitLab 面向香港及国际市场，服务器在香港
+    - 无永久免费个人版，仅提供 90 天免费试用💰
+
+- **🌐 GitHub**
+  - **GitHub 的版本结构**
+    - 核心可以总结为：按 “个人/组织”+“免费/付费” 划分，分为 Free（免费）、Team（团队）、Enterprise（企业）三大核心版本，且所有版本都基于 SaaS 模式（无自托管开源版）
+  - ✅ GitHub Free（免费版）「[github.com](https://github.com)」
+    - 个人开发者、开源项目、小型团队的基础版本，永久免费
+    - Github Pages，自动化工作流 Actions 2000 分钟/月，用完流水线暂停至次月重置，对个人足够（比如：部署博客、小项目 CI/CD，单次任务通常几分钟）
+  - GitHub Team（团队版，付费）
+    - 中小团队、需要高级协作与安全能力的组织，按用户/月订阅
+  - GitHub Enterprise（企业版，付费）
+    - GitHub Enterprise Cloud（云端 SaaS）
+    - GitHub Enterprise Server（自托管版）
 
 ### 🔹认识 Hexo 几个常用指令🔹
 - `hexo new "我的第一篇Hexo博客"`，简写 `hexo n "xxxx"`
@@ -172,14 +213,21 @@ Windows/macOS/Linux 三大系统，以下都是Windows系统的安装流程。
     - 执行后，Hexo 会自动将public/文件夹的静态文件推送到你配置的 Git 仓库，等待 1-2 分钟，即可通过「`用户名.github.io`」访问你的在线博客
 
 ### 🔹新建仓库/建立连接🔹
-- [github.com](https://github.com) 登录 → 新建仓库 "`用户名.github.io`" → 仓库状态设置为 public 状态
+- [github.com](https://github.com) 登录 → 新建仓库 "`用户名.github.io`" → 仓库状态设置为 `public` 状态(必须)
     - 推荐命名为`用户名.github.io`，用于直接通过 `https://用户名.github.io` 访问博客
-    - 如果用其他命名，链接会比较混乱，看起来没那么简洁
+    - 如果用其他命名，链接会看起来没那么简洁
+      - 比如：`hexo-lqh`，最后博客链接是 [https://liqinghua-ty.github.io/hexo-lqh/](https://liqinghua-ty.github.io/hexo-lqh/)
 
 - 建立连接
     - 拉取新仓库到本地 `git clone git@github.com:用户名.github.io.git`
     - 将本地仓库 `my-blog` 的代码复制到新仓库`用户名.github.io`
     - 配置 `_config.yml` 的 `repository` 为新仓库地址
+    - 配置 `_config.yml` 的 `url`
+      ```bash
+        # 配置 url 和 root （绝对不能错！）
+        url: https://用户名.github.io  # 不配置线上链接可能排版混乱
+        root: /  # 如果需要则可以配置，若博客部署在子目录（如xxx.github.io/blog），填 /blog/
+      ```
     - 推荐新建一个`.gitignore`文件，把不必要的更新忽略，比如 `node_modules`、`public`、`.deploy_git`
 
 - 推送本地源代码到远程仓库`git push -f origin main`
@@ -204,6 +252,7 @@ Windows/macOS/Linux 三大系统，以下都是Windows系统的安装流程。
 
   - 在 Hexo 项目根目录，按路径 **`.github/workflows/deploy.yml`** 创建配置文件
     - xxx.yml 文件名可以自定义，**当把本地内容推送到远程仓库，github 会自动识别到`.github/workflows/`这个目录和目录下的 yml 文件**
+    - ✅ 推送成功之后，在 Actions 下就可以看见 **commit** 和 **工作流** 记录 (不管是成功的还是失败的)
 
     ```yml
     name: 部署到GitHub Pages
@@ -259,7 +308,9 @@ Windows/macOS/Linux 三大系统，以下都是Windows系统的安装流程。
 
   - ⚡项目的 GitHub Actions 配置文件 deploy.yml 在 commit + 推送到远程后，定要检查 GitHub Actions 工作流是否触发且触发成功
     - 状态：绿色对勾(成功)、红色叉号(失败)、无记录(未触发)
-    - 这条 commit 是告诉 GitHub「有一个自动化工作流要执行」，但工作流**不会自动触发（或触发后失败）**，就不会生成/推送静态文件到目标分支`gh-pages`，也不会自动创建目标分支
+    - 这条 commit 是告诉 GitHub「有一个自动化工作流要执行」
+      - 如果工作流 **没有自动触发（或触发后失败）**，就也不会自动创建目标分支`gh-pages`，也不会生成/推送静态文件到目标分支`gh-pages`
+      - 如果工作流触发成功，`Settings` → `Pages` → 切换分支为目标分支`gh-pages` → 此时Actions下会再出现一条工作流，对应的分支正是目标分支 → 等待成功就可以打开博客链接了
     - Hexo+GitHub Actions 的核心是：**推送源码 → Actions 自动构建静态文件 → Actions 将静态文件推送到指定分支（如gh-pages）→ Pages 关联该分支提供访问**
 
   - 我提交 deploy.yml 配置文件之后，工作流触发了但执行失败了❗❗❗
@@ -295,7 +346,7 @@ Windows/macOS/Linux 三大系统，以下都是Windows系统的安装流程。
 - 📌之后每次 main 分支 commit 都会触发工作流，自动生成/推送静态文件到目标分支`gh-pages`，博客链接也会自动更新到最新内容。
 
 
-### 🔹✅我的操作步骤✅🔹
+## ✅ 我的操作步骤
 - 我的 github 登录用户名 `liqinghua-ty`
 - 我的 git 仓库地址 `git@github.com:liqinghua-ty/liqinghua-ty.github.io.git`
   ```bash
@@ -326,6 +377,9 @@ Windows/macOS/Linux 三大系统，以下都是Windows系统的安装流程。
       branch: main
   ```
   ![](/images/Hexo搭建个人博客Github-分享/hexo_set_repository.png)
+
+- 配置 `_config.yml` 的 `url` 为博客链接
+  ![](/images/Hexo搭建个人博客Github-分享/hexo_github_url.jpg)
 
 - 推送代码到远程，首次代码推送：`git push` 或 `git push -f origin main`
 
@@ -433,6 +487,34 @@ Windows/macOS/Linux 三大系统，以下都是Windows系统的安装流程。
   - 更多主题配置可以自行解锁，大概的修改后的效果：
   ![](/images/Hexo搭建个人博客Github-分享/hexo-theme-set.png)
 
+### 🔹增加看板娘（Live2D 动态人物）🔹
+- 安装依赖
+  ```bash
+    # 安装 live2d 核心插件
+    npm install -D hexo-helper-live2d
+    # 安装人物模型（选一个即可，也可装多个）
+    npm install --save live2d-widget-model-hibiki
+  ```
+- `_config.yml` 中增加一段配置
+  ```bash
+  live2d:
+    pluginRootPath: live2dw/
+    pluginJsPath: lib/
+    pluginModelPath: assets/
+    tagMode: false
+    use: live2d-widget-model-hibiki  # 模型名称
+    display:
+      position: left # 左右位置（left/right）
+      width: 230      # 宽度
+      height: 370     # 高度
+      hOffset: 50     # 水平偏移（px）
+      vOffset: 0    # 垂直偏移（px，负数向上移动）
+      zIndex: 100     # 层级
+    mobile:
+      show: false      # 移动端是否显示
+      scale: 0.5      # 移动端缩放比例
+  ```
+- `hexo g; hexo s -p 5000` 重新预览，刷新即可看到看板娘
 
 ### 🔹增加评论系统🔹
 待续...
