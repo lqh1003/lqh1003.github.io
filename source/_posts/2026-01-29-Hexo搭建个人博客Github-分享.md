@@ -401,7 +401,7 @@ Windows/macOS/Linux 三大系统，以下都是Windows系统的安装流程。
   - 修改 `_config.yml` 文件
     - theme 值改为 `butterfly`
   - 创建主题配置文件
-    - `_config.butterfly.yml`，从`node_modules/hexo-theme-butterfly/_config.yml`复制默认配置到 `_config.butterfly.ym`l 文件
+    - `_config.butterfly.yml`，从`node_modules/hexo-theme-butterfly/_config.yml`复制默认配置到 `_config.butterfly.yml` 文件
   - 重启查看效果：hexo clean; hexo s (如下：主题修改成功)
     ![](/images/Hexo搭建个人博客Github-分享/hexo-theme-butterfly.png)
   - 将代码推送到远程，等构建完成(1-5 分钟)，线上博客链接的主题也完成了更换
