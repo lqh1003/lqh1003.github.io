@@ -9,6 +9,31 @@ categories: Hexo
 cover: /images/Hexo搭建个人博客Github-分享/cover.png # 封面图
 ---
 
+## 📌 博客链接分享
+- 自己1 [https://liqinghua-ty.github.io/](https://liqinghua-ty.github.io/)   项目名称：`liqinghua-ty.github.io` (有主题)
+- 自己2 [https://liqinghua-ty.github.io/hexo-lqh/](https://liqinghua-ty.github.io/hexo-lqh/)   项目名称：`hexo-lqh` (最简单版本)
+
+- 阮一峰的网络日志 [https://www.ruanyifeng.com/blog/](https://www.ruanyifeng.com/blog/)
+  + 阮一峰，70 后，经济学博士（上海财经大学世界经济专业），跨界**自学编程**成为顶级前端 / JS/Web 技术专家
+  + 2003～至今持续在更新，分享编程技术内容、人文 / 社科 / 思考(每周分享 / 科技爱好者周刊)
+  + 技术架构：20 年不变的 “古董级稳定”
+    - **CMS**：Movable Type 5.2.2（Perl）（2000 年代主流博客系统）
+    - **前端**：原生 HTML + CSS + 极少原生 JS（无任何框架）
+    - **部署**：Nginx + Cloudflare CDN（全球加速）
+    - 渲染：纯静态 HTML → 写完 → 点发布 → 全站点生成 .html 文件
+    - 无数据库、无 PHP/Node、无动态渲染 → 永不宕机、极安全、超快
+    - 设计：纯文本、黑白、无广告、无多余元素、阅读优先
+
+- Lil’Log [https://lilianweng.github.io/](https://lilianweng.github.io/)
+  + 华人顶尖 AI 科学家 Lilian Weng（翁荔） 打造的 AI 技术博客
+  + 自 2017 年起持续更新，聚焦机器学习、深度学习、大语言模型（LLM）等前沿 AI 领域的研究与实践
+  + 技术栈：GitHub Pages + 静态生成，极简稳定
+    + **Hugo 静态博客框架**，基于[PaperMod 主题](https://themes.gohugo.io/themes/hugo-papermod/)
+
+## 💡 博客的作用
+可分享技术踩坑笔记、教程干货、学习复盘、好物收藏、生活感悟与优质资源合集等，记录个人成长...
+
+
 ## 🚀 搭建个人博客的方案有哪些？
 ### 🔹1. 快速搭建方案🔹
 主流静态博客框架，用现成框架，零基础友好，无需复杂环境，几分钟就能跑起来
@@ -47,8 +72,12 @@ cover: /images/Hexo搭建个人博客Github-分享/cover.png # 封面图
     - 跨域调试：VS Code 插件 CORS Everywhere，或后端配置 Cors 跨域
     - 本地服务代理：Nginx（本地模拟生产环境，配置前端 / 后端反向代理）
 
-## 📚 Hexo搭建个人博客需要哪些知识储备？
-+ 零基础，只需要会根据步骤安装环境、搭建项目即可，对搞开发的来说更简单
+## ✅ 为什么选 Hexo？
+- 核心优势：轻量、静态、Markdown 写作、免费部署（GitHub Pages）
+- 适用人群：程序员、内容创作者、想低成本搭个人博客的**新手**
+
+## 📚 需要哪些知识储备？
++ 零基础，只需要会根据步骤安装环境、搭建项目即可，对技术开发人员来说更简单
 + `Markdown`语法，这个在写 .md 文档的过程中慢慢累积就行
 
 ## 🎈开发环境准备
@@ -122,14 +151,30 @@ Windows/macOS/Linux 三大系统，以下都是Windows系统的安装流程。
     + 验证安装：桌面出现Cursor 图标，双击能正常打开编辑器界面，即安装成功
 
 ## 💻 博客搭建
-+ 安装博客框架 hexo 脚手架
++ **安装博客框架 hexo 脚手架**
   ```bash
       # 全局安装Hexo脚手架（首次搭建必装，仅需执行1次）
       npm install -g hexo-cli
       # 验证Hexo安装成功
       hexo -v
   ```
-+ 搭建博客项目
+
++ **认识 Hexo 几个常用指令**
+  - `hexo new "我的第一篇Hexo博客"`，简写 `hexo n "xxxx"`
+      - 新建博客文章
+      - 执行后在`source/_posts/`目录下生成`xxx文章标题.md`文件
+  - `hexo server`，简写 `hexo s`
+      - 本地启动预览服务（开发/写文章时实时查看效果）
+      - 执行后终端输出 http://localhost:4000/ ，浏览器打开该地址即可预览博客，修改 Markdown 文章/配置后，浏览器会自动刷新
+      - 若端口被占用时，可指定端口启动`hexo s -p 5000`
+  - `hexo generate`，简写 `hexo g`
+      - 打包构建静态文件（部署前必做，生成可上线的 HTML/CSS/JS）
+      - 执行后，博客根目录会生成 public/ 文件夹，里面是完整的静态博客文件，后续部署只需将该文件夹推送到 GitHub/Gitee Pages 或上传到云服务器
+  - `hexo deploy`，简写 `hexo d`
+      - 需要先安装 Hexo 部署插件(仅首次执行一次) `npm install hexo-deployer-git -D`
+      - 执行后，Hexo 会自动将public/文件夹的静态文件推送到你配置的 Git 仓库，等待 1-2 分钟，即可通过「`用户名.github.io`」访问你的在线博客
+
++ **搭建博客项目**
   ```bash
       # hexo init 博客目录名
       hexo init my-blog
@@ -138,9 +183,11 @@ Windows/macOS/Linux 三大系统，以下都是Windows系统的安装流程。
       hexo s   # 启动本地预览博客,实时看效果
       hexo s -p 5000   # 指定端口
   ```
-- 默认的项目目录结构，有一篇默认的"`hello-world.md`"博客
+
+- **默认的项目目录结构**，有一篇默认的"`hello-world.md`"博客
   ![](/images/Hexo搭建个人博客Github-分享/hexo_1.png)
-- 本地预览效果
+
+- **本地预览效果**
   ![](/images/Hexo搭建个人博客Github-分享/hexo_preview.png)
 
 
@@ -196,21 +243,6 @@ Windows/macOS/Linux 三大系统，以下都是Windows系统的安装流程。
   - GitHub Enterprise（企业版，付费）
     - GitHub Enterprise Cloud（云端 SaaS）
     - GitHub Enterprise Server（自托管版）
-
-### 🔹认识 Hexo 几个常用指令🔹
-- `hexo new "我的第一篇Hexo博客"`，简写 `hexo n "xxxx"`
-    - 新建博客文章
-    - 执行后在`source/_posts/`目录下生成`xxx文章标题.md`文件
-- `hexo server`，简写 `hexo s`
-    - 本地启动预览服务（开发/写文章时实时查看效果）
-    - 执行后终端输出 http://localhost:4000/ ，浏览器打开该地址即可预览博客，修改 Markdown 文章/配置后，浏览器会自动刷新
-    - 若端口被占用时，可指定端口启动`hexo s -p 5000`
-- `hexo generate`，简写 `hexo g`
-    - 打包构建静态文件（部署前必做，生成可上线的 HTML/CSS/JS）
-    - 执行后，博客根目录会生成 public/ 文件夹，里面是完整的静态博客文件，后续部署只需将该文件夹推送到 GitHub/Gitee Pages 或上传到云服务器
-- `hexo deploy`，简写 `hexo d`
-    - 需要先安装 Hexo 部署插件(仅首次执行一次) `npm install hexo-deployer-git -D`
-    - 执行后，Hexo 会自动将public/文件夹的静态文件推送到你配置的 Git 仓库，等待 1-2 分钟，即可通过「`用户名.github.io`」访问你的在线博客
 
 ### 🔹新建仓库/建立连接🔹
 - [github.com](https://github.com) 登录 → 新建仓库 "`用户名.github.io`" → 仓库状态设置为 `public` 状态(必须)
@@ -642,4 +674,5 @@ Windows/macOS/Linux 三大系统，以下都是Windows系统的安装流程。
     ![](/images/Hexo搭建个人博客Github-分享/close_live2d.jpg)
 
 ### 🔹增加评论系统🔹
+### 🔹增加搜索功能🔹
 待续...
