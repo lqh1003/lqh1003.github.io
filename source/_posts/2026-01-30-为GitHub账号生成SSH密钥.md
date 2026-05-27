@@ -17,7 +17,7 @@ cover: /images/为GitHub账号生成SSH密钥/cover.png # 封面图
         # 修改全局邮箱（填新GitHub账号绑定的邮箱，必须是已验证的）
         git config --global user.email "你的新GitHub绑定邮箱@xxx.com"
     ```
-- 验证全局配置
+- 验证全局配置 (liqinghua-ty / liqinghua@tanyue.cc、lqh1003 / 2933213867@qq.com)
     ```bash
         git config --global user.name
         git config --global user.email
