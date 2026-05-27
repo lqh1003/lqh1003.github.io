@@ -185,13 +185,370 @@ cover: /images/Cloudflare/cover.png # 封面图
 
 - 尝试改代码自动更新（git push → GitHub → Cloudflare Pages → 自动构建 → 网站更新）
   - 修改代码，git push 到远程仓库
-  - 然后回 Cloudflare/Workers & Pages/todolist/部署，可以看到部署正在进行（Building.../Deploying.../Success）
+  - 然后回 Cloudflare/计算/Workers & Pages/todolist/部署，可以看到部署正在进行（Building.../Deploying.../Success）
   - 等待十几秒～几十秒，再刷新链接，成功
     <img src="/images/Cloudflare/project_html_link2.png" alt="image" class="max500 border1"/>
 
-### **第二阶段：开始学 Workers（3–5天）**
+### **第二阶段：开始学 Workers（3–5天）【Worker API 返回加数据 (不要 D1，不要登录，不要增删改查)】**
+
+- 创建项目 `npm create cloudflare@latest`
+  - 需要 node22+
+    <img src="/images/Cloudflare/node_version.png" alt="image" class="max500 border1"/>
+  - Project name? —— 输入 todolist-worker
+  - What type of application? —— 选择 Hello World example
+  - Which language? —— 选择 Javascript
+  - ... 后面根据需要选择即可
+
+- 本地运行 `npm run dev`
+  - 初始化的项目目录：
+    <img src="/images/Cloudflare/project_worker.png" alt="image" class="max800 border1"/>
+  - 运行链接：http://127.0.0.1:8787/
+
+- 修改 `src/index.js`，返回假数据，打开 http://127.0.0.1:8787/todos 可以看到返回 Json 数据
+
+  ```javascript
+  // src/index.js 文件
+  export default {
+    async fetch(request, env, ctx) {
+      const url = new URL(request.url);
+      switch (url.pathname) {
+        case "/message":
+          return new Response("Hello, World!");
+        case "/random":
+          return new Response(crypto.randomUUID());
+
+        // *** 加一接口 /todos ***
+        case "/todos":
+          const todos = [
+            {
+              id: 1,
+              text: "学习 Cloudflare",
+              done: false,
+            },
+            {
+              id: 2,
+              text: "完成 Todo 页面",
+              done: true,
+            },
+            {
+              id: 3,
+              text: "部署到 Workers",
+              done: false,
+            },
+          ];
+          return new Response(JSON.stringify(todos), {
+            headers: { "Content-Type": "application/json" },
+          });
+        // *** End ***
+
+        default:
+          return new Response("Not Found", { status: 404 });
+      }
+    },
+  };
+  ```
+
+  <img src="/images/Cloudflare/project_worker1.png" alt="image" class="max300 border1"/>
+
+- **部署线上**
+  - 确认项目配置 wrangler.jsonc 是否正确
+    - name、main 等属性
+  - 登录 Cloudflare
+    - 全局安装：`npm install -g wrangler`
+    - 登录：终端输入 **`npx wrangler login`**
+      如果登陆着其他 Cloudflare 账号，要先运行命令退出登录 `npx wrangler logout`
+    - 会自动打开浏览器(或手动打开控制台的链接) → 选择账号登录 → 点击授权Authorize → 最后控制台终端会显示 Successfully logged in
+  - 部署
+    - 进入项目 `cd todolist-worker`
+    - 执行 `npm run deploy` 或 `npx wrangler deploy`
+    - 然后回 Cloudflare/计算/Workers & Pages
+      - 可以看到多了一个 **todolist-worker**，可以看到部署正在进行（Building.../Deploying.../Success）
+        <img src="/images/Cloudflare/project_worker2.png" alt="image" class="max700 border1"/>
+    - 控制台终端看到部署成功和链接 https://todolist-worker.2933213867.workers.dev/
+      <img src="/images/Cloudflare/project_worker3.png" alt="image" class="max500 border1"/>
+    - https://todolist-worker.2933213867.workers.dev/todos 这个便是可以使用的接口数据了
 
 ### **第三阶段：加数据库 D1（3–7天）**
+
+- **创建 D1 数据库**，如：数据库名称 todolist
+  - 命令创建：
+    - 进入 worker 项目：`cd todolist-worker`
+    - 输入命令 `npx wrangler d1 create todolist`
+    - Cloudflare 会出现数据库：
+      <img src="/images/Cloudflare/cloudflare_d1.png" alt="image" class="max700 border1"/>
+
+    - 执行成功会返回到控制台：
+      ```JSON
+        {
+          "d1_databases": [
+            {
+              "binding": "DB",  // Worker 代码里的变量名，可修改，习惯使用 DB 或 db，在worker项目中就是 env.DB
+              "database_name": "todolist",  // 数据库显示名称
+              "database_id": "3ac1718a-cca3-4ee5-ba27-dc0efc128955"  // 数据库唯一ID
+            }
+          ]
+        }
+      ```
+    - 复制到 wrangler.jsonc
+    - **有了 d1_databases 这个配置就会自动连接D1数据库 todolist**
+      - Worker → env.DB → D1数据库
+
+  - 或手动创建
+    - 在Cloudflare/存储和数据库/D1 数据库 → 点击创建数据库 todolist
+    - 可以根据以上格式手动写到 wrangler.jsonc
+
+- **创建表/数据**
+  - 可以在项目中写一个 xxx.sql 文件 (包含建表、插入几条初始数据...)
+    - 然后执行脚本命令 `npx wrangler d1 execute todolist --local --file=xxx.sql` 即可
+  - 当然也可以直接点击 Cloudflare/D1/todolist/探索数据 去操作建表/增删改查真实数据
+    <img src="/images/Cloudflare/cloudflare_d1_2.png" alt="image" class="max700 border1"/>
+
+- **todolist 的增删改查接口，使用真实数据**
+  - 建表 sql，文件目录 migrations/0001_create_todos.sql
+
+    ```SQL
+      -- 待办事项表（D1 / SQLite）
+      -- 执行：npx wrangler d1 migrations apply todolist --local
+      -- 或：  npx wrangler d1 execute todolist --local --file=migrations/0001_create_todos.sql
+
+      CREATE TABLE IF NOT EXISTS todos (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,              -- 主键，自增
+        text TEXT NOT NULL,                                -- 待办内容
+        done INTEGER NOT NULL DEFAULT 0 CHECK (done IN (0, 1)), -- 是否完成：0 否，1 是
+        created_at TEXT NOT NULL DEFAULT (datetime('now')), -- 创建时间（UTC 文本）
+        updated_at TEXT NOT NULL DEFAULT (datetime('now'))  -- 最后更新时间
+      );
+
+      -- 按创建时间倒序查询时加速
+      CREATE INDEX IF NOT EXISTS idx_todos_created_at ON todos (created_at DESC);
+    ```
+
+    - 执行命令 `npx wrangler d1 execute todolist --local --file=migrations/0001_create_todos.sql`
+
+  - 修改 src/index.js，增加增删改查接口
+
+    ```Javascript
+      /**
+       * TodoList Worker — 基于 Cloudflare D1 的待办 CRUD API
+      *
+      * 路由（均需绑定 wrangler.jsonc 中的 DB）：
+      *   GET    /api/todos       列表
+      *   GET    /api/todos/:id   单条
+      *   POST   /api/todos       创建，body: { text, done? }
+      *   PUT    /api/todos/:id   更新，body: { text?, done? }
+      *   DELETE /api/todos/:id   删除
+      */
+
+      /** JSON 响应默认头 */
+      const JSON_HEADERS = { 'Content-Type': 'application/json; charset=utf-8' };
+
+      /** 返回 JSON 响应 */
+      function json(data, status = 200) {
+        return new Response(JSON.stringify(data), { status, headers: JSON_HEADERS });
+      }
+
+      /** 返回错误 JSON，默认 400 */
+      function error(message, status = 400) {
+        return json({ error: message }, status);
+      }
+
+      /**
+       * 将 D1 查询行转为 API 对象
+      * SQLite 中 done 存为 0/1，对外返回布尔值
+      */
+      function rowToTodo(row) {
+        return {
+          id: row.id,
+          text: row.text,
+          done: row.done === 1,
+          created_at: row.created_at,
+          updated_at: row.updated_at,
+        };
+      }
+
+      /** 查询全部待办，按 id 升序 */
+      async function listTodos(db) {
+        const { results } = await db
+          .prepare('SELECT id, text, done, created_at, updated_at FROM todos ORDER BY id ASC')
+          .all();
+        return results.map(rowToTodo);
+      }
+
+      /** 按主键查询单条，不存在返回 null */
+      async function getTodo(db, id) {
+        const row = await db
+          .prepare('SELECT id, text, done, created_at, updated_at FROM todos WHERE id = ?')
+          .bind(id)
+          .first();
+        return row ? rowToTodo(row) : null;
+      }
+
+      /**
+       * 创建待办
+      * @returns {{ todo }} 或 {{ error, status }}
+      */
+      async function createTodo(db, body) {
+        const text = typeof body.text === 'string' ? body.text.trim() : '';
+        if (!text) {
+          return { error: 'text is required', status: 400 };
+        }
+        const done = body.done === true ? 1 : 0;
+        const result = await db
+          .prepare(
+            `INSERT INTO todos (text, done, updated_at)
+            VALUES (?, ?, datetime('now'))`
+          )
+          .bind(text, done)
+          .run();
+        const todo = await getTodo(db, result.meta.last_row_id);
+        return { todo };
+      }
+
+      /**
+       * 更新待办（部分字段：未传的 text/done 保留原值）
+      * @returns {{ todo }} 或 {{ error, status }}
+      */
+      async function updateTodo(db, id, body) {
+        const existing = await getTodo(db, id);
+        if (!existing) {
+          return { error: 'todo not found', status: 404 };
+        }
+
+        const text =
+          body.text !== undefined
+            ? typeof body.text === 'string'
+              ? body.text.trim()
+              : ''
+            : existing.text;
+        if (!text) {
+          return { error: 'text cannot be empty', status: 400 };
+        }
+        const done = body.done !== undefined ? (body.done === true ? 1 : 0) : existing.done ? 1 : 0;
+
+        await db
+          .prepare(
+            `UPDATE todos
+            SET text = ?, done = ?, updated_at = datetime('now')
+            WHERE id = ?`
+          )
+          .bind(text, done, id)
+          .run();
+
+        const todo = await getTodo(db, id);
+        return { todo };
+      }
+
+      /**
+       * 删除待办
+      * @returns {{ ok: true }} 或 {{ error, status }}
+      */
+      async function deleteTodo(db, id) {
+        const result = await db.prepare('DELETE FROM todos WHERE id = ?').bind(id).run();
+        if (result.meta.changes === 0) {
+          return { error: 'todo not found', status: 404 };
+        }
+        return { ok: true };
+      }
+
+      /**
+       * 处理 /api/todos 与 /api/todos/:id 的 HTTP 方法分发
+      * @param {number|null} id 路径中的 id；列表/创建时为 null
+      */
+      async function handleTodos(request, env, id) {
+        const db = env.DB;
+        if (!db) {
+          return error('database binding DB is not configured', 500);
+        }
+
+        const method = request.method;
+
+        // 列表
+        if (method === 'GET' && id === null) {
+          return json(await listTodos(db));
+        }
+
+        // 单条查询
+        if (method === 'GET' && id !== null) {
+          const todo = await getTodo(db, id);
+          return todo ? json(todo) : error('todo not found', 404);
+        }
+
+        // 创建
+        if (method === 'POST' && id === null) {
+          let body;
+          try {
+            body = await request.json();
+          } catch {
+            return error('invalid JSON body');
+          }
+          const result = await createTodo(db, body);
+          if (result.error) {
+            return error(result.error, result.status);
+          }
+          return json(result.todo, 201);
+        }
+
+        // 更新
+        if (method === 'PUT' && id !== null) {
+          let body;
+          try {
+            body = await request.json();
+          } catch {
+            return error('invalid JSON body');
+          }
+          const result = await updateTodo(db, id, body);
+          if (result.error) {
+            return error(result.error, result.status);
+          }
+          return json(result.todo);
+        }
+
+        // 删除
+        if (method === 'DELETE' && id !== null) {
+          const result = await deleteTodo(db, id);
+          if (result.error) {
+            return error(result.error, result.status);
+          }
+          return json({ deleted: true, id });
+        }
+
+        return error('method not allowed', 405);
+      }
+
+      export default {
+        async fetch(request, env, ctx) {
+          const url = new URL(request.url);
+
+          // 匹配 /api/todos 或 /api/todos/123
+          const todosMatch = url.pathname.match(/^\/api\/todos(?:\/(\d+))?$/);
+
+          if (todosMatch) {
+            const id = todosMatch[1] ? Number(todosMatch[1]) : null;
+            if (todosMatch[1] && Number.isNaN(id)) {
+              return error('invalid todo id');
+            }
+            return handleTodos(request, env, id);
+          }
+
+          // 示例/静态资源联调用的保留路由
+          switch (url.pathname) {
+            case '/message':
+              return new Response('Hello, World!');
+            case '/random':
+              return new Response(crypto.randomUUID());
+            default:
+              return new Response('Not Found', { status: 404 });
+          }
+        },
+      };
+    ```
+
+  - 代码推送带远程 `git push`
+
+  - 部署 `npm run deploy`
+
+  - 前端项目即可使用 https://todolist-worker.2933213867.workers.dev/ 作为接口基地址了
+
 
 ### **第四阶段：加 R2 文件上传（2–3天）**
 

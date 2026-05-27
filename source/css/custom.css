@@ -7,6 +7,9 @@
 #post #article-container img:hover {
     /* transform: scale(1.001); */
 }
+.max300 {
+    max-width: 300px !important;
+}
 .max400 {
     max-width: 400px !important;
 }
@@ -21,6 +24,9 @@
 }
 .max700 {
     max-width: 700px !important;
+}
+.max800 {
+    max-width: 800px !important;
 }
 .border1 {
     border: 1px solid #ccc;
