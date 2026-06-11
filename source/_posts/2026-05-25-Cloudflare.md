@@ -19,12 +19,12 @@ Cloudflare 最早很多人知道它是 CDN、DNS、防护服务（抗 DDoS）。
 
 **传统模式 vs Cloudflare 模式：**
 
-| <div style="width:90px">维度</div> | 传统模式 | Cloudflare 模式 |
-|---|---------|----------------|
-| 请求路径 | 用户 → 服务器（东京/新加坡/美国）→ 数据库 | 用户 → 最近的边缘节点 → Worker → 数据库/存储 |
-| 延迟 | 如果用户在北京，而服务器在美国，请求要跨洋，延迟可能 200ms+，高峰时期可能堵 | 就近处理，延迟大幅降低（不用关心“服务器在哪台机器”，部署后，代码自动出现在全球边缘节点）|
-| 运维 | 自己维护服务器、扩容、负载均衡 | 零运维，部署即上线 |
-| 适合场景 | 大型后台系统、复杂数据库、AI 训练任务 | 博客、工具站、API、个人 SaaS |
+| <div style="width:70px">维度</div> | 传统模式                                                                    | Cloudflare 模式                                                                          |
+| ---------------------------------- | --------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| 请求路径                           | 用户 → 服务器（东京/新加坡/美国）→ 数据库                                   | 用户 → 最近的边缘节点 → Worker → 数据库/存储                                             |
+| 延迟                               | 如果用户在北京，而服务器在美国，请求要跨洋，延迟可能 200ms+，高峰时期可能堵 | 就近处理，延迟大幅降低（不用关心“服务器在哪台机器”，部署后，代码自动出现在全球边缘节点） |
+| 运维                               | 自己维护服务器、扩容、负载均衡                                              | 零运维，部署即上线                                                                       |
+| 适合场景                           | 大型后台系统、复杂数据库、AI 训练任务                                       | 博客、工具站、API、个人 SaaS                                                             |
 
 > Cloudflare 不是“全面替代服务器”，而是**另一种架构选择**——省掉运维，降低复杂度。
 
@@ -44,7 +44,7 @@ Cloudflare 最早很多人知道它是 CDN、DNS、防护服务（抗 DDoS）。
   - Webhook
   - AI 调用层
 
-### 🗄️ D1 —— 数据库
+### 💾 D1 —— 数据库
 
 - D1 是 Cloudflare 的 SQL 数据库服务。底层核心是 **SQLite**。但它不是把 SQLite 文件放在本地，而是 Cloudflare 帮你托管、同步
 - Worker 可以直接查询：
@@ -68,7 +68,7 @@ Cloudflare 最早很多人知道它是 CDN、DNS、防护服务（抗 DDoS）。
 - Worker 可以直接查询：
 
   ```javascript
-  await env.BUCKET.put("avatar.png", file);
+  await env.R2.put("avatar.png", file);
   ```
 
 - Worker、D1、R2 三者的关系：
@@ -123,16 +123,16 @@ Cloudflare 最早很多人知道它是 CDN、DNS、防护服务（抗 DDoS）。
 
 ### 📦 Cloudflare 核心产品一览
 
-| 产品 | 定位 | 类比 | 免费额度 |
-|------|------|------|---------|
-| **Workers** | 代码运行（Serverless） | 后端服务器 / Node.js | 每天 10 万次请求 |
-| **Pages** | 静态网站托管 + CI/CD | Vercel / Netlify | 无限部署，无限带宽 |
-| **D1** | 关系型数据库（SQLite） | MySQL / PostgreSQL（轻量版） | 500MB 存储，500万行读/天 |
-| **R2** | 对象存储（文件/图片） | AWS S3（但出流量免费）| 10GB 存储，免出流量费 |
-| **KV** | 键值对存储（全球缓存） | Redis | 10万次读/天 |
-| **Wrangler** | 本地开发 + 部署 CLI | npm / 项目管理工具 | 免费工具 |
-| **CDN / DNS** | 全球加速 + 域名解析 | 国内 CDN + 阿里云 DNS | 免费 |
-| **DDoS / WAF** | 安全防护 | 云盾 / 防火墙 | 免费无限量 |
+| 产品           | 定位                   | 类比                         | 免费额度                 |
+| -------------- | ---------------------- | ---------------------------- | ------------------------ |
+| **Workers**    | 代码运行（Serverless） | 后端服务器 / Node.js         | 每天 10 万次请求         |
+| **Pages**      | 静态网站托管 + CI/CD   | Vercel / Netlify             | 无限部署，无限带宽       |
+| **D1**         | 关系型数据库（SQLite） | MySQL / PostgreSQL（轻量版） | 500MB 存储，500万行读/天 |
+| **R2**         | 对象存储（文件/图片）  | AWS S3（但出流量免费）       | 10GB 存储，免出流量费    |
+| **KV**         | 键值对存储（全球缓存） | Redis                        | 10万次读/天              |
+| **Wrangler**   | 本地开发 + 部署 CLI    | npm / 项目管理工具           | 免费工具                 |
+| **CDN / DNS**  | 全球加速 + 域名解析    | 国内 CDN + 阿里云 DNS        | 免费                     |
+| **DDoS / WAF** | 安全防护               | 云盾 / 防火墙                | 免费无限量               |
 
 > 四件套核心组合：**Pages（前端）+ Workers（后端）+ D1（数据库）+ R2（存储）** → 零成本跑完整全栈应用
 
@@ -310,7 +310,7 @@ Cloudflare 最早很多人知道它是 CDN、DNS、防护服务（抗 DDoS）。
 
 ---
 
-### 🗄️ 第三阶段：加数据库 D1
+### 💾 第三阶段：加数据库 D1
 
 > 周期：3-7 天
 
@@ -349,7 +349,7 @@ Cloudflare 最早很多人知道它是 CDN、DNS、防护服务（抗 DDoS）。
 - 当然也可以直接点击 Cloudflare/D1/todolist/探索数据 去操作建表/增删改查真实数据
   <img src="/images/Cloudflare/cloudflare_d1_2.png" alt="image" class="max700 border1"/>
 
-#### 🔁 **todolist 的增删改查接口，使用真实数据**
+#### 🔄 **todolist 的增删改查接口，使用真实数据**
 
 - 建表 sql，文件目录 migrations/0001_create_todos.sql
 
@@ -634,20 +634,24 @@ Cloudflare 最早很多人知道它是 CDN、DNS、防护服务（抗 DDoS）。
 
 ### 📁 第四阶段：加 R2 文件上传
 
-> 周期：2-3 天
+> 周期：2-3 天，只需要创建 R2 桶，在 worker 项目wrangler.jsonc中进行配置，就可以直接通过 `env.R2` 操作了
 
 #### 📁 创建 R2 存储桶
 
-- Cloudflare -> 左侧导航栏 存储和数据/R2对象存储/概述 -> 新建R2桶，输入 todolist-uploads (首次创建需要开通R2)
-  <img src="/images/Cloudflare/r2_step_1.png" alt="image" class="max500 border1"/>
-  <img src="/images/Cloudflare/r2_step_2.png" alt="image" class="max500 border1"/>
+- Cloudflare 账号，**首次创建** R2 桶，需要先开通 / 激活
+  - Cloudflare 目前主要支持：
+    - Visa 卡 (我使用的是平安银行 Visa 卡)
+    - Mastercard
+    - American Express
 
-- 也可以直接执行命令，关键命令 `npx wrangler r2 bucket create <bucket_name>`
-  - 首先 Cloudflare 账号 要开通 R2
-    - Cloudflare 目前主要支持：
-      - Visa 卡
-      - Mastercard
-      - American Express
+  <img src="/images/Cloudflare/r2_step_1.png" alt="image" class="max800 border1"/>
+  <img src="/images/Cloudflare/r2_step_2.png" alt="image" class="max700 border1"/>
+
+- Cloudflare → 左侧导航栏 存储和数据/R2对象存储/概述 → 新建R2桶，输入 todolist-uploads
+  <img src="/images/Cloudflare/r2_step_3.png" alt="image" class="max700 border1"/>
+
+- 也可使用命令
+  - 关键命令 `npx wrangler r2 bucket create <bucket_name>`
   - 在项目根目录 `todolist-worker` 打开终端：
 
     ```bash
@@ -657,22 +661,61 @@ Cloudflare 最早很多人知道它是 CDN、DNS、防护服务（抗 DDoS）。
         # 2. 登录 Cloudflare（需要浏览器授权）
         npx wrangler login
 
-        # 3. 创建 R2 存储桶（文件/头像上传用） 
+        # 3. 创建 R2 存储桶（文件/头像上传用）
         npx wrangler r2 bucket create todolist-uploads
     ```
 
-#### 📎 绑定到 `wrangler.jsonc`
+    <img src="/images/Cloudflare/r2_step_4.png" alt="image" class="max700 border1"/>
 
-  <img src="/images/Cloudflare/r2_step_3.png" alt="image" class="max500 border1"/>
+#### 🔗 绑定到 `wrangler.jsonc`
+
+- binding 是变量名，叫 R2、BUCKET、UPLOADS 都可以
+
+  <img src="/images/Cloudflare/r2_step_5.png" alt="image" class="max500 border1"/>
 
 #### 📤 Worker 实现上传/下载接口
 
-> `env.BUCKET` 对应 `wrangler.jsonc` 里绑定的 R2 存储桶，名称要与 `binding` 字段一致。 关键命令：`env.BUCKET.put()` / `env.BUCKET.get()`
+> `env.R2` 对应 `wrangler.jsonc` 里绑定的 R2 存储桶，名称要与 `binding` 字段一致。 关键命令：`env.R2.put()`上传 / `env.R2.get()`下载
 
-#### 🖥️ 前端对接
+- 上传 /api/upload
+  - 把前端上传的文件 file 进行处理
+    - 处理文件，const resolved = resolveUploadType(file)
+    - 组装成一个路径key：`uploads/${crypto.randomUUID()}.${resolved.ext}`
+      - uploads 是在 R2 桶中的文件目录
+      - 后面一节存储在 R2 桶中的文件名称
+      - env.R2.put 把文件上传到 R2 桶 (关键)
 
-- 上传成功后服务端返回 `{ key, url }`，前端拼接基地址即可展示图片
-- 若需要公开访问 R2 文件，还可以在 R2 桶设置中开启**公有读取**，直接用 `r2.dev` 子域访问，不必经过 Worker
+    - 返回完整 url 给前端，`${url.origin}/api/files/${key}`
+      - https://todolist-worker.2933213867.workers.dev/api/files/uploads/27e65672-a89e-491e-99da-a6b42468e5fb.jpg
+      - https://todolist-worker.2933213867.workers.dev 后端服务接口基地址
+      - /api/files 下载/获取文件的接口
+      - /uploads/27e65672-a89e-491e-99da-a6b42468e5fb.jpg 存储在 R2 桶中的位置
+
+- 下载 /api/files
+  - 接口 return `${url.origin}/api/files/${key}`;
+
+#### 💻 前端对接
+
+- 前端操作：上传文件成功后，返回完整资源链接 url: https://xxx/api/files/uploads/xxxxx
+- 前端拿到数据直接展示资源，把资源链接作为字段存进 todos 表
+
+#### 自定义资源域名
+
+> 想要自定义资源域名，可以公开访问 R2 文件，**不经过 worker** (通过下载接口拼接冗长的接口基地址)
+
+- 公开访问 R2 资源配置：
+  - 登录 Cloudflare → R2对象存储 → 找到`todolist-uploads` → 设置 → 设置两个地方 (不过前提是：域名已经按照阶段六的步骤接入了)
+    <img src="/images/Cloudflare/r2_step_6.png" alt="image" class="max700 border1"/>
+  - 设置成功之后，直接访问资源：
+    - https://file.lqhstudy.online/uploads/3d6fddf4-3a3a-464e-aa0b-6405e6e409f2.jpg
+
+- Worker 项目拼接的资源地址换一下
+  - 在 wrangler.jsonc 配置一下变量
+  - 在上面提到的上传接口中返回完整 url 资源路径的逻辑：改成有`R2_PUBLIC_URL`就拼接这个，没有就按照原逻辑，将改动`npm run deploy`部署上线
+    <img src="/images/Cloudflare/r2_step_7.png" alt="image" class="max700 border1"/>
+
+  - 这样前端上传文件操作，返回的 url 就是 https://file.lqhstudy.online 拼接的了，存储到todos表也是 https://file.lqhstudy.online/xxx/xxx 的资源格式链接了
+    <img src="/images/Cloudflare/r2_step_9.png" alt="image" class="max900 border1"/>
 
 ---
 
@@ -693,7 +736,6 @@ Pages（前端 HTML/JS）  ←→  Worker API（后端逻辑）
                            （数据库）    （文件存储）
 ```
 
-
 ### 🌍 第六阶段：域名接入
 
 > 把域名加入到 Cloudflare 账户，受 Cloudflare 保护
@@ -705,13 +747,13 @@ Pages（前端 HTML/JS）  ←→  Worker API（后端逻辑）
   <img src="/images/Cloudflare/add_domains2.png" alt="image" class="max500 border1"/>
 
 - **注册域名**，输入想要的域名，选择购买，填写对应的信息，支付金额即可
-  <img src="/images/Cloudflare/add_domains3.png" alt="image" class="max500 border1"/>
+  - 但是 Cloudflare Registrar 域名结账**原生无 Alipay 入口**，只支持 4 类支付：
+    - VISA/Master/AE 双币信用卡、银联国际卡
+    - PayPal（最常用中转）
+    - Apple Pay（仅苹果设备单次付款，不能自动续费域名）
+    - 企业合同对公（个人用不了）
 
-    - 但是 Cloudflare Registrar 域名结账**原生无 Alipay 入口**，只支持 4 类支付：
-      - VISA/Master/AE 双币信用卡、银联国际卡
-      - PayPal（最常用中转）
-      - Apple Pay（仅苹果设备单次付款，不能自动续费域名）
-      - 企业合同对公（个人用不了）
+  <img src="/images/Cloudflare/add_domains3.png" alt="image" class="max500 border1"/>
 
 - **连接域名 ✅**
   - 去其他平台购买域名，比如：国内云厂商（阿里云/腾讯云/华为云 ｜ 支付宝/微信秒付 ｜ 分国内/国际版）
@@ -721,9 +763,8 @@ Pages（前端 HTML/JS）  ←→  Worker API（后端逻辑）
   - 选择连接域名 → 输入域名 lqhstudy.online，点击继续 → 选择按月付费，Free计划 → 点击`继续前往激活` → 就会得到图2的界面(激活步骤)
     <img src="/images/Cloudflare/add_domains5.png" alt="image" class="max500 border1"/>
     <img src="/images/Cloudflare/add_domains6.png" alt="image" class="max500 border1"/>
-
-      - 复制好两条 NS 服务器，也就可以离开当前页面了，可以看到域名已经添加成功，但是状态还不可用
-        <img src="/images/Cloudflare/add_domains9.png" alt="image" class="max700 border1"/>
+  - 复制好两条 NS 服务器，也就可以离开当前页面了，可以看到域名已经添加成功，但是状态还不可用
+    <img src="/images/Cloudflare/add_domains9.png" alt="image" class="max700 border1"/>
 
   - 去激活，更换域名 NS（关键生效步骤）
     - 复制 Cloudflare 给出的两条 NS 服务器：`ara.ns.cloudflare.com` `theo.ns.cloudflare.com`
@@ -759,7 +800,7 @@ Pages（前端 HTML/JS）  ←→  Worker API（后端逻辑）
 
     4. 同理，给第二阶段的 todolist-worker 自定义域名 也完美生效：`https://api.lqhstudy.online/api/todos`
 
-    5. 绑定域名之后的连接更稳定和美观了，之前的链接  https://xxx.xxx/workers.dev  动不动就报错 500 (网络异常加载失败)
+    5. 绑定域名之后的连接更稳定和美观了，之前的链接 https://xxx.xxx/workers.dev 动不动就报错 500 (网络异常加载失败)
 
 - SSL/TLS 配置（**全站 HTTPS**）
   - SSL 的作用
@@ -876,8 +917,6 @@ Pages（前端 HTML/JS）  ←→  Worker API（后端逻辑）
       - 更新静态资源后若用户看到旧版，可在 **缓存 / Caching** → **配置** → **清除缓存** 里做「清除所有内容」
       - 新版控制台还有 **缓存规则 Cache Rules**（更灵活），免费计划也够用；Page Rules 够用时不必强行迁移
 
-
-
 ---
 
 ## 📌 [Cloudflare](https://www.cloudflare.com/zh-cn/)、[AWS](https://aws.amazon.com/cn/)、[GCP](https://cloud.google.com/?hl=zh-cn) 全面对比
@@ -888,63 +927,63 @@ Pages（前端 HTML/JS）  ←→  Worker API（后端逻辑）
 
 ### 一、🏷️ 整体定位
 
-| 维度 | Cloudflare | AWS（Amazon Web Services） | GCP（Google Cloud Platform） |
-|------|-----------|--------------------------|----------------------------|
-| 公司背景 | Cloudflare（独立公司） | Amazon 旗下 | Google 旗下 |
-| 诞生时间 | 2010 年 | 2006 年 | 2008 年 |
-| 核心出身 | CDN、安全防护、边缘网络 | 云计算基础设施（IaaS/PaaS） | Google 内部大规模基础设施外化 |
-| 全球节点 | 330+ 边缘 PoP（覆盖极广） | 30+ 大区（Region） | 40+ 大区（Region） |
-| 市场份额 | 较小但增长快，CDN 市场第一 | 全球云计算第一（~33%） | 全球云计算第三（~11%） |
-| 定价模式 | 慷慨的免费套餐 + 按量计费 | 按量计费，免费层较少 | 按量计费，免费层居中 |
-| 学习曲线 | 低（概念简洁，文档友好） | 高（服务繁多，概念复杂） | 中等 |
-| 独立开发者友好度 | ⭐⭐⭐⭐⭐ | ⭐⭐⭐ | ⭐⭐⭐⭐ |
-| 企业采用率 | 中 | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ |
+| 维度             | Cloudflare                 | AWS（Amazon Web Services）  | GCP（Google Cloud Platform）  |
+| ---------------- | -------------------------- | --------------------------- | ----------------------------- |
+| 公司背景         | Cloudflare（独立公司）     | Amazon 旗下                 | Google 旗下                   |
+| 诞生时间         | 2010 年                    | 2006 年                     | 2008 年                       |
+| 核心出身         | CDN、安全防护、边缘网络    | 云计算基础设施（IaaS/PaaS） | Google 内部大规模基础设施外化 |
+| 全球节点         | 330+ 边缘 PoP（覆盖极广）  | 30+ 大区（Region）          | 40+ 大区（Region）            |
+| 市场份额         | 较小但增长快，CDN 市场第一 | 全球云计算第一（~33%）      | 全球云计算第三（~11%）        |
+| 定价模式         | 慷慨的免费套餐 + 按量计费  | 按量计费，免费层较少        | 按量计费，免费层居中          |
+| 学习曲线         | 低（概念简洁，文档友好）   | 高（服务繁多，概念复杂）    | 中等                          |
+| 独立开发者友好度 | ⭐⭐⭐⭐⭐                 | ⭐⭐⭐                      | ⭐⭐⭐⭐                      |
+| 企业采用率       | 中                         | ⭐⭐⭐⭐⭐                  | ⭐⭐⭐⭐                      |
 
 ---
 
 ### 二、📦 核心产品对比
 
-| 能力类别 | Cloudflare | AWS | GCP |
-|---------|-----------|-----|-----|
+| 能力类别               | Cloudflare                             | AWS                       | GCP                         |
+| ---------------------- | -------------------------------------- | ------------------------- | --------------------------- |
 | **计算（Serverless）** | Workers（边缘 JS/TS/WASM，冷启动 0ms） | Lambda（标准 Serverless） | Cloud Functions / Cloud Run |
-| **计算（虚拟机）** | ❌ 无 | EC2 | Compute Engine |
-| **容器** | ❌ 无 | ECS / EKS（Kubernetes） | GKE（Kubernetes，业界标杆） |
-| **对象存储** | R2（无出流量费！） | S3（出流量收费） | GCS（出流量收费） |
-| **关系型数据库** | D1（SQLite，边缘，免费层大） | RDS / Aurora | Cloud SQL / AlloyDB |
-| **KV 存储** | Workers KV（全球复制，最终一致） | DynamoDB / ElastiCache | Firestore / Bigtable |
-| **CDN** | 核心产品，全球最快之一 | CloudFront | Cloud CDN |
-| **DNS** | 极快 DNS（1.1.1.1），免费 | Route 53（收费） | Cloud DNS（收费） |
-| **DDoS 防护** | 免费无限量防护 | AWS Shield（付费） | Cloud Armor（付费） |
-| **AI 推理** | Workers AI（边缘推理，GPU 节点） | SageMaker / Bedrock | Vertex AI |
-| **消息队列** | Queues | SQS / SNS / EventBridge | Pub/Sub |
-| **静态站点托管** | Pages（CI/CD 一体，免费） | S3 + CloudFront | Firebase Hosting |
-| **实时通信** | Durable Objects（WebSocket 状态保持） | API Gateway WebSocket | ❌ 无原生等价 |
-| **邮件服务** | Email Routing（免费转发） | SES | ❌ 无原生邮件发送 |
-| **访问控制/零信任** | Access / ZTNA（Zero Trust 领先） | IAM + Cognito | Cloud IAM + BeyondCorp |
+| **计算（虚拟机）**     | ❌ 无                                  | EC2                       | Compute Engine              |
+| **容器**               | ❌ 无                                  | ECS / EKS（Kubernetes）   | GKE（Kubernetes，业界标杆） |
+| **对象存储**           | R2（无出流量费！）                     | S3（出流量收费）          | GCS（出流量收费）           |
+| **关系型数据库**       | D1（SQLite，边缘，免费层大）           | RDS / Aurora              | Cloud SQL / AlloyDB         |
+| **KV 存储**            | Workers KV（全球复制，最终一致）       | DynamoDB / ElastiCache    | Firestore / Bigtable        |
+| **CDN**                | 核心产品，全球最快之一                 | CloudFront                | Cloud CDN                   |
+| **DNS**                | 极快 DNS（1.1.1.1），免费              | Route 53（收费）          | Cloud DNS（收费）           |
+| **DDoS 防护**          | 免费无限量防护                         | AWS Shield（付费）        | Cloud Armor（付费）         |
+| **AI 推理**            | Workers AI（边缘推理，GPU 节点）       | SageMaker / Bedrock       | Vertex AI                   |
+| **消息队列**           | Queues                                 | SQS / SNS / EventBridge   | Pub/Sub                     |
+| **静态站点托管**       | Pages（CI/CD 一体，免费）              | S3 + CloudFront           | Firebase Hosting            |
+| **实时通信**           | Durable Objects（WebSocket 状态保持）  | API Gateway WebSocket     | ❌ 无原生等价               |
+| **邮件服务**           | Email Routing（免费转发）              | SES                       | ❌ 无原生邮件发送           |
+| **访问控制/零信任**    | Access / ZTNA（Zero Trust 领先）       | IAM + Cognito             | Cloud IAM + BeyondCorp      |
 
 ---
 
 ### 三、⚖️ 优缺点对比
 
-| | Cloudflare | AWS | GCP |
-|--|-----------|-----|-----|
-| **核心优势** | 边缘低延迟、安全免费内置、免费层慷慨、零运维 | 服务最全（200+）、生态最成熟、企业合规证书最齐全 | AI/ML 领先、BigQuery 数仓最强、GKE 最原生 |
-| **最大劣势** | 无虚拟机/容器，不能跑长时任务（> 30s）、复杂后端 | 定价复杂，账单容易超支，学习曲线陡 | 市场份额最小，部分地区无 Region |
-| **数据库** | D1（SQLite），不适合高并发大型场景 | RDS / Aurora，强但配置复杂 | Cloud SQL / AlloyDB，强但非云原生设计 |
-| **计算限制** | Worker 单次 CPU 上限（免费 10ms，付费 30s） | 无明显上限 | 无明显上限 |
-| **中国大陆** | 部分功能有限制 | 无中国 Region（北京/宁夏独立合规） | 无中国 Region |
-| **生态成熟度** | 相对新，第三方集成少 | 最丰富 | 比 AWS 少，K8s 生态共享 |
+| 对比项         | Cloudflare                                       | AWS                                              | GCP                                       |
+| -------------- | ------------------------------------------------ | ------------------------------------------------ | ----------------------------------------- |
+| **核心优势**   | 边缘低延迟、安全免费内置、免费层慷慨、零运维     | 服务最全（200+）、生态最成熟、企业合规证书最齐全 | AI/ML 领先、BigQuery 数仓最强、GKE 最原生 |
+| **最大劣势**   | 无虚拟机/容器，不能跑长时任务（> 30s）、复杂后端 | 定价复杂，账单容易超支，学习曲线陡               | 市场份额最小，部分地区无 Region           |
+| **数据库**     | D1（SQLite），不适合高并发大型场景               | RDS / Aurora，强但配置复杂                       | Cloud SQL / AlloyDB，强但非云原生设计     |
+| **计算限制**   | Worker 单次 CPU 上限（免费 10ms，付费 30s）      | 无明显上限                                       | 无明显上限                                |
+| **中国大陆**   | 部分功能有限制                                   | 无中国 Region（北京/宁夏独立合规）               | 无中国 Region                             |
+| **生态成熟度** | 相对新，第三方集成少                             | 最丰富                                           | 比 AWS 少，K8s 生态共享                   |
 
 ---
 
 ### 四、💰 费用直观对比（以常见场景为例）
 
-| 场景 | Cloudflare | AWS | GCP |
-|------|-----------|-----|-----|
+| 场景                       | Cloudflare                              | AWS                                              | GCP                                     |
+| -------------------------- | --------------------------------------- | ------------------------------------------------ | --------------------------------------- |
 | 100GB 存储 + 1TB 出流量/月 | R2：约 **$1.5**（仅存储费，出流量免费） | S3：约 **$111**（存储 $2.3 + 流量 $92 + 请求费） | GCS：约 **$82**（存储 $2.6 + 流量 $80） |
-| 每月 100 万次 API 请求 | Workers：**免费**（每天 10 万免费） | Lambda + API GW：约 **$4.5** | Cloud Functions：约 **$4** |
-| 静态网站托管 | Pages：**永久免费** | S3 + CloudFront：约 **$3–10/月** | Firebase Hosting 有免费层，超出收费 |
-| 小型 SQLite 数据库 | D1：**免费**（500MB） | RDS MySQL 最低配：约 **$15/月** | Cloud SQL 最低配：约 **$10/月** |
+| 每月 100 万次 API 请求     | Workers：**免费**（每天 10 万免费）     | Lambda + API GW：约 **$4.5**                     | Cloud Functions：约 **$4**              |
+| 静态网站托管               | Pages：**永久免费**                     | S3 + CloudFront：约 **$3–10/月**                 | Firebase Hosting 有免费层，超出收费     |
+| 小型 SQLite 数据库         | D1：**免费**（500MB）                   | RDS MySQL 最低配：约 **$15/月**                  | Cloud SQL 最低配：约 **$10/月**         |
 
 > R2 的无出流量费是 Cloudflare 最大的"杀手锏"之一，对图片/视频类应用节省显著。
 
@@ -952,29 +991,29 @@ Pages（前端 HTML/JS）  ←→  Worker API（后端逻辑）
 
 ### 五、🎯 适用场景对比（决策参考表）
 
-| 项目类型 | 推荐平台 | 推荐产品 | 关键原因 |
-|---------|---------|---------|---------|
-| 个人博客 / 静态网站 | **Cloudflare** | Pages | 免费、全球 CDN、自动 CI/CD，最简单 |
-| 个人 API / 小工具 / SaaS MVP | **Cloudflare** | Workers + D1 + R2 | 免费层够用，边缘低延迟，零运维 |
-| 需要长时任务（> 30s）/ 复杂后端（成本敏感） | **AWS** | Lambda + EC2 | 弹性伸缩，按量付费，生态完善 |
-| 需要容器化部署 | **GCP / AWS** | Cloud Run / ECS | Cloud Run 最简单；ECS 最成熟 |
-| AI 轻量边缘推理 | **Cloudflare** | Workers AI | 边缘节点就近推理，延迟极低 |
-| AI 大模型训练 / 微调 | **GCP / AWS** | Vertex AI / SageMaker | GPU 资源丰富，训练框架完整 |
-| 大数据分析 / 数仓 | **GCP** | BigQuery | 业界最强云数仓，PB 级秒出结果 |
-| 企业级 / 需要合规证书 | **AWS** | 全套服务 | SOC2 / HIPAA / ISO 等认证最齐全 |
-| Kubernetes 应用 | **GCP** | GKE | K8s 发源地，托管最原生 |
-| 大量文件 / 媒体存储 | **Cloudflare** | R2 | 无出流量费，省钱显著 |
-| 零信任安全 / 内网穿透 | **Cloudflare** | Access / Tunnel | 免费，行业领先 |
+| 项目类型                                    | 推荐平台       | 推荐产品              | 关键原因                           |
+| ------------------------------------------- | -------------- | --------------------- | ---------------------------------- |
+| 个人博客 / 静态网站                         | **Cloudflare** | Pages                 | 免费、全球 CDN、自动 CI/CD，最简单 |
+| 个人 API / 小工具 / SaaS MVP                | **Cloudflare** | Workers + D1 + R2     | 免费层够用，边缘低延迟，零运维     |
+| 需要长时任务（> 30s）/ 复杂后端（成本敏感） | **AWS**        | Lambda + EC2          | 弹性伸缩，按量付费，生态完善       |
+| 需要容器化部署                              | **GCP / AWS**  | Cloud Run / ECS       | Cloud Run 最简单；ECS 最成熟       |
+| AI 轻量边缘推理                             | **Cloudflare** | Workers AI            | 边缘节点就近推理，延迟极低         |
+| AI 大模型训练 / 微调                        | **GCP / AWS**  | Vertex AI / SageMaker | GPU 资源丰富，训练框架完整         |
+| 大数据分析 / 数仓                           | **GCP**        | BigQuery              | 业界最强云数仓，PB 级秒出结果      |
+| 企业级 / 需要合规证书                       | **AWS**        | 全套服务              | SOC2 / HIPAA / ISO 等认证最齐全    |
+| Kubernetes 应用                             | **GCP**        | GKE                   | K8s 发源地，托管最原生             |
+| 大量文件 / 媒体存储                         | **Cloudflare** | R2                    | 无出流量费，省钱显著               |
+| 零信任安全 / 内网穿透                       | **Cloudflare** | Access / Tunnel       | 免费，行业领先                     |
 
 ---
 
 ### 六、🛠️ CLI 工具对比
 
-| | 工具名 | 安装方式 | 常用命令示例 |
-|--|-------|---------|------------|
+| 平台           | 工具名     | 安装方式            | 常用命令示例                              |
+| -------------- | ---------- | ------------------- | ----------------------------------------- |
 | **Cloudflare** | `wrangler` | `npm i -g wrangler` | `wrangler deploy` / `wrangler d1 execute` |
-| **AWS** | `aws cli` | 下载安装包 | `aws s3 cp` / `aws lambda invoke` |
-| **GCP** | `gcloud` | 下载安装包 | `gcloud run deploy` / `gsutil cp` |
+| **AWS**        | `aws cli`  | 下载安装包          | `aws s3 cp` / `aws lambda invoke`         |
+| **GCP**        | `gcloud`   | 下载安装包          | `gcloud run deploy` / `gsutil cp`         |
 
 - Wrangler 是三者中最简洁的，命令语义直白
 - AWS CLI 功能最全但参数繁多，很多人依赖 `aws configure` 配置多账号
@@ -991,6 +1030,7 @@ Pages（前端 HTML/JS）  ←→  Worker API（后端逻辑）
 **❌ 误区二："AWS 最贵，Cloudflare 最便宜"**
 
 **实际情况：** AWS 有大量免费层，合理使用并不贵。反过来，Cloudflare 的付费计划（Pro $20/月，Business $200/月）对某些场景也不便宜。关键是**用对场景**：
+
 - 静态资源大量出流量 → Cloudflare R2 便宜很多
 - 复杂后端微服务 → AWS 按量付费反而更划算
 
@@ -1005,6 +1045,7 @@ Pages（前端 HTML/JS）  ←→  Worker API（后端逻辑）
 **❌ 误区五："用了 Cloudflare 就安全了"**
 
 **实际情况：** Cloudflare 能防 DDoS、过滤恶意请求，但：
+
 - 应用层漏洞（SQL 注入、XSS）需要开发者自己修
 - 源站 IP 泄露后 Cloudflare 的防护失效
 - WAF 规则需要正确配置才能生效
@@ -1014,14 +1055,14 @@ Pages（前端 HTML/JS）  ←→  Worker API（后端逻辑）
 
 ### 八、📚 初学者推荐的学习路径
 
-| <div style="width:50px">步骤</div> | 🟠 前端 / 独立开发者<br>从 Cloudflare 开始 | 🟡 后端 / 云原生方向<br>进阶学 AWS | 🔵 AI / 数据工程方向<br>深入学 GCP |
-|:---:|---|---|---|
-| **1** | 注册 Cloudflare 账号（免费） | 完成 AWS 免费层的 EC2 入门（起一台虚拟机，SSH 进去） | 注册 GCP，领取 $300 免费额度 |
-| **2** | 用 Cloudflare Pages 部署一个静态网站（10 分钟） | 学 S3 存储桶的基本操作 | 用 BigQuery 跑一个公开数据集的 SQL 查询（体验秒级大数据） |
-| **3** | 写一个 Workers Hello World（5 分钟） | 写一个 Lambda 函数，配上 API Gateway | 用 Cloud Run 部署一个容器应用 |
-| **4** | 用 Wrangler 创建 D1 数据库，写一个简单 CRUD API | 学 IAM 权限管理（这是 AWS 最核心也最难的部分） | 接触 Vertex AI 的 API，调用 Gemini 模型 |
-| **5** | 把静态资源上传到 R2，体验无流量费存储 | 了解 VPC 网络隔离基础 | — |
-| **完成后** | 理解了"边缘计算全栈"是什么感觉 | 具备完整后端 + 云基础能力 | 具备 AI 应用 + 大数据分析能力 |
+|    步骤    | 【CF】前端/独立开发者                           | 【AWS】后端/云原生                                   | 【GCP】AI/数据工程                                        |
+| :--------: | ----------------------------------------------- | ---------------------------------------------------- | --------------------------------------------------------- |
+|   **1**    | 注册 Cloudflare 账号（免费）                    | 完成 AWS 免费层的 EC2 入门（起一台虚拟机，SSH 进去） | 注册 GCP，领取 $300 免费额度                              |
+|   **2**    | 用 Cloudflare Pages 部署一个静态网站（10 分钟） | 学 S3 存储桶的基本操作                               | 用 BigQuery 跑一个公开数据集的 SQL 查询（体验秒级大数据） |
+|   **3**    | 写一个 Workers Hello World（5 分钟）            | 写一个 Lambda 函数，配上 API Gateway                 | 用 Cloud Run 部署一个容器应用                             |
+|   **4**    | 用 Wrangler 创建 D1 数据库，写一个简单 CRUD API | 学 IAM 权限管理（这是 AWS 最核心也最难的部分）       | 接触 Vertex AI 的 API，调用 Gemini 模型                   |
+|   **5**    | 把静态资源上传到 R2，体验无流量费存储           | 了解 VPC 网络隔离基础                                | —                                                         |
+| **完成后** | 理解了"边缘计算全栈"是什么感觉                  | 具备完整后端 + 云基础能力                            | 具备 AI 应用 + 大数据分析能力                             |
 
 ---
 
@@ -1029,11 +1070,11 @@ Pages（前端 HTML/JS）  ←→  Worker API（后端逻辑）
 
 > 三者不是互相替代，而是互补——选对工具比选贵工具更重要。
 
-| | 一句话定位 | 典型用户 |
-|--|-----------|---------|
-| **Cloudflare** | "把应用放到离用户最近的地方跑，安全免费省心" | 独立开发者、个人项目、初创团队 |
-| **AWS** | "你需要什么我都有，企业级，但请做好预算管理" | 中大型企业、后端工程师、需要合规的业务 |
-| **GCP** | "我是 Google 基础设施的外化，AI 和数据是我的主场" | 数据工程师、AI 团队、深度使用 Kubernetes 的团队 |
+| 平台           | 一句话定位                                        | 典型用户                                        |
+| -------------- | ------------------------------------------------- | ----------------------------------------------- |
+| **Cloudflare** | "把应用放到离用户最近的地方跑，安全免费省心"      | 独立开发者、个人项目、初创团队                  |
+| **AWS**        | "你需要什么我都有，企业级，但请做好预算管理"      | 中大型企业、后端工程师、需要合规的业务          |
+| **GCP**        | "我是 Google 基础设施的外化，AI 和数据是我的主场" | 数据工程师、AI 团队、深度使用 Kubernetes 的团队 |
 
 **常见组合：**
 
