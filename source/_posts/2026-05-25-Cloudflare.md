@@ -13,7 +13,7 @@ cover: /images/Cloudflare/cover.png # 封面图
 
 ## 📌 了解 [Cloudflare](https://www.cloudflare.com/zh-cn/)
 
-### 🌐 Cloudflare —— 开发平台
+### 🌐 Cloudflare，开发平台
 
 Cloudflare 最早很多人知道它是 CDN、DNS、防护服务（抗 DDoS）。现在已经发展成一个完整的开发平台，核心思路是：**把计算能力放到离用户更近的位置运行，而不是集中在几台中心服务器上。**
 
@@ -26,13 +26,41 @@ Cloudflare 最早很多人知道它是 CDN、DNS、防护服务（抗 DDoS）。
 | 运维                               | 自己维护服务器、扩容、负载均衡                                              | 零运维，部署即上线                                                                       |
 | 适合场景                           | 大型后台系统、复杂数据库、AI 训练任务                                       | 博客、工具站、API、个人 SaaS                                                             |
 
-> Cloudflare 不是“全面替代服务器”，而是**另一种架构选择**——省掉运维，降低复杂度。
+> Cloudflare 不是“全面替代服务器”，而是**另一种架构选择** —— **省掉运维**，降低复杂度。简称 CF
 
 很多开发者现在会说：**“全栈部署到 Cloudflare”**，通常意思就是前端（React/Next）+ Workers + D1 + R2 整个应用都跑在 Cloudflare 上，而不是需要租 VPS 自己去维护服务器，**自然进入“全栈”状态，而不是停留在纯前端**。
 
-### ⚡ Workers —— 代码运行
+### 🔧 Wrangler，开发/部署工具
+
+- **Wrangler** 可以理解成 **CF 开发平台的命令行管家（CLI）**，它 = **本地开发、配置、部署Worker、D1、R2的工具**。你平时并不是手动去 CF 网页后台点来点去，而是在终端里敲命令
+  - 它还有一个非常重要的文件 `wrangler.jsonc`（以前很多项目是 `wrangler.toml`）
+
+    ```jsonc
+    // 这个文件类似项目配置中心，意思是 D1 数据库、R2 存储
+    {
+      "name": "my-api",
+      "main": "src/index.js",
+
+      "d1_databases": [
+        {
+          "binding": "DB", // 变量名，worker项目使用 env.DB
+          "database_name": "mydb",
+        },
+      ],
+
+      "r2_buckets": [
+        {
+          "binding": "BUCKET", // 变量名，worker项目使用 env.BUCKET
+          "bucket_name": "images",
+        },
+      ],
+    }
+    ```
+
+### ⚡ Workers，代码运行
 
 - Workers 是 Cloudflare 的 Serverless（无服务器）运行环境
+- 创建一个 Worker 项目的命令：`npm create cloudflare@latest`
 - 写 JS/TS/WASM → 部署 → **自动在全球边缘节点运行**
   - 传统后端：浏览器 → Nginx → Node.js服务器 → 数据库
   - Workers：浏览器 → Cloudflare Worker → 数据库/存储
@@ -44,7 +72,7 @@ Cloudflare 最早很多人知道它是 CDN、DNS、防护服务（抗 DDoS）。
   - Webhook
   - AI 调用层
 
-### 💾 D1 —— 数据库
+### 💾 D1，数据库
 
 - D1 是 Cloudflare 的 SQL 数据库服务。底层核心是 **SQLite**。但它不是把 SQLite 文件放在本地，而是 Cloudflare 帮你托管、同步
 - Worker 可以直接查询：
@@ -56,7 +84,7 @@ Cloudflare 最早很多人知道它是 CDN、DNS、防护服务（抗 DDoS）。
   - Worker ≈ Node 后端
   - D1 ≈ MySQL/PostgreSQL (但是 D1 更偏轻量)
 
-### 📁 R2 —— 文件存储
+### 📁 R2，文件存储
 
 - R2 是 Cloudflare 的对象存储（Object Storage）
 - 用于存储：
@@ -68,7 +96,7 @@ Cloudflare 最早很多人知道它是 CDN、DNS、防护服务（抗 DDoS）。
 - Worker 可以直接查询：
 
   ```javascript
-  await env.R2.put("avatar.png", file);
+  await env.BUCKET.put("avatar.png", file);
   ```
 
 - Worker、D1、R2 三者的关系：
@@ -94,33 +122,6 @@ Cloudflare 最早很多人知道它是 CDN、DNS、防护服务（抗 DDoS）。
     - R2
       - 存图片、附件
 
-### 🔧 Wrangler —— 开发/部署工具
-
-- **Wrangler** 可以理解成 **Cloudflare 开发平台的命令行管家（CLI）**，它 = **本地开发、配置、部署Worker、D1、R2的工具**。你平时并不是手动去 Cloudflare 网页后台点来点去，而是在终端里敲命令
-- **Wrangler** 还有一个非常重要的文件 `wrangler.jsonc`（以前很多项目是 `wrangler.toml`）
-
-  ```jsonc
-  // 这个文件类似项目配置中心，意思是 D1 数据库、R2 存储
-  {
-    "name": "my-api",
-    "main": "src/index.js",
-
-    "d1_databases": [
-      {
-        "binding": "DB",
-        "database_name": "mydb",
-      },
-    ],
-
-    "r2_buckets": [
-      {
-        "binding": "BUCKET",
-        "bucket_name": "images",
-      },
-    ],
-  }
-  ```
-
 ### 📦 Cloudflare 核心产品一览
 
 | 产品           | 定位                   | 类比                         | 免费额度                 |
@@ -140,6 +141,8 @@ Cloudflare 最早很多人知道它是 CDN、DNS、防护服务（抗 DDoS）。
 
 ## 📌 开通 [Cloudflare](https://www.cloudflare.com/zh-cn/plans/)
 
+### 直接注册账号
+
 - 个人使用 Cloudflare 的门槛其实很低：**直接注册账号即可，不需要先买服务器**
   - 很多人刚接触会误以为：“我要买一台 Cloudflare 服务器”，实际上不是。Cloudflare 大部分产品是：**先开通 → 使用 → 按量付费（或免费额度）**
 
@@ -150,18 +153,19 @@ Cloudflare 最早很多人知道它是 CDN、DNS、防护服务（抗 DDoS）。
   - R2：免费额度
   - 域名：单独买（约 $10–15/年）
 
-- 举例：
-  - 场景1：个人博客（Worker + D1 + R2）
-    - 访问量：
-      - 每天 1000–5000 PV
-      - 图片几 GB
-      - 少量数据库查询
+### 场景举例
 
-    - 费用：≈ $0/月，通常免费额度够用
+- 场景1：个人博客（Worker + D1 + R2）
+  - 访问量：
+    - 每天 1000–5000 PV
+    - 图片几 GB
+    - 少量数据库查询
 
-  - 场景2：个人 SaaS（1000 用户）
-    - 前端 + Worker API + D1 + R2
-    - 费用：约 $5–15/月，很多独立开发者就在这个区间
+  - 费用：≈ $0/月，通常免费额度够用
+
+- 场景2：个人 SaaS（1000 用户）
+  - 前端 + Worker API + D1 + R2
+  - 费用：约 $5–15/月，很多独立开发者就在这个区间
 
 ## 📌 使用 [Cloudflare](https://www.cloudflare.com/zh-cn)
 
@@ -219,6 +223,12 @@ Cloudflare 最早很多人知道它是 CDN、DNS、防护服务（抗 DDoS）。
 - 然后回 Cloudflare/计算/Workers & Pages/todolist/部署界面，可以看到部署正在进行（Building.../Deploying.../Success）
 - 等待十几秒～几十秒，再刷新链接，成功
   <img src="/images/Cloudflare/project_html_link2.png" alt="image" class="max500 border1"/>
+
+#### 📍 绑定域名
+
+> 使用原格式 https://xxx.xxx.workers.dev/ 链接，非常不稳定，总是出现报错 500 / 网络异常的情况
+
+- 点击跳转至 [绑定 Pages 自定义域名（使用域名）](#绑定-Pages-自定义域名（使用域名）)
 
 ---
 
@@ -307,6 +317,12 @@ Cloudflare 最早很多人知道它是 CDN、DNS、防护服务（抗 DDoS）。
   - 控制台终端看到部署成功和链接 https://todolist-worker.2933213867.workers.dev/
     <img src="/images/Cloudflare/project_worker3.png" alt="image" class="max500 border1"/>
   - https://todolist-worker.2933213867.workers.dev/todos 这个便是可以使用的接口数据了
+
+#### 📍 绑定域名
+
+> 使用原格式 https://xxx.xxx.workers.dev/ 链接，非常不稳定，总是出现报错 500 / 异常的情况
+
+- 点击跳转至 [绑定 Pages 自定义域名（使用域名）](#绑定-Pages-自定义域名（使用域名）)
 
 ---
 
@@ -626,8 +642,8 @@ Cloudflare 最早很多人知道它是 CDN、DNS、防护服务（抗 DDoS）。
   - 此时项目已经变成 vite 项目了，代码推送前，先在 Cloudflare 修改一下 todolist 的打包命令 (之前纯静态项目打包命令为空，现在vite项目 打包命令是`npm run build`)
     <img src="/images/Cloudflare/cloudflare_d1_4.png" alt="image" class="max700 border1"/>
 
-  - 修改完成之后，推送代码到远程`git pull`
-    - Cloudflare / Workers 和 Pages / todolistz 在自动构建，等待构建完成
+  - 修改完成之后，推送代码到远程`git push`
+    - Cloudflare / Workers 和 Pages / todolist 在自动构建，等待构建完成
     - 打开线上链接`https://todolist.2933213867.workers.dev/`可以访问了 (vite 项目 + 接口 + D1数据)
 
 ---
@@ -647,7 +663,7 @@ Cloudflare 最早很多人知道它是 CDN、DNS、防护服务（抗 DDoS）。
   <img src="/images/Cloudflare/r2_step_1.png" alt="image" class="max800 border1"/>
   <img src="/images/Cloudflare/r2_step_2.png" alt="image" class="max700 border1"/>
 
-- Cloudflare → 左侧导航栏 存储和数据/R2对象存储/概述 → 新建R2桶，输入 todolist-uploads
+- Cloudflare → 左侧导航栏 存储和数据/R2对象存储/概述 → 新建R2桶，输入`todolist-uploads`
   <img src="/images/Cloudflare/r2_step_3.png" alt="image" class="max700 border1"/>
 
 - 也可使用命令
@@ -683,13 +699,13 @@ Cloudflare 最早很多人知道它是 CDN、DNS、防护服务（抗 DDoS）。
     - 组装成一个路径key：`uploads/${crypto.randomUUID()}.${resolved.ext}`
       - uploads 是在 R2 桶中的文件目录
       - 后面一节存储在 R2 桶中的文件名称
-      - env.R2.put 把文件上传到 R2 桶 (关键)
+      - `env.R2.put()` 把文件上传到 R2 桶 (关键)
 
     - 返回完整 url 给前端，`${url.origin}/api/files/${key}`
       - https://todolist-worker.2933213867.workers.dev/api/files/uploads/27e65672-a89e-491e-99da-a6b42468e5fb.jpg
       - https://todolist-worker.2933213867.workers.dev 后端服务接口基地址
       - /api/files 下载/获取文件的接口
-      - /uploads/27e65672-a89e-491e-99da-a6b42468e5fb.jpg 存储在 R2 桶中的位置
+      - `/uploads/27e65672-a89e-491e-99da-a6b42468e5fb.jpg` 存储在 R2 桶中的位置
 
 - 下载 /api/files
   - 接口 return `${url.origin}/api/files/${key}`;
@@ -699,12 +715,12 @@ Cloudflare 最早很多人知道它是 CDN、DNS、防护服务（抗 DDoS）。
 - 前端操作：上传文件成功后，返回完整资源链接 url: https://xxx/api/files/uploads/xxxxx
 - 前端拿到数据直接展示资源，把资源链接作为字段存进 todos 表
 
-#### 自定义资源域名
+#### 📍 自定义资源域名
 
 > 想要自定义资源域名，可以公开访问 R2 文件，**不经过 worker** (通过下载接口拼接冗长的接口基地址)
 
 - 公开访问 R2 资源配置：
-  - 登录 Cloudflare → R2对象存储 → 找到`todolist-uploads` → 设置 → 设置两个地方 (不过前提是：域名已经按照阶段六的步骤接入了)
+  - 登录 Cloudflare → R2对象存储 → 找到`todolist-uploads` → 设置 → 设置两个地方 (不过前提是：域名已经按照[🌍 第六阶段：域名接入](#🌍-第六阶段：域名接入)的步骤接入了
     <img src="/images/Cloudflare/r2_step_6.png" alt="image" class="max700 border1"/>
   - 设置成功之后，直接访问资源：
     - https://file.lqhstudy.online/uploads/3d6fddf4-3a3a-464e-aa0b-6405e6e409f2.jpg
@@ -742,7 +758,7 @@ Pages（前端 HTML/JS）  ←→  Worker API（后端逻辑）
 
 #### 🌐 添加域名
 
-- 登录Cloudflare账号 → 域名/概览 → 添加域名 → 已有域名选择`连接域名`，没有选择`注册域名`
+- 登录Cloudflare账号 → 域名/概览 → 添加域名 → 1.已有域名选择`连接域名`，2.没有域名选择`注册域名`
   <img src="/images/Cloudflare/add_domains1.png" alt="image" class="max500 border1"/>
   <img src="/images/Cloudflare/add_domains2.png" alt="image" class="max500 border1"/>
 
@@ -760,162 +776,169 @@ Pages（前端 HTML/JS）  ←→  Worker API（后端逻辑）
     - 在华为云购买了域名 **lqhstudy.online**，10元/年，选择不自动续费，支付宝扫码秒付
       <img src="/images/Cloudflare/add_domains4.png" alt="image" class="max800 border1"/>
 
-  - 选择连接域名 → 输入域名 lqhstudy.online，点击继续 → 选择按月付费，Free计划 → 点击`继续前往激活` → 就会得到图2的界面(激活步骤)
+  - 在 Cloudflare 选择连接域名 → 输入域名 lqhstudy.online，点击继续 → 选择按月付费，Free计划 → 点击`继续前往激活` → 就会得到下面图2的界面(激活步骤)
     <img src="/images/Cloudflare/add_domains5.png" alt="image" class="max500 border1"/>
     <img src="/images/Cloudflare/add_domains6.png" alt="image" class="max500 border1"/>
   - 复制好两条 NS 服务器，也就可以离开当前页面了，可以看到域名已经添加成功，但是状态还不可用
     <img src="/images/Cloudflare/add_domains9.png" alt="image" class="max700 border1"/>
 
-  - 去激活，更换域名 NS（关键生效步骤）
+  - 去激活域名状态，更换域名 NS（关键生效步骤）
     - 复制 Cloudflare 给出的两条 NS 服务器：`ara.ns.cloudflare.com` `theo.ns.cloudflare.com`
     - 进入你的域名注册商后台 → 点击域名管理 → 替换成 Cloudflare 分配的 2 条 NS 地址
       <img src="/images/Cloudflare/add_domains7.png" alt="image" class="max600 border1"/>
       <img src="/images/Cloudflare/add_domains8.png" alt="image" class="max600 border1"/>
-    - 生效时间：10 分钟～24 小时，**Cloudflare 页面自动检测 NS 状态变成 Active，即接入成功**
+    - 生效时间：10 分钟～24 小时，**Cloudflare 页面自动检测 NS 状态变成 Active，即域名接入成功**
       <img src="/images/Cloudflare/add_domains10.png" alt="image" class="max600 border1"/>
 
-#### Cloudflare 接入域名后，按顺序：**DNS 域名解析 → SSL 证书 → CDN 缓存**
+#### Cloudflare 接入域名后
 
-  <img src="/images/Cloudflare/add_domains11.png" alt="image" class="max600 border1"/>
+> 按顺序：**DNS 域名解析 → 使用域名 → SSL 证书 → CDN 缓存**，一般完成前面一步就可以使用域名，后面两步一般不需要改动，一般默认
 
-- DNS 配置（**域名解析核心**）
-  - 前提：域名在别家注册、NS 已经改成 Cloudflare
-  - 点击域名 → 配置 DNS → 添加记录 (根据自己需要添加)
-    <img src="/images/Cloudflare/add_domains12.png" alt="image" class="max700 border1"/>
-  - 推荐添加的三条记录（`192.0.2.1` 是 Cloudflare 官方占位 IP，橙云开启时代理会自动转发，无需填真实服务器 IP）
+<img src="/images/Cloudflare/add_domains11.png" alt="image" class="max600 border1"/>
 
-    | 类型  | 主机/名称 | 内容/IPv4     | 云朵             | 备注                            |
-    | :---- | :-------- | :------------ | :--------------- | :------------------------------ |
-    | A     | @         | 192.0.2.1     | 橙云（开启代理） | 裸域名主站                      |
-    | CNAME | www       | xxx.pages.dev | 橙云（开启代理） | www 优先走 Pages，不受 `*` 影响 |
-    | A     | \*        | 192.0.2.1     | 橙云（开启代理） | 其余子域名兜底                  |
+##### DNS 配置（**域名解析核心**）
 
-  - **绑定 Pages 自定义域名**（把域名和第一阶段部署的 Pages 项目连起来）
-    1. Cloudflare → **Workers & Pages** → 选择 todolist 项目 → 选择`域` → **添加域名**
-    2. 选择路由模式，随机添加几个路由，比如：
-       <img src="/images/Cloudflare/add_domains14.png" alt="image" class="max600 border1"/>
+- 前提：域名在别家注册、NS 已经改成 Cloudflare
+- 点击域名 → 配置 DNS → 添加记录 (根据自己需要添加)
+  <img src="/images/Cloudflare/add_domains12.png" alt="image" class="max700 border1"/>
+- 推荐添加的三条记录（`192.0.2.1` 是 Cloudflare 官方占位 IP，橙云开启时代理会自动转发，无需填真实服务器 IP）
 
-    3. 等待 DNS 生效，访问 `https://lqhstudy.online`、`https://todos.lqhstudy.online` 验证，都可以打开站点
-       <img src="/images/Cloudflare/add_domains15.png" alt="image" class="max500 border1"/>
+  | 类型  | 主机/名称 | 内容/IPv4     | 云朵             | 备注                            |
+  | :---- | :-------- | :------------ | :--------------- | :------------------------------ |
+  | A     | @         | 192.0.2.1     | 橙云（开启代理） | 裸域名主站                      |
+  | CNAME | www       | xxx.pages.dev | 橙云（开启代理） | www 优先走 Pages，不受 `*` 影响 |
+  | A     | \*        | 192.0.2.1     | 橙云（开启代理） | 其余子域名兜底                  |
 
-    4. 同理，给第二阶段的 todolist-worker 自定义域名 也完美生效：`https://api.lqhstudy.online/api/todos`
+##### 绑定 Pages 自定义域名（使用域名）
 
-    5. 绑定域名之后的连接更稳定和美观了，之前的链接 https://xxx.xxx/workers.dev 动不动就报错 500 (网络异常加载失败)
+- 把域名和第一阶段部署的 Pages 项目连起来
+  - Cloudflare → **Workers & Pages** → 选择 todolist 项目 → 选择`域` → **添加域名**
+  - 选择路由模式，随机添加几个路由，比如：
+    <img src="/images/Cloudflare/add_domains14.png" alt="image" class="max600 border1"/>
 
-- SSL/TLS 配置（**全站 HTTPS**）
-  - SSL 的作用
-    - 浏览器 → CF 服务器加密 HTTPS，地址栏小绿锁，去除不安全警告
-    - 浏览器强制 HTTPS 访问，避免手动输 http 跳转失败
-    - 搜索引擎优先收录 HTTPS 站点，提升 SEO 排名
-    - 防止数据窃听、劫持、广告篡改网页内容
-    - Pages 静态站必须 HTTPS，http 访问会报错
-    - **CF 免费自动签发全球可信 SSL 证书，域名自带小绿锁，解决 https 证书购买、续期难题**
-  - 点击域名 → **SSL/TLS** → **概述** 选择加密模式（4 种模式适合不同场景）
+  - 等待 DNS 生效，访问 `https://lqhstudy.online`、`https://todos.lqhstudy.online` 验证，都可以打开站点
+    <img src="/images/Cloudflare/add_domains15.png" alt="image" class="max500 border1"/>
 
-    | 模式                      | 适用场景                      | 博客/Pages 推荐                              |
-    | :------------------------ | :---------------------------- | :------------------------------------------- |
-    | 灵活 Flexible             | 源站只有 HTTP                 | ❌ 不推荐（浏览器到 CF 加密，CF 到源站明文） |
-    | 完全 Full                 | 源站有 HTTPS 但证书可能不受信 | ⚠️ 可用                                      |
-    | 完全（严格）Full (strict) | 源站有有效 HTTPS 证书         | ✅ **Pages 首选**                            |
-    | 关闭 Off                  | 不加密                        | ❌ 禁用                                      |
+- 同理，给第二阶段的 todolist-worker 自定义域名 也完美生效：`https://api.lqhstudy.online/api/todos`
 
-    > Pages / Workers 托管站点选 **Full (strict)** 即可，证书由 Cloudflare 自动签发。
+- 绑定域名之后的链接更稳定和美观了，之前的链接 https://xxx.xxx/workers.dev 动不动就报错 500 (网络异常加载失败)
 
-    <img src="/images/Cloudflare/add_domains13.png" alt="SSL/TLS 加密模式选择" class="max700 border1"/>
+##### SSL/TLS 配置（**全站 HTTPS**）
 
-- CDN 配置（**缓存、提速、压缩**）
+- SSL 的作用
+  - 浏览器 → CF 服务器加密 HTTPS，地址栏小绿锁，去除不安全警告
+  - 浏览器强制 HTTPS 访问，避免手动输 http 跳转失败
+  - 搜索引擎优先收录 HTTPS 站点，提升 SEO 排名
+  - 防止数据窃听、劫持、广告篡改网页内容
+  - Pages 静态站必须 HTTPS，http 访问会报错
+  - **CF 免费自动签发全球可信 SSL 证书，域名自带小绿锁，解决 https 证书购买、续期难题**
+- 点击域名 → **SSL/TLS** → **概述** 选择加密模式（4 种模式适合不同场景）
 
-  分两大模块：**① Speed（速度 / 压缩全局开关）** 和 **② Page Rules 页面规则（自定义缓存）**。建议先做完 Speed 全局开关，再按需加 Page Rules 精细控制。
-  - ① Speed —— 速度 / 压缩全局开关
-    - 入口：点击域名 → 左侧 **速度 / Speed** → **优化 / Optimization**
-    - 作用：全站生效，不用写规则。适合博客、静态站这类「HTML + CSS + JS + 图片」站点，一次打开，全球边缘节点自动压缩、加速传输
+  | 模式                      | 适用场景                      | 博客/Pages 推荐                              |
+  | :------------------------ | :---------------------------- | :------------------------------------------- |
+  | 灵活 Flexible             | 源站只有 HTTP                 | ❌ 不推荐（浏览器到 CF 加密，CF 到源站明文） |
+  | 完全 Full                 | 源站有 HTTPS 但证书可能不受信 | ⚠️ 可用                                      |
+  | 完全（严格）Full (strict) | 源站有有效 HTTPS 证书         | ✅ **Pages 首选**                            |
+  | 关闭 Off                  | 不加密                        | ❌ 禁用                                      |
 
-    - **推荐开启项（免费计划可用）**
+  > Pages / Workers 托管站点选 **Full (strict)** 即可，证书由 Cloudflare 自动签发。
 
-      | 设置项         | 路径                   | 推荐值           | 说明                                                   |
-      | :------------- | :--------------------- | :--------------- | :----------------------------------------------------- |
-      | Brotli 压缩    | 速度 → 优化 → 内容优化 | **开启**         | 比 Gzip 压缩率更高，CSS/JS/HTML 体积更小，首屏加载更快 |
-      | Early Hints    | 速度 → 优化 → 内容优化 | **开启**         | 提前告诉浏览器要加载哪些资源，减少等待时间             |
-      | HTTP/2         | 速度 → 优化 → 协议优化 | **开启**（默认） | 多路复用，同一连接并行加载多个文件                     |
-      | HTTP/3 (QUIC)  | 速度 → 优化 → 协议优化 | **开启**（默认） | 弱网、移动网络下延迟更低                               |
-      | 0-RTT 连接恢复 | 速度 → 优化 → 协议优化 | **开启**         | 回访用户握手更快（安全性要求极高时可关）               |
+  <img src="/images/Cloudflare/add_domains13.png" alt="SSL/TLS 加密模式选择" class="max700 border1"/>
 
-    - **按需开启 / 建议关闭项**
+##### CDN 配置（**缓存、提速、压缩**）
 
-      | 设置项                     | 推荐值     | 说明                                                            |
-      | :------------------------- | :--------- | :-------------------------------------------------------------- |
-      | Rocket Loader              | **关闭**   | 会改写 JS 加载顺序，Hexo / Vue / React 站点容易出白屏或交互异常 |
-      | Auto Minify（HTML/CSS/JS） | **已下线** | Cloudflare 已移除该开关；构建阶段用 Vite/Webpack/Hexo 压缩即可  |
-      | Polish（图片优化）         | 免费版有限 | 付费功能，博客图片建议本地压缩 + WebP，不必强开                 |
-      | Mirage                     | **关闭**   | 已废弃，无需配置                                                |
+分两大模块：**① Speed（速度 / 压缩全局开关）** 和 **② Page Rules 页面规则（自定义缓存）**。建议先做完 Speed 全局开关，再按需加 Page Rules 精细控制。
 
-    - **操作步骤**
-      1. 进入域名控制台 → **速度 / Speed** → **优化 / Optimization**
-      2. 找到 **内容优化 / Content Optimization**，打开 **Brotli**、**Early Hints**
-      3. 找到 **协议优化**，确认 **HTTP/2**、**HTTP/3** 为开启状态
-      4. 找到 **JavaScript**，确认 **Rocket Loader** 为关闭
-      5. 保存后等 1～3 分钟生效，可用浏览器 DevTools → Network 查看响应头是否出现 `content-encoding: br`
+- ① Speed —— 速度 / 压缩全局开关
+  - 入口：点击域名 → 左侧 **速度 / Speed** → **优化 / Optimization**
+  - 作用：全站生效，不用写规则。适合博客、静态站这类「HTML + CSS + JS + 图片」站点，一次打开，全球边缘节点自动压缩、加速传输
 
-    - **验证是否生效**
-      - 打开站点 → F12 → Network → 刷新 → 点任意 `.css` 或 `.js` 文件
-      - 响应头里看到 `content-encoding: br` 表示 Brotli 已生效
-      - 响应头里看到 `cf-cache-status: HIT` 表示 CDN 缓存命中（需配合下方 Page Rules）
+  - **推荐开启项（免费计划可用）**
 
-  - ② Page Rules —— 页面规则（自定义缓存）
-    - 入口：点击域名 → 左侧 **规则 / Rules** → **页面规则 / Page Rules**
-    - 作用：按 URL 模式单独控制缓存策略。Speed 是全局开关；Page Rules 用来区分「静态资源长期缓存」和「HTML 短缓存 / 不缓存」
-    - 免费计划：**3 条** Page Rules，要精打细算，优先给静态资源
+    | 设置项         | 路径                   | 推荐值           | 说明                                                   |
+    | :------------- | :--------------------- | :--------------- | :----------------------------------------------------- |
+    | Brotli 压缩    | 速度 → 优化 → 内容优化 | **开启**         | 比 Gzip 压缩率更高，CSS/JS/HTML 体积更小，首屏加载更快 |
+    | Early Hints    | 速度 → 优化 → 内容优化 | **开启**         | 提前告诉浏览器要加载哪些资源，减少等待时间             |
+    | HTTP/2         | 速度 → 优化 → 协议优化 | **开启**（默认） | 多路复用，同一连接并行加载多个文件                     |
+    | HTTP/3 (QUIC)  | 速度 → 优化 → 协议优化 | **开启**（默认） | 弱网、移动网络下延迟更低                               |
+    | 0-RTT 连接恢复 | 速度 → 优化 → 协议优化 | **开启**         | 回访用户握手更快（安全性要求极高时可关）               |
 
-    - **博客 / 静态站推荐 3 条规则（按优先级从上到下）**
+  - **按需开启 / 建议关闭项**
 
-      | 优先级 | URL 匹配模式                | 设置项                      | 值                                | 用途         |
-      | :----- | :-------------------------- | :-------------------------- | :-------------------------------- | :----------- |
-      | 1      | `*lqhstudy.online/css/*`    | 缓存级别 Cache Level        | **缓存所有内容 Cache Everything** | CSS 长期缓存 |
-      | 1      | 同上                        | 边缘缓存 TTL Edge Cache TTL | **1 个月**                        | 减少回源     |
-      | 2      | `*lqhstudy.online/js/*`     | 缓存级别                    | **Cache Everything**              | JS 长期缓存  |
-      | 2      | 同上                        | 边缘缓存 TTL                | **1 个月**                        | 同上         |
-      | 3      | `*lqhstudy.online/images/*` | 缓存级别                    | **Cache Everything**              | 图片长期缓存 |
-      | 3      | 同上                        | 边缘缓存 TTL                | **1 个月**                        | 同上         |
+    | 设置项                     | 推荐值     | 说明                                                            |
+    | :------------------------- | :--------- | :-------------------------------------------------------------- |
+    | Rocket Loader              | **关闭**   | 会改写 JS 加载顺序，Hexo / Vue / React 站点容易出白屏或交互异常 |
+    | Auto Minify（HTML/CSS/JS） | **已下线** | Cloudflare 已移除该开关；构建阶段用 Vite/Webpack/Hexo 压缩即可  |
+    | Polish（图片优化）         | 免费版有限 | 付费功能，博客图片建议本地压缩 + WebP，不必强开                 |
+    | Mirage                     | **关闭**   | 已废弃，无需配置                                                |
 
-      > 把 `lqhstudy.online` 换成你自己的域名。若静态资源在 `/assets/` 等路径，把 `css`、`js`、`images` 改成对应目录即可。
+  - **操作步骤**
+    1. 进入域名控制台 → **速度 / Speed** → **优化 / Optimization**
+    2. 找到 **内容优化 / Content Optimization**，打开 **Brotli**、**Early Hints**
+    3. 找到 **协议优化**，确认 **HTTP/2**、**HTTP/3** 为开启状态
+    4. 找到 **JavaScript**，确认 **Rocket Loader** 为关闭
+    5. 保存后等 1～3 分钟生效，可用浏览器 DevTools → Network 查看响应头是否出现 `content-encoding: br`
 
-    - **如果 3 条额度不够，合并成 1 条（省额度写法）**
+  - **验证是否生效**
+    - 打开站点 → F12 → Network → 刷新 → 点任意 `.css` 或 `.js` 文件
+    - 响应头里看到 `content-encoding: br` 表示 Brotli 已生效
+    - 响应头里看到 `cf-cache-status: HIT` 表示 CDN 缓存命中（需配合下方 Page Rules）
 
-      | URL 匹配模式                                                           | 设置项                           | 值                   |
-      | :--------------------------------------------------------------------- | :------------------------------- | :------------------- |
-      | `*lqhstudy.online/*.{css,js,png,jpg,jpeg,gif,webp,svg,ico,woff,woff2}` | 缓存级别                         | **Cache Everything** |
-      | 同上                                                                   | 边缘缓存 TTL                     | **1 个月**           |
-      | 同上                                                                   | 浏览器缓存 TTL Browser Cache TTL | **4 小时**（或按需） |
+- ② Page Rules —— 页面规则（自定义缓存）
+  - 入口：点击域名 → 左侧 **规则 / Rules** → **页面规则 / Page Rules**
+  - 作用：按 URL 模式单独控制缓存策略。Speed 是全局开关；Page Rules 用来区分「静态资源长期缓存」和「HTML 短缓存 / 不缓存」
+  - 免费计划：**3 条** Page Rules，要精打细算，优先给静态资源
 
-      这样 1 条规则覆盖所有静态资源，剩余 2 条可留给其他需求（如强制 HTTPS、www 跳转等）。
+  - **博客 / 静态站推荐 3 条规则（按优先级从上到下）**
 
-    - **HTML 页面要不要缓存？**
+    | 优先级 | URL 匹配模式                | 设置项                      | 值                                | 用途         |
+    | :----- | :-------------------------- | :-------------------------- | :-------------------------------- | :----------- |
+    | 1      | `*lqhstudy.online/css/*`    | 缓存级别 Cache Level        | **缓存所有内容 Cache Everything** | CSS 长期缓存 |
+    | 1      | 同上                        | 边缘缓存 TTL Edge Cache TTL | **1 个月**                        | 减少回源     |
+    | 2      | `*lqhstudy.online/js/*`     | 缓存级别                    | **Cache Everything**              | JS 长期缓存  |
+    | 2      | 同上                        | 边缘缓存 TTL                | **1 个月**                        | 同上         |
+    | 3      | `*lqhstudy.online/images/*` | 缓存级别                    | **Cache Everything**              | 图片长期缓存 |
+    | 3      | 同上                        | 边缘缓存 TTL                | **1 个月**                        | 同上         |
 
-      | 场景                     | 建议                                                                     |
-      | :----------------------- | :----------------------------------------------------------------------- |
-      | 纯静态博客，很少改内容   | 可对 `*lqhstudy.online/*` 设 Cache Everything，Edge TTL **2 小时～1 天** |
-      | 经常 `git push` 更新文章 | **不要**给 HTML 设长期缓存；只缓存 css/js/images，HTML 走默认策略即可    |
-      | 有登录 / 后台 / API      | 对 `/api/*`、后台路径单独设 **绕过缓存 Bypass**                          |
+    > 把 `lqhstudy.online` 换成你自己的域名。若静态资源在 `/assets/` 等路径，把 `css`、`js`、`images` 改成对应目录即可。
 
-    - **操作步骤（以静态资源规则为例）**
-      1. 进入 **规则 / Rules** → **页面规则 / Page Rules** → 点击 **创建页面规则 / Create Page Rule**
-      2. **URL** 填入：`*lqhstudy.online/css/*`（换成你的域名和路径）
-      3. 点击 **+ 添加设置**，选择 **缓存级别** → 选 **缓存所有内容 / Cache Everything**
-      4. 再 **+ 添加设置** → **边缘缓存 TTL** → 选 **1 个月**
-      5. 点击 **保存并部署 / Save and Deploy**
-      6. 按同样方式创建 `js`、`images` 规则（或合并为 1 条通配规则）
-      7. 规则按列表从上到下匹配，**更具体的规则放上面**
+  - **如果 3 条额度不够，合并成 1 条（省额度写法）**
 
-    - **验证缓存是否命中**
-      - 第一次访问某 CSS 文件，响应头 `cf-cache-status` 多为 `MISS` 或 `EXPIRED`（回源拉取）
-      - 刷新后再访问，应变为 `HIT`（边缘节点直接返回，不再回源）
-      - 若一直是 `DYNAMIC` 或 `BYPASS`，检查规则 URL 是否写错、是否开启了绕过缓存
+    | URL 匹配模式                                                           | 设置项                           | 值                   |
+    | :--------------------------------------------------------------------- | :------------------------------- | :------------------- |
+    | `*lqhstudy.online/*.{css,js,png,jpg,jpeg,gif,webp,svg,ico,woff,woff2}` | 缓存级别                         | **Cache Everything** |
+    | 同上                                                                   | 边缘缓存 TTL                     | **1 个月**           |
+    | 同上                                                                   | 浏览器缓存 TTL Browser Cache TTL | **4 小时**（或按需） |
 
-    - **常见坑**
-      - Page Rules 免费只有 3 条，**先配静态资源**，别浪费在「全站一条」上
-      - URL 模式区分大小写，路径要和 Hexo 生成目录一致（如 `/css/`、`/js/`、`/images/`）
-      - 更新静态资源后若用户看到旧版，可在 **缓存 / Caching** → **配置** → **清除缓存** 里做「清除所有内容」
-      - 新版控制台还有 **缓存规则 Cache Rules**（更灵活），免费计划也够用；Page Rules 够用时不必强行迁移
+    这样 1 条规则覆盖所有静态资源，剩余 2 条可留给其他需求（如强制 HTTPS、www 跳转等）。
+
+  - **HTML 页面要不要缓存？**
+
+    | 场景                     | 建议                                                                     |
+    | :----------------------- | :----------------------------------------------------------------------- |
+    | 纯静态博客，很少改内容   | 可对 `*lqhstudy.online/*` 设 Cache Everything，Edge TTL **2 小时～1 天** |
+    | 经常 `git push` 更新文章 | **不要**给 HTML 设长期缓存；只缓存 css/js/images，HTML 走默认策略即可    |
+    | 有登录 / 后台 / API      | 对 `/api/*`、后台路径单独设 **绕过缓存 Bypass**                          |
+
+  - **操作步骤（以静态资源规则为例）**
+    1. 进入 **规则 / Rules** → **页面规则 / Page Rules** → 点击 **创建页面规则 / Create Page Rule**
+    2. **URL** 填入：`*lqhstudy.online/css/*`（换成你的域名和路径）
+    3. 点击 **+ 添加设置**，选择 **缓存级别** → 选 **缓存所有内容 / Cache Everything**
+    4. 再 **+ 添加设置** → **边缘缓存 TTL** → 选 **1 个月**
+    5. 点击 **保存并部署 / Save and Deploy**
+    6. 按同样方式创建 `js`、`images` 规则（或合并为 1 条通配规则）
+    7. 规则按列表从上到下匹配，**更具体的规则放上面**
+
+  - **验证缓存是否命中**
+    - 第一次访问某 CSS 文件，响应头 `cf-cache-status` 多为 `MISS` 或 `EXPIRED`（回源拉取）
+    - 刷新后再访问，应变为 `HIT`（边缘节点直接返回，不再回源）
+    - 若一直是 `DYNAMIC` 或 `BYPASS`，检查规则 URL 是否写错、是否开启了绕过缓存
+
+  - **常见坑**
+    - Page Rules 免费只有 3 条，**先配静态资源**，别浪费在「全站一条」上
+    - URL 模式区分大小写，路径要和 Hexo 生成目录一致（如 `/css/`、`/js/`、`/images/`）
+    - 更新静态资源后若用户看到旧版，可在 **缓存 / Caching** → **配置** → **清除缓存** 里做「清除所有内容」
+    - 新版控制台还有 **缓存规则 Cache Rules**（更灵活），免费计划也够用；Page Rules 够用时不必强行迁移
 
 ---
 
