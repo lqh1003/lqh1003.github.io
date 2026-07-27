@@ -520,7 +520,7 @@ Windows/macOS/Linux 三大系统，以下都是Windows系统的安装流程。
   ![](/images/Hexo搭建个人博客Github-分享/hexo-theme-set.png)
 
 ### 🔹增加看板娘（Live2D 动态人物）🔹
-- 安装依赖
+- 安装依赖，根据喜好从[Live2D 模型开源仓库](https://github.com/imuncle/live2d)选择模型
   ```bash
     # 安装 live2d 核心插件
     npm install -D hexo-helper-live2d

@@ -102,12 +102,12 @@ footer_img: /theme_images/footer.jpg
 # 全局背景图: color(纯色) | image(图片) 为空则背景留白
 # background: /theme_images/bg.jpg
 # background: 'linear-gradient(180deg, #B9D394 30%, #D2E3B9 100%)'
-background: '#97bf5e42'
+background: "#97bf5e42"
 
 # 封面是否显示
 cover:
-  index_enable: true  # 首页是否展示文章封面
-  aside_enable: false  # aside的 "最新文章" 区域是否展示文章封面
+  index_enable: true # 首页是否展示文章封面
+  aside_enable: false # aside的 "最新文章" 区域是否展示文章封面
   archives_enable: true # 归档是否展示文章封面
   # 当未设置封面cover时，将显示默认封面（可设置图片/颜色/渐变色）
   default_cover:
@@ -121,7 +121,7 @@ error_img:
 # A simple 404 page
 error_404:
   enable: true
-  subtitle: '页面没有找到'
+  subtitle: "页面没有找到"
   background: /img/error-page.png
 
 # 页面的meta展示
@@ -356,7 +356,7 @@ aside:
     # The title shows the series name
     series_title: false
     # Order by title or date
-    orderBy: 'date'
+    orderBy: "date"
     # Sort of order. 1, asc for ascending; -1, desc for descending
     order: -1
   card_webinfo:
@@ -386,9 +386,9 @@ translate:
   # Time delay
   translateDelay: 0
   # The text of the button when the language is Simplified Chinese
-  msgToTraditionalChinese: '繁'
+  msgToTraditionalChinese: "繁"
   # The text of the button when the language is Traditional Chinese
-  msgToSimplifiedChinese: '簡'
+  msgToSimplifiedChinese: "簡"
 
 # Read Mode
 readmode: true
@@ -509,7 +509,7 @@ search:
 
     # 搜索库CDN（默认使用本地）
     # js: https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.min.js
-    CDN: 
+    CDN:
 
   # Docsearch
   # https://docsearch.algolia.com/
@@ -612,18 +612,20 @@ valine:
 # Waline 评论配置
 waline:
   enable: true
-  serverURL: 'https://lqh-blog-comments.vercel.app' # 替换为你的实际地址
+  serverURL: "https://lqh-blog-comments.vercel.app" # 替换为你的实际地址
   locale:
-    placeholder: '欢迎留言...' # 评论框提示文字
+    placeholder: "欢迎留言..." # 评论框提示文字
   commentCount: true # 显示评论数
   pageview: true # 显示阅读量
   emoji:
     - https://unpkg.com/@waline/emojis@1.1.0/weibo
     - https://unpkg.com/@waline/emojis@1.1.0/alus
-  meta: ['nick', 'mail', 'link'] # 评论者信息
-  requiredFields: ['nick', 'mail'] # 必填项
-  login: 'enable' # 登录方式
+  meta: ["nick", "mail", "link"] # 评论者信息
+  requiredFields: ["nick", "mail"] # 必填项（评论者信息：昵称、邮箱email、网址link）
+  login: "enable" # 登录方式
   wordLimit: 0 # 评论字数限制
+  visitor: true # 启用访问量统计
+  pageSize: 10 # 每页评论数
 
 # Utterances
 # https://utteranc.es/
@@ -788,16 +790,16 @@ site_verification:
 
 theme_color:
   enable: true
-  main: "#77a931"   # 主题色
-  paginator: "#77a931"   # 分页器颜色
-  button_hover: "#97bf5e"   # 按鈕 hover 颜色
-  text_selection: "#97bf5e"   # 文字选中颜色
+  main: "#77a931" # 主题色
+  paginator: "#77a931" # 分页器颜色
+  button_hover: "#97bf5e" # 按鈕 hover 颜色
+  text_selection: "#97bf5e" # 文字选中颜色
   # link_color: "#99a9bf"   # 链接颜色
   # meta_color: "#858585"   # 文章元数据颜色
-  hr_color: "#77a931"   # 分割线颜色
+  hr_color: "#77a931" # 分割线颜色
   # code_foreground: "#F47466"   # 代码前景色
   # code_background: "rgba(27, 31, 35, .05)"   # 代码背景色
-  toc_color: "#77a931"   # 目录颜色
+  toc_color: "#77a931" # 目录颜色
   # blockquote_padding_color: "#49b1f5"   # 引用边框颜色
   # blockquote_background_color: "#49b1f5"   # 应用背景色
   # scrollbar_color: "#49b1f5"   # 滚动条颜色
@@ -871,9 +873,9 @@ hr_icon:
 # https://github.com/disjukr/activate-power-mode
 activate_power_mode:
   enable: true
-  colorful: true  # 是否开启冒光特效
-  shake: false  # 是否开启抖动特效
-  mobile: false  # 是否在移动端开启打字效果
+  colorful: true # 是否开启冒光特效
+  shake: false # 是否开启抖动特效
+  mobile: false # 是否在移动端开启打字效果
 
 # Background effects
 # --------------------------------------
@@ -900,7 +902,7 @@ canvas_fluttering_ribbon:
 canvas_nest:
   enable: false
   # Color of lines, default: '0,0,0'; RGB values: (R,G,B).(note: use ',' to separate.)
-  color: '0,0,255'
+  color: "0,0,255"
   # The opacity of line (0~1)
   opacity: 0.7
   # The z-index property of the background
@@ -934,7 +936,7 @@ clickShowText:
     - Good
     - 精彩
   fontSize: 15px
-  random: false  # 文字随机显示
+  random: false # 文字随机显示
   mobile: false
 
 # --------------------------------------
@@ -955,7 +957,7 @@ lightbox:
 series:
   enable: false
   # Order by title or date
-  orderBy: 'title'
+  orderBy: "title"
   # Sort of order. 1, asc for ascending; -1, desc for descending
   order: 1
   number: true
@@ -985,16 +987,16 @@ chartjs:
   # The default settings are only used when the MD syntax is not specified.
   # General font color for the chart
   fontColor:
-    light: 'rgba(0, 0, 0, 0.8)'
-    dark: 'rgba(255, 255, 255, 0.8)'
+    light: "rgba(0, 0, 0, 0.8)"
+    dark: "rgba(255, 255, 255, 0.8)"
   # General border color for the chart
   borderColor:
-    light: 'rgba(0, 0, 0, 0.1)'
-    dark: 'rgba(255, 255, 255, 0.2)'
+    light: "rgba(0, 0, 0, 0.1)"
+    dark: "rgba(255, 255, 255, 0.2)"
   # Background color for scale labels on radar and polar area charts
   scale_ticks_backdropColor:
-    light: 'transparent'
-    dark: 'transparent'
+    light: "transparent"
+    dark: "transparent"
 
 # Note - Bootstrap Callout
 note:
@@ -1033,8 +1035,8 @@ snackbar:
   enable: false
   position: bottom-left
   # The background color of Toast Notification in light mode and dark mode
-  bg_light: '#49b1f5'
-  bg_dark: '#1f1f1f'
+  bg_light: "#49b1f5"
+  bg_dark: "#1f1f1f"
 
 # Instant.page
 # https://instant.page/
