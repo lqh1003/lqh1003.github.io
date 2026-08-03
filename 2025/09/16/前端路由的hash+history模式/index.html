@@ -1,0 +1,372 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>前端路由的hash+history模式 | 😊Saraの记录</title><meta name="author" content="sara"><meta name="copyright" content="sara"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="前端路由的两种核心实现方式（hash 哈希模式、history 模式），主要用于管理 URL 与组件之间的映射关系，核心区别：  URL 格式 底层原理 服务器依赖（hash ❌ 、history ✅） 功能限制  👉 URL 格式 hash 模式  URL 包含 #，# 后面的部分为路由路径 http:&#x2F;&#x2F;example.com&#x2F;#&#x2F;home #及其后面的内容不会被发送到服务器，仅由前端路由解">
+<meta property="og:type" content="article">
+<meta property="og:title" content="前端路由的hash+history模式">
+<meta property="og:url" content="https://lqh1003.github.io/2025/09/16/%E5%89%8D%E7%AB%AF%E8%B7%AF%E7%94%B1%E7%9A%84hash+history%E6%A8%A1%E5%BC%8F/index.html">
+<meta property="og:site_name" content="😊Saraの记录">
+<meta property="og:description" content="前端路由的两种核心实现方式（hash 哈希模式、history 模式），主要用于管理 URL 与组件之间的映射关系，核心区别：  URL 格式 底层原理 服务器依赖（hash ❌ 、history ✅） 功能限制  👉 URL 格式 hash 模式  URL 包含 #，# 后面的部分为路由路径 http:&#x2F;&#x2F;example.com&#x2F;#&#x2F;home #及其后面的内容不会被发送到服务器，仅由前端路由解">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://lqh1003.github.io/images/%E5%89%8D%E7%AB%AF%E8%B7%AF%E7%94%B1%E7%9A%84hash+history%E6%A8%A1%E5%BC%8F/cover.jpg">
+<meta property="article:published_time" content="2025-09-16T10:29:10.000Z">
+<meta property="article:modified_time" content="2026-08-03T06:20:38.607Z">
+<meta property="article:author" content="sara">
+<meta property="article:tag" content="Vue-Router">
+<meta property="article:tag" content="Hash">
+<meta property="article:tag" content="History">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://lqh1003.github.io/images/%E5%89%8D%E7%AB%AF%E8%B7%AF%E7%94%B1%E7%9A%84hash+history%E6%A8%A1%E5%BC%8F/cover.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "前端路由的hash+history模式",
+  "url": "https://lqh1003.github.io/2025/09/16/%E5%89%8D%E7%AB%AF%E8%B7%AF%E7%94%B1%E7%9A%84hash+history%E6%A8%A1%E5%BC%8F/",
+  "image": "https://lqh1003.github.io/images/%E5%89%8D%E7%AB%AF%E8%B7%AF%E7%94%B1%E7%9A%84hash+history%E6%A8%A1%E5%BC%8F/cover.jpg",
+  "datePublished": "2025-09-16T10:29:10.000Z",
+  "dateModified": "2026-08-03T06:20:38.607Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "sara",
+      "url": "https://lqh1003.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/theme_images/f.ico"><link rel="canonical" href="https://lqh1003.github.io/2025/09/16/%E5%89%8D%E7%AB%AF%E8%B7%AF%E7%94%B1%E7%9A%84hash+history%E6%A8%A1%E5%BC%8F/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":230,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '前端路由的hash+history模式',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-color: #97bf5e42;"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/theme_images/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">29</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">44</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-book"></i><span> 页面</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link"><i class="fa-fw fas fa-link"></i><span> 链接</span></a></div><div class="menus_item"><a class="site-page" href="/about"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/images/%E5%89%8D%E7%AB%AF%E8%B7%AF%E7%94%B1%E7%9A%84hash+history%E6%A8%A1%E5%BC%8F/cover.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">😊Saraの记录</span></a><a class="nav-page-title" href="/"><span class="site-name">前端路由的hash+history模式</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-book"></i><span> 页面</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link"><i class="fa-fw fas fa-link"></i><span> 链接</span></a></div><div class="menus_item"><a class="site-page" href="/about"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">前端路由的hash+history模式</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-09-16T10:29:10.000Z" title="发表于 2025-09-16 10:29:10">2025-09-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-08-03T06:20:38.607Z" title="更新于 2026-08-03 06:20:38">2026-08-03</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Vue-Router/">Vue-Router</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span class="waline-pageview-count" data-path="/2025/09/16/%E5%89%8D%E7%AB%AF%E8%B7%AF%E7%94%B1%E7%9A%84hash+history%E6%A8%A1%E5%BC%8F/"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>前端路由的两种核心实现方式（hash 哈希模式、history 模式），主要用于管理 URL 与组件之间的映射关系，核心区别：</p>
+<ul>
+<li>URL 格式</li>
+<li>底层原理</li>
+<li>服务器依赖（hash ❌ 、history ✅）</li>
+<li>功能限制</li>
+</ul>
+<h3 id="👉-URL-格式"><a href="#👉-URL-格式" class="headerlink" title="👉 URL 格式"></a>👉 URL 格式</h3><ul>
+<li><p>hash 模式</p>
+<ul>
+<li>URL 包含 <code>#</code>，<code>#</code> 后面的部分为路由路径 <code>http://example.com/#/home</code></li>
+<li><strong><code>#</code>及其后面的内容不会被发送到服务器，仅由前端路由解析</strong></li>
+</ul>
+</li>
+<li><p>history 模式</p>
+<ul>
+<li>URL 不包含 <code>#</code>，路径格式与传统 URL 一致 <code>http://example.com/home</code></li>
+<li>路径看起来更 “整洁” ，符合用户对 URL 的常规认知</li>
+</ul>
+</li>
+</ul>
+<h3 id="👉-底层原理"><a href="#👉-底层原理" class="headerlink" title="👉 底层原理"></a>👉 底层原理</h3><ul>
+<li><p>hash 模式</p>
+<ul>
+<li>基于浏览器的 <strong>哈希值（window.location.hash）</strong> 实现</li>
+<li>哈希值的变化会触发 hashchange 事件，Vue Router 监听该事件并匹配对应的路由组件</li>
+<li>特点<ul>
+<li><strong><code>#</code> 后面的内容不会被包含在 HTTP 请求中，仅在客户端解析</strong></li>
+<li>即使刷新页面，浏览器也不会向服务器请求该路径，而是直接加载当前页面并由前端路由处理</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>history 模式</p>
+<ul>
+<li>基于 <strong>HTML5 的 History API（window.history）</strong> 实现，主要使用 pushState() 和 replaceState() 方法操作浏览器历史记录</li>
+<li>特点<ul>
+<li>可以修改 URL 路径而不触发页面刷新（传统的 window.location.href 会导致刷新）</li>
+<li>路径变化时不会自动触发事件，Vue Router 内部通过拦截 <code>&lt;a&gt;</code> 标签点击和监听 popstate 事件（前进 &#x2F; 后退按钮）实现路由切换。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="👉-核心区别对比表"><a href="#👉-核心区别对比表" class="headerlink" title="👉 核心区别对比表"></a>👉 核心区别对比表</h3><table>
+<thead>
+<tr>
+<th align="left">对比维度</th>
+<th align="left">hash 模式</th>
+<th align="left">history 模式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">URL 美观度</td>
+<td align="left">含 <code>#</code>，不够美观（如 <code>/#/about</code>）</td>
+<td align="left">无 <code>#</code>，更接近传统 URL（如 <code>/about</code>）</td>
+</tr>
+<tr>
+<td align="left">服务器依赖</td>
+<td align="left">无：刷新页面不会向服务器请求路径</td>
+<td align="left">有：刷新页面会向服务器请求该路径</td>
+</tr>
+<tr>
+<td align="left">兼容性</td>
+<td align="left">支持所有浏览器（包括 IE8 及以下）</td>
+<td align="left">仅支持 HTML5 浏览器（IE10+）</td>
+</tr>
+<tr>
+<td align="left">路径长度限制</td>
+<td align="left">有（不同浏览器对哈希值长度限制不同）</td>
+<td align="left">理论上无限制（取决于服务器配置）</td>
+</tr>
+<tr>
+<td align="left">部署复杂度</td>
+<td align="left">简单：无需服务器配置</td>
+<td align="left">复杂：需服务器配置路由重定向</td>
+</tr>
+<tr>
+<td align="left">404 处理</td>
+<td align="left">不会出现 404（始终由前端处理）</td>
+<td align="left">可能出现 404（需服务器配置兜底页面）</td>
+</tr>
+</tbody></table>
+<h3 id="👉-使用场景"><a href="#👉-使用场景" class="headerlink" title="👉 使用场景"></a>👉 使用场景</h3><ul>
+<li><p>优先选择 hash 模式的情况</p>
+<ul>
+<li>项目需要兼容 旧浏览器（如：IE8 及以下）—— 理由：hash 兼容性强，无需后端配置</li>
+<li>部署环境无法修改服务器配置（如某些静态托管平台不支持自定义配置）</li>
+<li>对 URL 美观度要求不高，更注重开发和部署的简便</li>
+</ul>
+</li>
+<li><p>优先选择 history 模式的情况</p>
+<ul>
+<li>追求 URL 美观性（如：企业官网、产品展示页）</li>
+<li>需要使用 SEO 友好的 URL（虽然单页应用 SEO 需额外处理，但 history 模式的 URL 更符合搜索引擎规范）</li>
+<li><strong>部署环境支持服务器配置（如 Nginx、Apache 等）</strong>，可解决刷新 404 问题</li>
+</ul>
+</li>
+</ul>
+<h2 id="👉-关键注意事项："><a href="#👉-关键注意事项：" class="headerlink" title="👉 关键注意事项："></a>👉 关键注意事项：</h2><h3 id="⚠️-history-模式的-404-问题-空白页-页面-404-Cannot-GET-path"><a href="#⚠️-history-模式的-404-问题-空白页-页面-404-Cannot-GET-path" class="headerlink" title="⚠️ history 模式的 404 问题 (空白页&#x2F;页面 404&#x2F;Cannot GET /path)"></a>⚠️ history 模式的 404 问题 (空白页&#x2F;页面 404&#x2F;<code>Cannot GET /path</code>)</h3><p>当用户直接访问<code>http://example.com/about</code>并刷新页面时，浏览器会向服务器请求<code>/about</code>路径。若服务器未配置该路径指向 index.html，会返回 404 错误 或者 <code>Cannot GET /about</code></p>
+<ul>
+<li><p>解决方法（<strong>需在服务器配置中添加规则，将所有请求重定向到 index.html</strong>）：</p>
+<ul>
+<li><p><strong>开发环境</strong>配置（本地调试）</p>
+<ul>
+<li><p>通过 <code>devServer.historyApiFallback</code> 选项，配置路由重定向到 index.html（通常用于支持 history 模式）</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Vue CLI（vue.config.js）</span></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = &#123;</span><br><span class="line">	<span class="attr">devServer</span>: &#123;</span><br><span class="line">		<span class="attr">historyApiFallback</span>: <span class="literal">true</span>, <span class="comment">// 所有请求重定向到 index.html</span></span><br><span class="line">	&#125;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Vite（vite.config.js）</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title function_">defineConfig</span>(&#123;</span><br><span class="line">	<span class="attr">server</span>: &#123;</span><br><span class="line">		<span class="attr">historyApiFallback</span>: <span class="literal">true</span>,</span><br><span class="line">	&#125;,</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p><strong>生产环境</strong>配置（服务器端）<br>vue.config.js 仅负责开发环境配置，生产环境部署时仍需在服务器（如 Nginx、Apache）中配置重定向规则</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="⚠️-hash-模式的-SEO-局限"><a href="#⚠️-hash-模式的-SEO-局限" class="headerlink" title="⚠️ hash 模式的 SEO 局限"></a>⚠️ hash 模式的 SEO 局限</h3><p>部分搜索引擎可能会忽略<code>#</code>后的内容，影响页面的 SEO 效果（虽然现代搜索引擎已逐步支持，但仍存在兼容性问题）</p>
+<ul>
+<li><p>URL 包含<code>#</code>，影响美观和 SEO</p>
+<ul>
+<li>问题：<code>#</code>符号可能让用户觉得 URL 不专业，且部分旧搜索引擎会忽略<code>#</code>后的内容（影响 SEO）</li>
+<li>解决：<ul>
+<li>若对 URL 美观度要求高，直接改用 history 模式</li>
+<li>SEO 需求可结合服务端渲染（SSR）或预渲染（Prerender）处理</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>哈希值被编码导致路由匹配失败</p>
+<ul>
+<li>问题：若路由参数包含特殊字符（如 <code>?、&amp;</code>），会被自动编码（如 <code>?</code> 变为 <code>%3F</code>），可能导致路由匹配异常</li>
+<li>解决：<ul>
+<li>使用 <code>encodeURIComponent</code> 和 <code>decodeURIComponent</code> 手动处理参数编码</li>
+<li>复杂参数建议通过 <code>Vuex/Pinia</code> 存储，而非放在 URL 中</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="👉-开发-测试环境（本地打开-dist-index-html）"><a href="#👉-开发-测试环境（本地打开-dist-index-html）" class="headerlink" title="👉 开发&#x2F;测试环境（本地打开 dist&#x2F;index.html）"></a>👉 开发&#x2F;测试环境（本地打开 dist&#x2F;index.html）</h3><ul>
+<li>直接双击 <code>dist/index.html</code> 打开（<code>file:// 协议</code>）时，history 模式会因浏览器安全限制失效（空白页）</li>
+<li>或 右键使用 vscode 的 Live Server 这类简单文件服务打开页面时，出现空白页</li>
+</ul>
+<p><img src="/images/%E5%89%8D%E7%AB%AF%E8%B7%AF%E7%94%B1%E7%9A%84hash+history%E6%A8%A1%E5%BC%8F/liveServer.png"></p>
+<p>临时解决：使用本地服务器打开，如 serve 或 http-server</p>
+<ul>
+<li>serve 轻量级本地服务器，适合非 Vue 项目或需要独立服务器的场景</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装 serve 工具（需 Node.js）</span></span><br><span class="line">npm install -g serve</span><br><span class="line"><span class="comment"># 在 dist 目录运行</span></span><br><span class="line"><span class="built_in">cd</span> dist</span><br><span class="line">serve -s</span><br><span class="line"></span><br><span class="line"><span class="comment"># 全局安装</span></span><br><span class="line">npm install -g http-server</span><br><span class="line"><span class="comment"># 在 dist 目录运行</span></span><br><span class="line"><span class="built_in">cd</span> dist</span><br><span class="line">http-server</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/%E5%89%8D%E7%AB%AF%E8%B7%AF%E7%94%B1%E7%9A%84hash+history%E6%A8%A1%E5%BC%8F/httpServer.png"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://lqh1003.github.io">sara</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://lqh1003.github.io/2025/09/16/%E5%89%8D%E7%AB%AF%E8%B7%AF%E7%94%B1%E7%9A%84hash+history%E6%A8%A1%E5%BC%8F/">https://lqh1003.github.io/2025/09/16/前端路由的hash+history模式/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://lqh1003.github.io" target="_blank">😊Saraの记录</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Vue-Router/">Vue-Router</a><a class="post-meta__tags" href="/tags/Hash/">Hash</a><a class="post-meta__tags" href="/tags/History/">History</a></div><div class="post-share"><div class="social-share" data-image="/images/%E5%89%8D%E7%AB%AF%E8%B7%AF%E7%94%B1%E7%9A%84hash+history%E6%A8%A1%E5%BC%8F/cover.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2025/09/19/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E2%80%94%E5%AE%9E%E6%88%98%E6%80%9D%E8%B7%AF/" title="前端性能优化—实战思路"><img class="cover" src="/images/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E2%80%94%E5%AE%9E%E6%88%98%E6%80%9D%E8%B7%AF/cover.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">前端性能优化—实战思路</div></div><div class="info-2"><div class="info-item-1"> 打开速度怎么变快 —— 首屏加载优化 再次打开速度怎么变快 —— 缓存优化 操作怎么才顺滑 —— 渲染优化 动画怎么保证流畅 —— 长任务拆分  前端性能优化 —— 实战思路⚙️ 开发一个 SEO 要求高、首屏加载快的新网站 首选终极方案：SSR 服务端渲染，静态站点生成 SSG  ⚙️ 对一个现成的网站进行性能和 SEO 优化性能指标衡量 ⭐ FCP（First Contentful Paint）—— 用户导航到你页面后浏览器呈现第一块 DOM 内容所花费的时间 ⭐ LCP（Largest Contentful Paint） —— 指页面渲染出最大文本或图片的时间 SI（Speed Index） —— 指界面可见内容的显示速度 TTI（Time to Interactive） —— 指网页需要多长时间才能提供完整的交互功能 TBT（Total Blocking Time） —— 度量页面被阻止响应用户输入（如鼠标单击、屏幕点击或键盘按下）的总时间 这个综合是通过在 FCP 和可交互时间之间添加所有长任务的阻塞部分来计算的 任何执行时间超过 50ms 的任务都是长任务，50ms...</div></div></div></a><a class="pagination-related" href="/2025/09/15/%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E6%95%85%E9%9A%9C%E6%95%88%E6%9E%9C%E7%9A%84%E6%8C%89%E9%92%AE/" title="实现一个故障效果的按钮"><img class="cover" src="/images/%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E6%95%85%E9%9A%9C%E6%95%88%E6%9E%9C%E7%9A%84%E6%8C%89%E9%92%AE/cover.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">实现一个故障效果的按钮</div></div><div class="info-2"><div class="info-item-1">🚀 故障按钮效果  	 		 		 		 			.faultBox { 				padding: 20px; 				margin: 0; 				display: flex; 				justify-content: center; 			}     		.fault-btn,     		.fault-btn::after {     			padding: 13px 36px;     			border: none;     			outline: transparent;     			background: linear-gradient(     				45deg,     				transparent 5%,     				#ff013c 5%     			); /* 0-5%透明 5%-100%红色*/     			box-shadow: 6px 0 #00e6f6;     			font-family: 'Bebas Neue', monospace;     			font-weight: bold;     			display: flex;...</div></div></div></a></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/theme_images/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">sara</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">29</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">44</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%91%89-URL-%E6%A0%BC%E5%BC%8F"><span class="toc-number">1.</span> <span class="toc-text">👉 URL 格式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%91%89-%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86"><span class="toc-number">2.</span> <span class="toc-text">👉 底层原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%91%89-%E6%A0%B8%E5%BF%83%E5%8C%BA%E5%88%AB%E5%AF%B9%E6%AF%94%E8%A1%A8"><span class="toc-number">3.</span> <span class="toc-text">👉 核心区别对比表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%91%89-%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">4.</span> <span class="toc-text">👉 使用场景</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%91%89-%E5%85%B3%E9%94%AE%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9%EF%BC%9A"><span class="toc-number"></span> <span class="toc-text">👉 关键注意事项：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9A%A0%EF%B8%8F-history-%E6%A8%A1%E5%BC%8F%E7%9A%84-404-%E9%97%AE%E9%A2%98-%E7%A9%BA%E7%99%BD%E9%A1%B5-%E9%A1%B5%E9%9D%A2-404-Cannot-GET-path"><span class="toc-number">1.</span> <span class="toc-text">⚠️ history 模式的 404 问题 (空白页&#x2F;页面 404&#x2F;Cannot GET &#x2F;path)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9A%A0%EF%B8%8F-hash-%E6%A8%A1%E5%BC%8F%E7%9A%84-SEO-%E5%B1%80%E9%99%90"><span class="toc-number">2.</span> <span class="toc-text">⚠️ hash 模式的 SEO 局限</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%91%89-%E5%BC%80%E5%8F%91-%E6%B5%8B%E8%AF%95%E7%8E%AF%E5%A2%83%EF%BC%88%E6%9C%AC%E5%9C%B0%E6%89%93%E5%BC%80-dist-index-html%EF%BC%89"><span class="toc-number">3.</span> <span class="toc-text">👉 开发&#x2F;测试环境（本地打开 dist&#x2F;index.html）</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/07/09/%E4%BA%86%E8%A7%A3-AI-Agent/" title="了解 AI Agent">了解 AI Agent</a><time datetime="2026-07-09T16:52:54.000Z" title="发表于 2026-07-09 16:52:54">2026-07-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/05/25/Cloudflare/" title="Cloudflare">Cloudflare</a><time datetime="2026-05-25T10:44:26.000Z" title="发表于 2026-05-25 10:44:26">2026-05-25</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/30/%E4%B8%BAGitHub%E8%B4%A6%E5%8F%B7%E7%94%9F%E6%88%90SSH%E5%AF%86%E9%92%A5/" title="为GitHub账号生成SSH密钥">为GitHub账号生成SSH密钥</a><time datetime="2026-01-30T10:16:18.000Z" title="发表于 2026-01-30 10:16:18">2026-01-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/29/Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2Github-%E5%88%86%E4%BA%AB/" title="Hexo搭建个人博客Github-分享">Hexo搭建个人博客Github-分享</a><time datetime="2026-01-29T10:56:54.000Z" title="发表于 2026-01-29 10:56:54">2026-01-29</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/10/25/Webpack%E3%80%81Vite%E5%AF%B9%E6%AF%94/" title="Webpack、Vite对比">Webpack、Vite对比</a><time datetime="2025-10-25T10:00:30.000Z" title="发表于 2025-10-25 10:00:30">2025-10-25</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/theme_images/footer.jpg);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;2025 - 2026 By sara</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.4.2</a></span></div><div class="footer_custom_text">Hi, 欢迎来到我的 <a href="/">博客</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const destroyWaline = ele => ele.destroy()
+
+  const initWaline = (Fn, el = document, path = window.location.pathname) => {
+    const waline = Fn({
+      el: el.querySelector('#waline-wrap'),
+      serverURL: 'https://lqh-blog-comments.vercel.app',
+      pageview: true,
+      dark: 'html[data-theme="dark"]',
+      comment: false,
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyWaline = () => {
+        destroyWaline(waline)
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+  }
+
+  const loadWaline = (el, path) => {
+    if (initFn) initWaline(initFn, el, path)
+    else {
+      btf.getCSS('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.css')
+        .then(() => import('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.js'))
+        .then(({ init }) => {
+          initFn = init || Waline.init
+          initWaline(initFn, el, path)
+          window.walineFn = initFn
+        })
+    }
+  }
+
+  if (isShuoshuo) {
+    'Waline' === 'Waline'
+      ? window.shuoshuoComment = { loadComment: loadWaline } 
+      : window.loadOtherComment = loadWaline
+    return
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script src="/js/live2d-toggle.js"></script><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="false" data-text="厉害,强,好,wonderful,点赞,Great,棒,Good,精彩" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"use":"live2d-widget-model-hibiki","display":{"position":"left","width":230,"height":370,"hOffset":50,"vOffset":0,"zIndex":100},"mobile":{"show":false,"scale":0.5},"log":false});</script></body></html>

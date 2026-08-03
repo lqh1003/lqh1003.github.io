@@ -1,0 +1,1585 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Cloudflare | 😊Saraの记录</title><meta name="author" content="sara"><meta name="copyright" content="sara"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="📌 了解 Cloudflare🌐 Cloudflare，开发平台Cloudflare 最早很多人知道它是 CDN、DNS、防护服务（抗 DDoS）。现在已经发展成一个完整的开发平台，核心思路是：把计算能力放到离用户更近的位置运行，而不是集中在几台中心服务器上。 传统模式 vs Cloudflare 模式：    维度 传统模式 Cloudflare 模式    请求路径 用户 → 服务器（东京">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cloudflare">
+<meta property="og:url" content="https://lqh1003.github.io/2026/05/25/Cloudflare/index.html">
+<meta property="og:site_name" content="😊Saraの记录">
+<meta property="og:description" content="📌 了解 Cloudflare🌐 Cloudflare，开发平台Cloudflare 最早很多人知道它是 CDN、DNS、防护服务（抗 DDoS）。现在已经发展成一个完整的开发平台，核心思路是：把计算能力放到离用户更近的位置运行，而不是集中在几台中心服务器上。 传统模式 vs Cloudflare 模式：    维度 传统模式 Cloudflare 模式    请求路径 用户 → 服务器（东京">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://lqh1003.github.io/images/Cloudflare/cover.png">
+<meta property="article:published_time" content="2026-05-25T10:44:26.000Z">
+<meta property="article:modified_time" content="2026-08-03T06:20:38.608Z">
+<meta property="article:author" content="sara">
+<meta property="article:tag" content="Cloudflare">
+<meta property="article:tag" content="Workers">
+<meta property="article:tag" content="D1">
+<meta property="article:tag" content="R2">
+<meta property="article:tag" content="Wrangler">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://lqh1003.github.io/images/Cloudflare/cover.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Cloudflare",
+  "url": "https://lqh1003.github.io/2026/05/25/Cloudflare/",
+  "image": "https://lqh1003.github.io/images/Cloudflare/cover.png",
+  "datePublished": "2026-05-25T10:44:26.000Z",
+  "dateModified": "2026-08-03T06:20:38.608Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "sara",
+      "url": "https://lqh1003.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/theme_images/f.ico"><link rel="canonical" href="https://lqh1003.github.io/2026/05/25/Cloudflare/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":230,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Cloudflare',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-color: #97bf5e42;"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/theme_images/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">29</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">44</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-book"></i><span> 页面</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link"><i class="fa-fw fas fa-link"></i><span> 链接</span></a></div><div class="menus_item"><a class="site-page" href="/about"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/images/Cloudflare/cover.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">😊Saraの记录</span></a><a class="nav-page-title" href="/"><span class="site-name">Cloudflare</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-book"></i><span> 页面</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link"><i class="fa-fw fas fa-link"></i><span> 链接</span></a></div><div class="menus_item"><a class="site-page" href="/about"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Cloudflare</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-05-25T10:44:26.000Z" title="发表于 2026-05-25 10:44:26">2026-05-25</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-08-03T06:20:38.608Z" title="更新于 2026-08-03 06:20:38">2026-08-03</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Cloudflare/">Cloudflare</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span class="waline-pageview-count" data-path="/2026/05/25/Cloudflare/"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="📌-了解-Cloudflare"><a href="#📌-了解-Cloudflare" class="headerlink" title="📌 了解 Cloudflare"></a>📌 了解 <a target="_blank" rel="noopener" href="https://www.cloudflare.com/zh-cn/">Cloudflare</a></h2><h3 id="🌐-Cloudflare，开发平台"><a href="#🌐-Cloudflare，开发平台" class="headerlink" title="🌐 Cloudflare，开发平台"></a>🌐 Cloudflare，开发平台</h3><p>Cloudflare 最早很多人知道它是 CDN、DNS、防护服务（抗 DDoS）。现在已经发展成一个完整的开发平台，核心思路是：<strong>把计算能力放到离用户更近的位置运行，而不是集中在几台中心服务器上。</strong></p>
+<p><strong>传统模式 vs Cloudflare 模式：</strong></p>
+<table>
+<thead>
+<tr>
+<th><div style="width:70px">维度</div></th>
+<th>传统模式</th>
+<th>Cloudflare 模式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>请求路径</td>
+<td>用户 → 服务器（东京&#x2F;新加坡&#x2F;美国）→ 数据库</td>
+<td>用户 → 最近的边缘节点 → Worker → 数据库&#x2F;存储</td>
+</tr>
+<tr>
+<td>延迟</td>
+<td>如果用户在北京，而服务器在美国，请求要跨洋，延迟可能 200ms+，高峰时期可能堵</td>
+<td>就近处理，延迟大幅降低（不用关心“服务器在哪台机器”，部署后，代码自动出现在全球边缘节点）</td>
+</tr>
+<tr>
+<td>运维</td>
+<td>自己维护服务器、扩容、负载均衡</td>
+<td>零运维，部署即上线</td>
+</tr>
+<tr>
+<td>适合场景</td>
+<td>大型后台系统、复杂数据库、AI 训练任务</td>
+<td>博客、工具站、API、个人 SaaS</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>Cloudflare 不是“全面替代服务器”，而是<strong>另一种架构选择</strong> —— <strong>省掉运维</strong>，降低复杂度。简称 CF</p>
+</blockquote>
+<p>很多开发者现在会说：<strong>“全栈部署到 Cloudflare”</strong>，通常意思就是前端（React&#x2F;Next）+ Workers + D1 + R2 整个应用都跑在 Cloudflare 上，而不是需要租 VPS 自己去维护服务器，<strong>自然进入“全栈”状态，而不是停留在纯前端</strong>。</p>
+<h3 id="🔧-Wrangler，开发-部署工具"><a href="#🔧-Wrangler，开发-部署工具" class="headerlink" title="🔧 Wrangler，开发&#x2F;部署工具"></a>🔧 Wrangler，开发&#x2F;部署工具</h3><ul>
+<li><strong>Wrangler</strong> 可以理解成 <strong>CF 开发平台的命令行管家（CLI）</strong>，它 &#x3D; <strong>本地开发、配置、部署Worker、D1、R2的工具</strong>。你平时并不是手动去 CF 网页后台点来点去，而是在终端里敲命令<ul>
+<li><p>它还有一个非常重要的文件 <code>wrangler.jsonc</code>（以前很多项目是 <code>wrangler.toml</code>）</p>
+<figure class="highlight jsonc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 这个文件类似项目配置中心，意思是 D1 数据库、R2 存储</span></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;my-api&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;main&quot;</span><span class="punctuation">:</span> <span class="string">&quot;src/index.js&quot;</span><span class="punctuation">,</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">&quot;d1_databases&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;binding&quot;</span><span class="punctuation">:</span> <span class="string">&quot;DB&quot;</span><span class="punctuation">,</span> <span class="comment">// 变量名，worker项目使用 env.DB</span></span><br><span class="line">      <span class="attr">&quot;database_name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;mydb&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">&quot;r2_buckets&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;binding&quot;</span><span class="punctuation">:</span> <span class="string">&quot;BUCKET&quot;</span><span class="punctuation">,</span> <span class="comment">// 变量名，worker项目使用 env.BUCKET</span></span><br><span class="line">      <span class="attr">&quot;bucket_name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;images&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<h3 id="⚡-Workers，代码运行"><a href="#⚡-Workers，代码运行" class="headerlink" title="⚡ Workers，代码运行"></a>⚡ Workers，代码运行</h3><ul>
+<li>Workers 是 Cloudflare 的 Serverless（无服务器）运行环境</li>
+<li>创建一个 Worker 项目的命令：<code>npm create cloudflare@latest</code></li>
+<li>写 JS&#x2F;TS&#x2F;WASM → 部署 → <strong>自动在全球边缘节点运行</strong><ul>
+<li>传统后端：浏览器 → Nginx → Node.js服务器 → 数据库</li>
+<li>Workers：浏览器 → Cloudflare Worker → 数据库&#x2F;存储</li>
+</ul>
+</li>
+<li>它直接处理 HTTP 请求，相当于：<ul>
+<li>API 服务</li>
+<li>网页SSR</li>
+<li>鉴权</li>
+<li>中间件</li>
+<li>Webhook</li>
+<li>AI 调用层</li>
+</ul>
+</li>
+</ul>
+<h3 id="💾-D1，数据库"><a href="#💾-D1，数据库" class="headerlink" title="💾 D1，数据库"></a>💾 D1，数据库</h3><ul>
+<li><p>D1 是 Cloudflare 的 SQL 数据库服务。底层核心是 <strong>SQLite</strong>。但它不是把 SQLite 文件放在本地，而是 Cloudflare 帮你托管、同步</p>
+</li>
+<li><p>Worker 可以直接查询：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> result = <span class="keyword">await</span> env.<span class="property">DB</span>.<span class="title function_">prepare</span>(<span class="string">&quot;SELECT * FROM users&quot;</span>).<span class="title function_">all</span>();</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Worker ≈ Node 后端</li>
+<li>D1 ≈ MySQL&#x2F;PostgreSQL (但是 D1 更偏轻量)</li>
+</ul>
+</li>
+</ul>
+<h3 id="📁-R2，文件存储"><a href="#📁-R2，文件存储" class="headerlink" title="📁 R2，文件存储"></a>📁 R2，文件存储</h3><ul>
+<li><p>R2 是 Cloudflare 的对象存储（Object Storage）</p>
+</li>
+<li><p>用于存储：</p>
+<ul>
+<li>图片</li>
+<li>视频</li>
+<li>PDF</li>
+<li>上传文件</li>
+<li>静态资源</li>
+</ul>
+</li>
+<li><p>Worker 可以直接查询：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">await</span> env.<span class="property">BUCKET</span>.<span class="title function_">put</span>(<span class="string">&quot;avatar.png&quot;</span>, file);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Worker、D1、R2 三者的关系：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">用户</span><br><span class="line">↓</span><br><span class="line">Cloudflare CDN</span><br><span class="line">↓</span><br><span class="line">Worker</span><br><span class="line">↓       ↓</span><br><span class="line">D1      R2</span><br><span class="line">(SQL)  (文件)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>例如做一个博客系统：<ul>
+<li>Worker<ul>
+<li>处理 API</li>
+<li>登录</li>
+<li>页面渲染</li>
+</ul>
+</li>
+<li>D1<ul>
+<li>存文章、用户、评论</li>
+</ul>
+</li>
+<li>R2<ul>
+<li>存图片、附件</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="📦-Cloudflare-核心产品一览"><a href="#📦-Cloudflare-核心产品一览" class="headerlink" title="📦 Cloudflare 核心产品一览"></a>📦 Cloudflare 核心产品一览</h3><table>
+<thead>
+<tr>
+<th>产品</th>
+<th>定位</th>
+<th>类比</th>
+<th>免费额度</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Workers</strong></td>
+<td>代码运行（Serverless）</td>
+<td>后端服务器 &#x2F; Node.js</td>
+<td>每天 10 万次请求</td>
+</tr>
+<tr>
+<td><strong>Pages</strong></td>
+<td>静态网站托管 + CI&#x2F;CD</td>
+<td>Vercel &#x2F; Netlify</td>
+<td>无限部署，无限带宽</td>
+</tr>
+<tr>
+<td><strong>D1</strong></td>
+<td>关系型数据库（SQLite）</td>
+<td>MySQL &#x2F; PostgreSQL（轻量版）</td>
+<td>500MB 存储，500万行读&#x2F;天</td>
+</tr>
+<tr>
+<td><strong>R2</strong></td>
+<td>对象存储（文件&#x2F;图片）</td>
+<td>AWS S3（但出流量免费）</td>
+<td>10GB 存储，免出流量费</td>
+</tr>
+<tr>
+<td><strong>KV</strong></td>
+<td>键值对存储（全球缓存）</td>
+<td>Redis</td>
+<td>10万次读&#x2F;天</td>
+</tr>
+<tr>
+<td><strong>Wrangler</strong></td>
+<td>本地开发 + 部署 CLI</td>
+<td>npm &#x2F; 项目管理工具</td>
+<td>免费工具</td>
+</tr>
+<tr>
+<td><strong>CDN &#x2F; DNS</strong></td>
+<td>全球加速 + 域名解析</td>
+<td>国内 CDN + 阿里云 DNS</td>
+<td>免费</td>
+</tr>
+<tr>
+<td><strong>DDoS &#x2F; WAF</strong></td>
+<td>安全防护</td>
+<td>云盾 &#x2F; 防火墙</td>
+<td>免费无限量</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>四件套核心组合：<strong>Pages（前端）+ Workers（后端）+ D1（数据库）+ R2（存储）</strong> → 零成本跑完整全栈应用</p>
+</blockquote>
+<hr>
+<h2 id="📌-开通-Cloudflare"><a href="#📌-开通-Cloudflare" class="headerlink" title="📌 开通 Cloudflare"></a>📌 开通 <a target="_blank" rel="noopener" href="https://www.cloudflare.com/zh-cn/plans/">Cloudflare</a></h2><h3 id="直接注册账号"><a href="#直接注册账号" class="headerlink" title="直接注册账号"></a>直接注册账号</h3><ul>
+<li><p>个人使用 Cloudflare 的门槛其实很低：<strong>直接注册账号即可，不需要先买服务器</strong></p>
+<ul>
+<li>很多人刚接触会误以为：“我要买一台 Cloudflare 服务器”，实际上不是。Cloudflare 大部分产品是：<strong>先开通 → 使用 → 按量付费（或免费额度）</strong></li>
+</ul>
+</li>
+<li><p>Cloudflare 主要是按量模式，如果只是（学习 Cloudflare + 做几个项目）的阶段，可能花费：</p>
+<ul>
+<li>账号：免费</li>
+<li>Workers：免费额度</li>
+<li>D1：免费额度</li>
+<li>R2：免费额度</li>
+<li>域名：单独买（约 $10–15&#x2F;年）</li>
+</ul>
+</li>
+</ul>
+<h3 id="场景举例"><a href="#场景举例" class="headerlink" title="场景举例"></a>场景举例</h3><ul>
+<li><p>场景1：个人博客（Worker + D1 + R2）</p>
+<ul>
+<li><p>访问量：</p>
+<ul>
+<li>每天 1000–5000 PV</li>
+<li>图片几 GB</li>
+<li>少量数据库查询</li>
+</ul>
+</li>
+<li><p>费用：≈ $0&#x2F;月，通常免费额度够用</p>
+</li>
+</ul>
+</li>
+<li><p>场景2：个人 SaaS（1000 用户）</p>
+<ul>
+<li>前端 + Worker API + D1 + R2</li>
+<li>费用：约 $5–15&#x2F;月，很多独立开发者就在这个区间</li>
+</ul>
+</li>
+</ul>
+<h2 id="📌-使用-Cloudflare"><a href="#📌-使用-Cloudflare" class="headerlink" title="📌 使用 Cloudflare"></a>📌 使用 <a target="_blank" rel="noopener" href="https://www.cloudflare.com/zh-cn">Cloudflare</a></h2><blockquote>
+<p><strong>学习路线</strong>：① Pages 部署静态站 → ② Workers 接口 → ③ D1 数据库 → ④ R2 文件存储 → ⑤ 完整项目串联 → ⑥ 域名接入 + DNS&#x2F;SSL&#x2F;CDN</p>
+</blockquote>
+<hr>
+<h3 id="🚀-第一阶段：先把”部署网站”跑通"><a href="#🚀-第一阶段：先把”部署网站”跑通" class="headerlink" title="🚀 第一阶段：先把”部署网站”跑通"></a>🚀 第一阶段：先把”部署网站”跑通</h3><blockquote>
+<p>不碰数据库，不碰后端，只学会把项目放到 Cloudflare，周期：1-2 天</p>
+</blockquote>
+<h4 id="📝-注册-Cloudflare"><a href="#📝-注册-Cloudflare" class="headerlink" title="📝 注册 Cloudflare"></a>📝 注册 <a target="_blank" rel="noopener" href="https://dash.cloudflare.com/login">Cloudflare</a></h4><ul>
+<li>使用 GitHub 或 邮箱+密码 登录 (我直接用验证完真人，选择点击 Github 登录)<img src="/images/Cloudflare/cloudflare_login.png" alt="image" class="max400 border1"/>
+<img src="/images/Cloudflare/cloudflare_login2.png" alt="image" class="max400 border1"/>
+<img src="/images/Cloudflare/cloudflare_default.png" alt="image" class="max700 border1"/></li>
+</ul>
+<h4 id="📁-准备一个-HTML-项目-Github"><a href="#📁-准备一个-HTML-项目-Github" class="headerlink" title="📁 准备一个 HTML 项目 (Github)"></a>📁 准备一个 HTML 项目 (Github)</h4><ul>
+<li>适合项目：<ul>
+<li>纯 HTML&#x2F;CSS&#x2F;JS</li>
+<li>Vue &#x2F; React &#x2F; Vite &#x2F; Next 静态导出</li>
+<li>博客 - 文档站</li>
+<li>Landing Page</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">my-site/</span><br><span class="line">  ├── index.html</span><br><span class="line">  ├── style.css</span><br><span class="line">  ├── script.js</span><br><span class="line">  ├── images/</span><br></pre></td></tr></table></figure></li>
+<li>准备一个静态项目 <a href="mailto:&#103;&#105;&#116;&#x40;&#x67;&#105;&#116;&#104;&#x75;&#x62;&#46;&#x63;&#x6f;&#x6d;">git@github.com</a>:lqh1003&#x2F;todolist.git<ul>
+<li>仓库不需要公开。Cloudflare Pages 和 Workers 都支持私有 GitHub 仓库<img src="/images/Cloudflare/project_html.png" alt="image" class="max700 border1"/></li>
+</ul>
+</li>
+</ul>
+<h4 id="🔗-Cloudflare-Pages-绑定-GitHub-自动部署"><a href="#🔗-Cloudflare-Pages-绑定-GitHub-自动部署" class="headerlink" title="🔗 Cloudflare Pages 绑定 GitHub 自动部署"></a>🔗 Cloudflare Pages 绑定 GitHub 自动部署</h4><blockquote>
+<p>部署一个 HTML 项目到 Cloudflare Pages，绑定 GitHub 自动部署</p>
+</blockquote>
+<ul>
+<li>登录 Cloudflare → 进入 Workers &amp; Pages → 选择 Create → 选择 Pages → 选择 Connect to Github → 选择todolist项目(第一次会要求授权 GitHub) → 部署<img src="/images/Cloudflare/project_html_c.png" alt="image" class="max700 border1"/>
+<img src="/images/Cloudflare/project_html_deploy.png" alt="image" class="max400 border1"/></li>
+<li>等待几秒部署完成<ul>
+<li>这里就是可以访问的链接<code>https://项目名.账号ID.workers.dev</code>，也可以自己购买域名进行更换<img src="/images/Cloudflare/project_html_link.png" alt="image" class="max500 border1"/></li>
+<li>继续等待几十秒刷新链接 <a target="_blank" rel="noopener" href="https://todolist.2933213867.workers.dev/">https://todolist.2933213867.workers.dev/</a><img src="/images/Cloudflare/project_html_link1.png" alt="image" class="max500 border1"/></li>
+</ul>
+</li>
+</ul>
+<h4 id="🔄-尝试改代码自动更新"><a href="#🔄-尝试改代码自动更新" class="headerlink" title="🔄 尝试改代码自动更新"></a>🔄 尝试改代码自动更新</h4><blockquote>
+<p>git push → GitHub → Cloudflare Pages → <strong>自动构建</strong> → 网站更新</p>
+</blockquote>
+<ul>
+<li>修改代码，git push 到远程仓库</li>
+<li>然后回 Cloudflare&#x2F;计算&#x2F;Workers &amp; Pages&#x2F;todolist&#x2F;部署界面，可以看到部署正在进行（Building…&#x2F;Deploying…&#x2F;Success）</li>
+<li>等待十几秒～几十秒，再刷新链接，成功<img src="/images/Cloudflare/project_html_link2.png" alt="image" class="max500 border1"/></li>
+</ul>
+<h4 id="📍-绑定域名"><a href="#📍-绑定域名" class="headerlink" title="📍 绑定域名"></a>📍 绑定域名</h4><blockquote>
+<p>使用原格式 <a target="_blank" rel="noopener" href="https://xxx.xxx.workers.dev/">https://xxx.xxx.workers.dev/</a> 链接，非常不稳定，总是出现报错 500 &#x2F; 网络异常的情况</p>
+</blockquote>
+<ul>
+<li>点击跳转至 <a href="#%E7%BB%91%E5%AE%9A-Pages-%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F%E5%90%8D%EF%BC%88%E4%BD%BF%E7%94%A8%E5%9F%9F%E5%90%8D%EF%BC%89">绑定 Pages 自定义域名（使用域名）</a></li>
+</ul>
+<hr>
+<h3 id="⚡-第二阶段：开始学-Workers"><a href="#⚡-第二阶段：开始学-Workers" class="headerlink" title="⚡ 第二阶段：开始学 Workers"></a>⚡ 第二阶段：开始学 Workers</h3><blockquote>
+<p>Worker API 返回加数据 (不要 D1，不要登录，不要增删改查)，周期：3-5 天</p>
+</blockquote>
+<h4 id="创建项目-npm-create-cloudflare-latest"><a href="#创建项目-npm-create-cloudflare-latest" class="headerlink" title="创建项目 npm create cloudflare@latest"></a>创建项目 <code>npm create cloudflare@latest</code></h4><ul>
+<li>需要 node22+<img src="/images/Cloudflare/node_version.png" alt="image" class="max500 border1"/></li>
+<li>Project name? —— 输入 todolist-worker</li>
+<li>What type of application? —— 选择 Hello World example</li>
+<li>Which language? —— 选择 Javascript</li>
+<li>… 后面根据需要选择即可</li>
+</ul>
+<h4 id="本地运行-npm-run-dev"><a href="#本地运行-npm-run-dev" class="headerlink" title="本地运行 npm run dev"></a>本地运行 <code>npm run dev</code></h4><ul>
+<li>初始化的项目目录：<img src="/images/Cloudflare/project_worker.png" alt="image" class="max800 border1"/></li>
+<li>运行链接：<a target="_blank" rel="noopener" href="http://127.0.0.1:8787/">http://127.0.0.1:8787/</a></li>
+</ul>
+<h4 id="修改-src-index-js"><a href="#修改-src-index-js" class="headerlink" title="修改 src/index.js"></a>修改 <code>src/index.js</code></h4><ul>
+<li><p>返回假数据，打开 <a target="_blank" rel="noopener" href="http://127.0.0.1:8787/todos">http://127.0.0.1:8787/todos</a> 可以看到返回 Json 数据</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// src/index.js 文件</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  <span class="keyword">async</span> <span class="title function_">fetch</span>(<span class="params">request, env, ctx</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> url = <span class="keyword">new</span> <span class="title function_">URL</span>(request.<span class="property">url</span>);</span><br><span class="line">    <span class="keyword">switch</span> (url.<span class="property">pathname</span>) &#123;</span><br><span class="line">      <span class="keyword">case</span> <span class="string">&quot;/message&quot;</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Response</span>(<span class="string">&quot;Hello, World!&quot;</span>);</span><br><span class="line">      <span class="keyword">case</span> <span class="string">&quot;/random&quot;</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Response</span>(crypto.<span class="title function_">randomUUID</span>());</span><br><span class="line"></span><br><span class="line">      <span class="comment">// *** 加一接口 /todos ***</span></span><br><span class="line">      <span class="keyword">case</span> <span class="string">&quot;/todos&quot;</span>:</span><br><span class="line">        <span class="keyword">const</span> todos = [</span><br><span class="line">          &#123;</span><br><span class="line">            <span class="attr">id</span>: <span class="number">1</span>,</span><br><span class="line">            <span class="attr">text</span>: <span class="string">&quot;学习 Cloudflare&quot;</span>,</span><br><span class="line">            <span class="attr">done</span>: <span class="literal">false</span>,</span><br><span class="line">          &#125;,</span><br><span class="line">          &#123;</span><br><span class="line">            <span class="attr">id</span>: <span class="number">2</span>,</span><br><span class="line">            <span class="attr">text</span>: <span class="string">&quot;完成 Todo 页面&quot;</span>,</span><br><span class="line">            <span class="attr">done</span>: <span class="literal">true</span>,</span><br><span class="line">          &#125;,</span><br><span class="line">          &#123;</span><br><span class="line">            <span class="attr">id</span>: <span class="number">3</span>,</span><br><span class="line">            <span class="attr">text</span>: <span class="string">&quot;部署到 Workers&quot;</span>,</span><br><span class="line">            <span class="attr">done</span>: <span class="literal">false</span>,</span><br><span class="line">          &#125;,</span><br><span class="line">        ];</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Response</span>(<span class="title class_">JSON</span>.<span class="title function_">stringify</span>(todos), &#123;</span><br><span class="line">          <span class="attr">headers</span>: &#123; <span class="string">&quot;Content-Type&quot;</span>: <span class="string">&quot;application/json&quot;</span> &#125;,</span><br><span class="line">        &#125;);</span><br><span class="line">      <span class="comment">// *** End ***</span></span><br><span class="line"></span><br><span class="line">      <span class="attr">default</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Response</span>(<span class="string">&quot;Not Found&quot;</span>, &#123; <span class="attr">status</span>: <span class="number">404</span> &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<img src="/images/Cloudflare/project_worker1.png" alt="image" class="max300 border1"/></li>
+</ul>
+<h4 id="🚀-部署线上"><a href="#🚀-部署线上" class="headerlink" title="🚀 部署线上"></a>🚀 <strong>部署线上</strong></h4><ul>
+<li>确认项目配置 wrangler.jsonc 是否正确<ul>
+<li>name、main 等属性</li>
+</ul>
+</li>
+<li>登录 Cloudflare<ul>
+<li>全局安装：<code>npm install -g wrangler</code></li>
+<li>登录：终端输入 <strong><code>npx wrangler login</code></strong><br>如果登陆着其他 Cloudflare 账号，要先运行命令退出登录 <code>npx wrangler logout</code></li>
+<li>会自动打开浏览器(或手动打开控制台的链接) → 选择账号登录 → 点击授权Authorize → 最后控制台终端会显示 Successfully logged in</li>
+</ul>
+</li>
+<li>部署<ul>
+<li>进入项目 <code>cd todolist-worker</code></li>
+<li>执行 <code>npm run deploy</code> 或 <code>npx wrangler deploy</code></li>
+<li>然后回 Cloudflare&#x2F;计算&#x2F;Workers &amp; Pages<ul>
+<li>可以看到多了一个 <strong>todolist-worker</strong>，可以看到部署正在进行（Building…&#x2F;Deploying…&#x2F;Success）<img src="/images/Cloudflare/project_worker2.png" alt="image" class="max700 border1"/></li>
+</ul>
+</li>
+<li>控制台终端看到部署成功和链接 <a target="_blank" rel="noopener" href="https://todolist-worker.2933213867.workers.dev/">https://todolist-worker.2933213867.workers.dev/</a><img src="/images/Cloudflare/project_worker3.png" alt="image" class="max500 border1"/></li>
+<li><a target="_blank" rel="noopener" href="https://todolist-worker.2933213867.workers.dev/todos">https://todolist-worker.2933213867.workers.dev/todos</a> 这个便是可以使用的接口数据了</li>
+</ul>
+</li>
+</ul>
+<h4 id="📍-绑定域名-1"><a href="#📍-绑定域名-1" class="headerlink" title="📍 绑定域名"></a>📍 绑定域名</h4><blockquote>
+<p>使用原格式 <a target="_blank" rel="noopener" href="https://xxx.xxx.workers.dev/">https://xxx.xxx.workers.dev/</a> 链接，非常不稳定，总是出现报错 500 &#x2F; 异常的情况</p>
+</blockquote>
+<ul>
+<li>点击跳转至 <a href="#%E7%BB%91%E5%AE%9A-Pages-%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F%E5%90%8D%EF%BC%88%E4%BD%BF%E7%94%A8%E5%9F%9F%E5%90%8D%EF%BC%89">绑定 Pages 自定义域名（使用域名）</a></li>
+</ul>
+<hr>
+<h3 id="💾-第三阶段：加数据库-D1"><a href="#💾-第三阶段：加数据库-D1" class="headerlink" title="💾 第三阶段：加数据库 D1"></a>💾 第三阶段：加数据库 D1</h3><blockquote>
+<p>周期：3-7 天</p>
+</blockquote>
+<h4 id="💾-创建-D1-数据库"><a href="#💾-创建-D1-数据库" class="headerlink" title="💾 创建 D1 数据库"></a>💾 <strong>创建 D1 数据库</strong></h4><ul>
+<li><p>命令创建，如：数据库名称 todolist：</p>
+<ul>
+<li><p>进入 worker 项目：<code>cd todolist-worker</code></p>
+</li>
+<li><p>输入命令 <code>npx wrangler d1 create todolist</code></p>
+</li>
+<li><p>Cloudflare 会出现数据库：</p>
+<img src="/images/Cloudflare/cloudflare_d1.png" alt="image" class="max700 border1"/>
+</li>
+<li><p>执行成功会返回到控制台：</p>
+<figure class="highlight jsonc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;d1_databases&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;binding&quot;</span><span class="punctuation">:</span> <span class="string">&quot;DB&quot;</span><span class="punctuation">,</span> <span class="comment">// Worker 代码里的变量名，习惯用 DB，即 env.DB （可自定义）</span></span><br><span class="line">      <span class="attr">&quot;database_name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;todolist&quot;</span><span class="punctuation">,</span> <span class="comment">// 数据库显示名称</span></span><br><span class="line">      <span class="attr">&quot;database_id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;3ac1718a-cca3-4ee5-ba27-dc0efc128955&quot;</span><span class="punctuation">,</span> <span class="comment">// 数据库唯一ID</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure></li>
+<li><p>复制到 wrangler.jsonc</p>
+</li>
+<li><p><strong>有了 d1_databases 这个配置就会自动连接D1数据库 todolist</strong></p>
+<ul>
+<li>Worker → env.DB → D1数据库</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>或手动创建</p>
+<ul>
+<li>在Cloudflare&#x2F;存储和数据库&#x2F;D1 数据库 → 点击创建数据库 todolist</li>
+<li>可以根据以上格式手动写到 wrangler.jsonc</li>
+</ul>
+</li>
+</ul>
+<h4 id="📊-创建表-数据"><a href="#📊-创建表-数据" class="headerlink" title="📊 创建表&#x2F;数据"></a>📊 <strong>创建表&#x2F;数据</strong></h4><ul>
+<li>可以在项目中写一个 xxx.sql 文件 (包含建表、插入几条初始数据…)<ul>
+<li>然后执行脚本命令 <code>npx wrangler d1 execute todolist --local --file=xxx.sql</code> 即可</li>
+</ul>
+</li>
+<li>当然也可以直接点击 Cloudflare&#x2F;D1&#x2F;todolist&#x2F;探索数据 去操作建表&#x2F;增删改查真实数据<img src="/images/Cloudflare/cloudflare_d1_2.png" alt="image" class="max700 border1"/></li>
+</ul>
+<h4 id="🔄-todolist-的增删改查接口，使用真实数据"><a href="#🔄-todolist-的增删改查接口，使用真实数据" class="headerlink" title="🔄 todolist 的增删改查接口，使用真实数据"></a>🔄 <strong>todolist 的增删改查接口，使用真实数据</strong></h4><ul>
+<li><p>建表 sql，文件目录 migrations&#x2F;0001_create_todos.sql</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 待办事项表（D1 / SQLite）</span></span><br><span class="line"><span class="comment">-- 执行：npx wrangler d1 migrations apply todolist --local</span></span><br><span class="line"><span class="comment">-- 或：  npx wrangler d1 execute todolist --local --file=migrations/0001_create_todos.sql</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE TABLE</span> IF <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> todos (</span><br><span class="line">  id <span class="type">INTEGER</span> <span class="keyword">PRIMARY KEY</span> AUTOINCREMENT,              <span class="comment">-- 主键，自增</span></span><br><span class="line">  text TEXT <span class="keyword">NOT NULL</span>,                                <span class="comment">-- 待办内容</span></span><br><span class="line">  done <span class="type">INTEGER</span> <span class="keyword">NOT NULL</span> <span class="keyword">DEFAULT</span> <span class="number">0</span> <span class="keyword">CHECK</span> (done <span class="keyword">IN</span> (<span class="number">0</span>, <span class="number">1</span>)), <span class="comment">-- 是否完成：0 否，1 是</span></span><br><span class="line">  created_at TEXT <span class="keyword">NOT NULL</span> <span class="keyword">DEFAULT</span> (datetime(<span class="string">&#x27;now&#x27;</span>)), <span class="comment">-- 创建时间（UTC 文本）</span></span><br><span class="line">  updated_at TEXT <span class="keyword">NOT NULL</span> <span class="keyword">DEFAULT</span> (datetime(<span class="string">&#x27;now&#x27;</span>))  <span class="comment">-- 最后更新时间</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 按创建时间倒序查询时加速</span></span><br><span class="line"><span class="keyword">CREATE</span> INDEX IF <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> idx_todos_created_at <span class="keyword">ON</span> todos (created_at <span class="keyword">DESC</span>);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>执行命令 <code>npx wrangler d1 execute todolist --local --file=migrations/0001_create_todos.sql</code></li>
+</ul>
+</li>
+<li><p>修改 src&#x2F;index.js，增加增删改查接口</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * TodoList Worker — 基于 Cloudflare D1 的待办 CRUD API</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * 路由（均需绑定 wrangler.jsonc 中的 DB）：</span></span><br><span class="line"><span class="comment"> *   GET    /api/todos       列表</span></span><br><span class="line"><span class="comment"> *   GET    /api/todos/:id   单条</span></span><br><span class="line"><span class="comment"> *   POST   /api/todos       创建，body: &#123; text, done? &#125;</span></span><br><span class="line"><span class="comment"> *   PUT    /api/todos/:id   更新，body: &#123; text?, done? &#125;</span></span><br><span class="line"><span class="comment"> *   DELETE /api/todos/:id   删除</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/** JSON 响应默认头 */</span></span><br><span class="line"><span class="keyword">const</span> <span class="title class_">JSON</span>_HEADERS = &#123; <span class="string">&quot;Content-Type&quot;</span>: <span class="string">&quot;application/json; charset=utf-8&quot;</span> &#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/** 返回 JSON 响应 */</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">json</span>(<span class="params">data, status = <span class="number">200</span></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Response</span>(<span class="title class_">JSON</span>.<span class="title function_">stringify</span>(data), &#123;</span><br><span class="line">    status,</span><br><span class="line">    <span class="attr">headers</span>: <span class="title class_">JSON</span>_HEADERS,</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/** 返回错误 JSON，默认 400 */</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">error</span>(<span class="params">message, status = <span class="number">400</span></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="title function_">json</span>(&#123; <span class="attr">error</span>: message &#125;, status);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 将 D1 查询行转为 API 对象</span></span><br><span class="line"><span class="comment"> * SQLite 中 done 存为 0/1，对外返回布尔值</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">rowToTodo</span>(<span class="params">row</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="attr">id</span>: row.<span class="property">id</span>,</span><br><span class="line">    <span class="attr">text</span>: row.<span class="property">text</span>,</span><br><span class="line">    <span class="attr">done</span>: row.<span class="property">done</span> === <span class="number">1</span>,</span><br><span class="line">    <span class="attr">created_at</span>: row.<span class="property">created_at</span>,</span><br><span class="line">    <span class="attr">updated_at</span>: row.<span class="property">updated_at</span>,</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/** 查询全部待办，按 id 升序 */</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">listTodos</span>(<span class="params">db</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; results &#125; = <span class="keyword">await</span> db</span><br><span class="line">    .<span class="title function_">prepare</span>(</span><br><span class="line">      <span class="string">&quot;SELECT id, text, done, created_at, updated_at FROM todos ORDER BY id ASC&quot;</span>,</span><br><span class="line">    )</span><br><span class="line">    .<span class="title function_">all</span>();</span><br><span class="line">  <span class="keyword">return</span> results.<span class="title function_">map</span>(rowToTodo);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/** 按主键查询单条，不存在返回 null */</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">getTodo</span>(<span class="params">db, id</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> row = <span class="keyword">await</span> db</span><br><span class="line">    .<span class="title function_">prepare</span>(</span><br><span class="line">      <span class="string">&quot;SELECT id, text, done, created_at, updated_at FROM todos WHERE id = ?&quot;</span>,</span><br><span class="line">    )</span><br><span class="line">    .<span class="title function_">bind</span>(id)</span><br><span class="line">    .<span class="title function_">first</span>();</span><br><span class="line">  <span class="keyword">return</span> row ? <span class="title function_">rowToTodo</span>(row) : <span class="literal">null</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 创建待办</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@returns</span> &#123;<span class="type">&#123; todo </span>&#125;&#125; 或 &#123;&#123; error, status &#125;&#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">createTodo</span>(<span class="params">db, body</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> text = <span class="keyword">typeof</span> body.<span class="property">text</span> === <span class="string">&quot;string&quot;</span> ? body.<span class="property">text</span>.<span class="title function_">trim</span>() : <span class="string">&quot;&quot;</span>;</span><br><span class="line">  <span class="keyword">if</span> (!text) &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123; <span class="attr">error</span>: <span class="string">&quot;text is required&quot;</span>, <span class="attr">status</span>: <span class="number">400</span> &#125;;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">const</span> done = body.<span class="property">done</span> === <span class="literal">true</span> ? <span class="number">1</span> : <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">const</span> result = <span class="keyword">await</span> db</span><br><span class="line">    .<span class="title function_">prepare</span>(</span><br><span class="line">      <span class="string">`INSERT INTO todos (text, done, updated_at)</span></span><br><span class="line"><span class="string">        VALUES (?, ?, datetime(&#x27;now&#x27;))`</span>,</span><br><span class="line">    )</span><br><span class="line">    .<span class="title function_">bind</span>(text, done)</span><br><span class="line">    .<span class="title function_">run</span>();</span><br><span class="line">  <span class="keyword">const</span> todo = <span class="keyword">await</span> <span class="title function_">getTodo</span>(db, result.<span class="property">meta</span>.<span class="property">last_row_id</span>);</span><br><span class="line">  <span class="keyword">return</span> &#123; todo &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 更新待办（部分字段：未传的 text/done 保留原值）</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@returns</span> &#123;<span class="type">&#123; todo </span>&#125;&#125; 或 &#123;&#123; error, status &#125;&#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">updateTodo</span>(<span class="params">db, id, body</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> existing = <span class="keyword">await</span> <span class="title function_">getTodo</span>(db, id);</span><br><span class="line">  <span class="keyword">if</span> (!existing) &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123; <span class="attr">error</span>: <span class="string">&quot;todo not found&quot;</span>, <span class="attr">status</span>: <span class="number">404</span> &#125;;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> text =</span><br><span class="line">    body.<span class="property">text</span> !== <span class="literal">undefined</span></span><br><span class="line">      ? <span class="keyword">typeof</span> body.<span class="property">text</span> === <span class="string">&quot;string&quot;</span></span><br><span class="line">        ? body.<span class="property">text</span>.<span class="title function_">trim</span>()</span><br><span class="line">        : <span class="string">&quot;&quot;</span></span><br><span class="line">      : existing.<span class="property">text</span>;</span><br><span class="line">  <span class="keyword">if</span> (!text) &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123; <span class="attr">error</span>: <span class="string">&quot;text cannot be empty&quot;</span>, <span class="attr">status</span>: <span class="number">400</span> &#125;;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">const</span> done =</span><br><span class="line">    body.<span class="property">done</span> !== <span class="literal">undefined</span></span><br><span class="line">      ? body.<span class="property">done</span> === <span class="literal">true</span></span><br><span class="line">        ? <span class="number">1</span></span><br><span class="line">        : <span class="number">0</span></span><br><span class="line">      : existing.<span class="property">done</span></span><br><span class="line">        ? <span class="number">1</span></span><br><span class="line">        : <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">await</span> db</span><br><span class="line">    .<span class="title function_">prepare</span>(</span><br><span class="line">      <span class="string">`UPDATE todos</span></span><br><span class="line"><span class="string">        SET text = ?, done = ?, updated_at = datetime(&#x27;now&#x27;)</span></span><br><span class="line"><span class="string">        WHERE id = ?`</span>,</span><br><span class="line">    )</span><br><span class="line">    .<span class="title function_">bind</span>(text, done, id)</span><br><span class="line">    .<span class="title function_">run</span>();</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> todo = <span class="keyword">await</span> <span class="title function_">getTodo</span>(db, id);</span><br><span class="line">  <span class="keyword">return</span> &#123; todo &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 删除待办</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@returns</span> &#123;<span class="type">&#123; ok: true </span>&#125;&#125; 或 &#123;&#123; error, status &#125;&#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">deleteTodo</span>(<span class="params">db, id</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> result = <span class="keyword">await</span> db</span><br><span class="line">    .<span class="title function_">prepare</span>(<span class="string">&quot;DELETE FROM todos WHERE id = ?&quot;</span>)</span><br><span class="line">    .<span class="title function_">bind</span>(id)</span><br><span class="line">    .<span class="title function_">run</span>();</span><br><span class="line">  <span class="keyword">if</span> (result.<span class="property">meta</span>.<span class="property">changes</span> === <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123; <span class="attr">error</span>: <span class="string">&quot;todo not found&quot;</span>, <span class="attr">status</span>: <span class="number">404</span> &#125;;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> &#123; <span class="attr">ok</span>: <span class="literal">true</span> &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 处理 /api/todos 与 /api/todos/:id 的 HTTP 方法分发</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> &#123;<span class="type">number|null</span>&#125; id 路径中的 id；列表/创建时为 null</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">handleTodos</span>(<span class="params">request, env, id</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> db = env.<span class="property">DB</span>;</span><br><span class="line">  <span class="keyword">if</span> (!db) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">error</span>(<span class="string">&quot;database binding DB is not configured&quot;</span>, <span class="number">500</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> method = request.<span class="property">method</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 列表</span></span><br><span class="line">  <span class="keyword">if</span> (method === <span class="string">&quot;GET&quot;</span> &amp;&amp; id === <span class="literal">null</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">json</span>(<span class="keyword">await</span> <span class="title function_">listTodos</span>(db));</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 单条查询</span></span><br><span class="line">  <span class="keyword">if</span> (method === <span class="string">&quot;GET&quot;</span> &amp;&amp; id !== <span class="literal">null</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> todo = <span class="keyword">await</span> <span class="title function_">getTodo</span>(db, id);</span><br><span class="line">    <span class="keyword">return</span> todo ? <span class="title function_">json</span>(todo) : <span class="title function_">error</span>(<span class="string">&quot;todo not found&quot;</span>, <span class="number">404</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 创建</span></span><br><span class="line">  <span class="keyword">if</span> (method === <span class="string">&quot;POST&quot;</span> &amp;&amp; id === <span class="literal">null</span>) &#123;</span><br><span class="line">    <span class="keyword">let</span> body;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      body = <span class="keyword">await</span> request.<span class="title function_">json</span>();</span><br><span class="line">    &#125; <span class="keyword">catch</span> &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="title function_">error</span>(<span class="string">&quot;invalid JSON body&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">const</span> result = <span class="keyword">await</span> <span class="title function_">createTodo</span>(db, body);</span><br><span class="line">    <span class="keyword">if</span> (result.<span class="property">error</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="title function_">error</span>(result.<span class="property">error</span>, result.<span class="property">status</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">json</span>(result.<span class="property">todo</span>, <span class="number">201</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 更新</span></span><br><span class="line">  <span class="keyword">if</span> (method === <span class="string">&quot;PUT&quot;</span> &amp;&amp; id !== <span class="literal">null</span>) &#123;</span><br><span class="line">    <span class="keyword">let</span> body;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      body = <span class="keyword">await</span> request.<span class="title function_">json</span>();</span><br><span class="line">    &#125; <span class="keyword">catch</span> &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="title function_">error</span>(<span class="string">&quot;invalid JSON body&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">const</span> result = <span class="keyword">await</span> <span class="title function_">updateTodo</span>(db, id, body);</span><br><span class="line">    <span class="keyword">if</span> (result.<span class="property">error</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="title function_">error</span>(result.<span class="property">error</span>, result.<span class="property">status</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">json</span>(result.<span class="property">todo</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 删除</span></span><br><span class="line">  <span class="keyword">if</span> (method === <span class="string">&quot;DELETE&quot;</span> &amp;&amp; id !== <span class="literal">null</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> result = <span class="keyword">await</span> <span class="title function_">deleteTodo</span>(db, id);</span><br><span class="line">    <span class="keyword">if</span> (result.<span class="property">error</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="title function_">error</span>(result.<span class="property">error</span>, result.<span class="property">status</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">json</span>(&#123; <span class="attr">deleted</span>: <span class="literal">true</span>, id &#125;);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="title function_">error</span>(<span class="string">&quot;method not allowed&quot;</span>, <span class="number">405</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  <span class="keyword">async</span> <span class="title function_">fetch</span>(<span class="params">request, env, ctx</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> url = <span class="keyword">new</span> <span class="title function_">URL</span>(request.<span class="property">url</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 匹配 /api/todos 或 /api/todos/123</span></span><br><span class="line">    <span class="keyword">const</span> todosMatch = url.<span class="property">pathname</span>.<span class="title function_">match</span>(<span class="regexp">/^\/api\/todos(?:\/(\d+))?$/</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (todosMatch) &#123;</span><br><span class="line">      <span class="keyword">const</span> id = todosMatch[<span class="number">1</span>] ? <span class="title class_">Number</span>(todosMatch[<span class="number">1</span>]) : <span class="literal">null</span>;</span><br><span class="line">      <span class="keyword">if</span> (todosMatch[<span class="number">1</span>] &amp;&amp; <span class="title class_">Number</span>.<span class="built_in">isNaN</span>(id)) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="title function_">error</span>(<span class="string">&quot;invalid todo id&quot;</span>);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> <span class="title function_">handleTodos</span>(request, env, id);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 示例/静态资源联调用的保留路由</span></span><br><span class="line">    <span class="keyword">switch</span> (url.<span class="property">pathname</span>) &#123;</span><br><span class="line">      <span class="keyword">case</span> <span class="string">&quot;/message&quot;</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Response</span>(<span class="string">&quot;Hello, World!&quot;</span>);</span><br><span class="line">      <span class="keyword">case</span> <span class="string">&quot;/random&quot;</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Response</span>(crypto.<span class="title function_">randomUUID</span>());</span><br><span class="line">      <span class="attr">default</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Response</span>(<span class="string">&quot;Not Found&quot;</span>, &#123; <span class="attr">status</span>: <span class="number">404</span> &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>代码推送到远程 <code>git push</code></p>
+</li>
+<li><p><strong>本地 vs 线上数据库</strong></p>
+<ul>
+<li><code>--local</code>：只影响本地 dev 环境</li>
+<li>上线前需执行【建表】：<code>npx wrangler d1 migrations apply todolist --remote</code>（或 <code>--remote --file=xxx.sql</code>）</li>
+</ul>
+</li>
+<li><p>部署 <code>npm run deploy</code></p>
+</li>
+<li><p>前端项目即可使用 <a target="_blank" rel="noopener" href="https://todolist-worker.2933213867.workers.dev/">https://todolist-worker.2933213867.workers.dev/</a> 作为接口基地址了</p>
+</li>
+</ul>
+<h4 id="🔌-接口地址使用"><a href="#🔌-接口地址使用" class="headerlink" title="🔌 接口地址使用"></a>🔌 接口地址使用</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://todolist-worker.2933213867.workers.dev/">https://todolist-worker.2933213867.workers.dev/</a> 这个接口基地址 + 几个接口的相关使用给到前端项目<ul>
+<li><p>前端项目：纯静态的 HTML 项目 <a href="mailto:&#103;&#x69;&#116;&#x40;&#x67;&#105;&#116;&#x68;&#117;&#x62;&#x2e;&#x63;&#111;&#109;">git@github.com</a>:lqh1003&#x2F;todolist.git</p>
+</li>
+<li><p>改成 vite 项目，且调用后端接口，本地运行正常：</p>
+<img src="/images/Cloudflare/cloudflare_d1_3.png" alt="image" class="max700 border1"/></li>
+<li><p>此时项目已经变成 vite 项目了，代码推送前，先在 Cloudflare 修改一下 todolist 的打包命令 (之前纯静态项目打包命令为空，现在vite项目 打包命令是<code>npm run build</code>)</p>
+<img src="/images/Cloudflare/cloudflare_d1_4.png" alt="image" class="max700 border1"/>
+</li>
+<li><p>修改完成之后，推送代码到远程<code>git push</code></p>
+<ul>
+<li>Cloudflare &#x2F; Workers 和 Pages &#x2F; todolist 在自动构建，等待构建完成</li>
+<li>打开线上链接<code>https://todolist.2933213867.workers.dev/</code>可以访问了 (vite 项目 + 接口 + D1数据)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="📁-第四阶段：加-R2-文件上传"><a href="#📁-第四阶段：加-R2-文件上传" class="headerlink" title="📁 第四阶段：加 R2 文件上传"></a>📁 第四阶段：加 R2 文件上传</h3><blockquote>
+<p>周期：2-3 天，只需要创建 R2 桶，在 worker 项目wrangler.jsonc中进行配置，就可以直接通过 <code>env.R2</code> 操作了</p>
+</blockquote>
+<h4 id="📁-创建-R2-存储桶"><a href="#📁-创建-R2-存储桶" class="headerlink" title="📁 创建 R2 存储桶"></a>📁 创建 R2 存储桶</h4><ul>
+<li><p>Cloudflare 账号，<strong>首次创建</strong> R2 桶，需要先开通 &#x2F; 激活</p>
+<ul>
+<li>Cloudflare 目前主要支持：<ul>
+<li>Visa 卡 (我使用的是平安银行 Visa 卡)</li>
+<li>Mastercard</li>
+<li>American Express</li>
+</ul>
+</li>
+</ul>
+<img src="/images/Cloudflare/r2_step_1.png" alt="image" class="max800 border1"/>
+<img src="/images/Cloudflare/r2_step_2.png" alt="image" class="max700 border1"/>
+</li>
+<li><p>Cloudflare → 左侧导航栏 存储和数据&#x2F;R2对象存储&#x2F;概述 → 新建R2桶，输入<code>todolist-uploads</code></p>
+<img src="/images/Cloudflare/r2_step_3.png" alt="image" class="max700 border1"/>
+</li>
+<li><p>也可使用命令</p>
+<ul>
+<li><p>关键命令 <code>npx wrangler r2 bucket create &lt;bucket_name&gt;</code></p>
+</li>
+<li><p>在项目根目录 <code>todolist-worker</code> 打开终端：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. 安装依赖，包括工具 wrangler</span></span><br><span class="line">npm install</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 登录 Cloudflare（需要浏览器授权）</span></span><br><span class="line">npx wrangler login</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 创建 R2 存储桶（文件/头像上传用）</span></span><br><span class="line">npx wrangler r2 bucket create todolist-uploads</span><br></pre></td></tr></table></figure>
+
+<img src="/images/Cloudflare/r2_step_4.png" alt="image" class="max700 border1"/></li>
+</ul>
+</li>
+</ul>
+<h4 id="🔗-绑定到-wrangler-jsonc"><a href="#🔗-绑定到-wrangler-jsonc" class="headerlink" title="🔗 绑定到 wrangler.jsonc"></a>🔗 绑定到 <code>wrangler.jsonc</code></h4><ul>
+<li><p>binding 是变量名，叫 R2、BUCKET、UPLOADS 都可以</p>
+<img src="/images/Cloudflare/r2_step_5.png" alt="image" class="max500 border1"/></li>
+</ul>
+<h4 id="📤-Worker-实现上传-下载接口"><a href="#📤-Worker-实现上传-下载接口" class="headerlink" title="📤 Worker 实现上传&#x2F;下载接口"></a>📤 Worker 实现上传&#x2F;下载接口</h4><blockquote>
+<p><code>env.R2</code> 对应 <code>wrangler.jsonc</code> 里绑定的 R2 存储桶，名称要与 <code>binding</code> 字段一致。 关键命令：<code>env.R2.put()</code>上传 &#x2F; <code>env.R2.get()</code>下载</p>
+</blockquote>
+<ul>
+<li><p>上传 &#x2F;api&#x2F;upload</p>
+<ul>
+<li>把前端上传的文件 file 进行处理<ul>
+<li><p>处理文件，const resolved &#x3D; resolveUploadType(file)</p>
+</li>
+<li><p>组装成一个路径key：<code>uploads/$&#123;crypto.randomUUID()&#125;.$&#123;resolved.ext&#125;</code></p>
+<ul>
+<li>uploads 是在 R2 桶中的文件目录</li>
+<li>后面一节存储在 R2 桶中的文件名称</li>
+<li><code>env.R2.put()</code> 把文件上传到 R2 桶 (关键)</li>
+</ul>
+</li>
+<li><p>返回完整 url 给前端，<code>$&#123;url.origin&#125;/api/files/$&#123;key&#125;</code></p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://todolist-worker.2933213867.workers.dev/api/files/uploads/27e65672-a89e-491e-99da-a6b42468e5fb.jpg">https://todolist-worker.2933213867.workers.dev/api/files/uploads/27e65672-a89e-491e-99da-a6b42468e5fb.jpg</a></li>
+<li><a target="_blank" rel="noopener" href="https://todolist-worker.2933213867.workers.dev/">https://todolist-worker.2933213867.workers.dev</a> 后端服务接口基地址</li>
+<li>&#x2F;api&#x2F;files 下载&#x2F;获取文件的接口</li>
+<li><code>/uploads/27e65672-a89e-491e-99da-a6b42468e5fb.jpg</code> 存储在 R2 桶中的位置</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>下载 &#x2F;api&#x2F;files</p>
+<ul>
+<li>接口 return <code>$&#123;url.origin&#125;/api/files/$&#123;key&#125;</code>;</li>
+</ul>
+</li>
+</ul>
+<h4 id="💻-前端对接"><a href="#💻-前端对接" class="headerlink" title="💻 前端对接"></a>💻 前端对接</h4><ul>
+<li>前端操作：上传文件成功后，返回完整资源链接 url: <a target="_blank" rel="noopener" href="https://xxx/api/files/uploads/xxxxx">https://xxx/api/files/uploads/xxxxx</a></li>
+<li>前端拿到数据直接展示资源，把资源链接作为字段存进 todos 表</li>
+</ul>
+<h4 id="📍-自定义资源域名"><a href="#📍-自定义资源域名" class="headerlink" title="📍 自定义资源域名"></a>📍 自定义资源域名</h4><blockquote>
+<p>想要自定义资源域名，可以公开访问 R2 文件，<strong>不经过 worker</strong> (通过下载接口拼接冗长的接口基地址)</p>
+</blockquote>
+<ul>
+<li><p>公开访问 R2 资源配置：</p>
+<ul>
+<li>登录 Cloudflare → R2对象存储 → 找到<code>todolist-uploads</code> → 设置 → 设置两个地方 (不过前提是：域名已经按照<a href="#%F0%9F%8C%8D-%E7%AC%AC%E5%85%AD%E9%98%B6%E6%AE%B5%EF%BC%9A%E5%9F%9F%E5%90%8D%E6%8E%A5%E5%85%A5">🌍 第六阶段：域名接入</a>的步骤接入了<img src="/images/Cloudflare/r2_step_6.png" alt="image" class="max700 border1"/></li>
+<li>设置成功之后，直接访问资源：<ul>
+<li><a target="_blank" rel="noopener" href="https://file.lqhstudy.online/uploads/3d6fddf4-3a3a-464e-aa0b-6405e6e409f2.jpg">https://file.lqhstudy.online/uploads/3d6fddf4-3a3a-464e-aa0b-6405e6e409f2.jpg</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Worker 项目拼接的资源地址换一下</p>
+<ul>
+<li><p>在 wrangler.jsonc 配置一下变量</p>
+</li>
+<li><p>在上面提到的上传接口中返回完整 url 资源路径的逻辑：改成有<code>R2_PUBLIC_URL</code>就拼接这个，没有就按照原逻辑，将改动<code>npm run deploy</code>部署上线</p>
+<img src="/images/Cloudflare/r2_step_7.png" alt="image" class="max700 border1"/>
+</li>
+<li><p>这样前端上传文件操作，返回的 url 就是 <a target="_blank" rel="noopener" href="https://file.lqhstudy.online/">https://file.lqhstudy.online</a> 拼接的了，存储到todos表也是 <a target="_blank" rel="noopener" href="https://file.lqhstudy.online/xxx/xxx">https://file.lqhstudy.online/xxx/xxx</a> 的资源格式链接了</p>
+<img src="/images/Cloudflare/r2_step_9.png" alt="image" class="max900 border1"/></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="🏗️-第五阶段：做一个完整项目"><a href="#🏗️-第五阶段：做一个完整项目" class="headerlink" title="🏗️ 第五阶段：做一个完整项目"></a>🏗️ 第五阶段：做一个完整项目</h3><blockquote>
+<p>周期：1–2 周。把前四阶段全部串联，部署一个真正可对外使用的应用。</p>
+</blockquote>
+<h4 id="🏗️-整体架构"><a href="#🏗️-整体架构" class="headerlink" title="🏗️ 整体架构"></a>🏗️ 整体架构</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">用户浏览器</span><br><span class="line">    ↓  HTTPS</span><br><span class="line">Cloudflare CDN（全球边缘加速）</span><br><span class="line">    ↓</span><br><span class="line">Pages（前端 HTML/JS）  ←→  Worker API（后端逻辑）</span><br><span class="line">                                ↓           ↓</span><br><span class="line">                               D1          R2</span><br><span class="line">                           （数据库）    （文件存储）</span><br></pre></td></tr></table></figure>
+
+<h3 id="🌍-第六阶段：域名接入"><a href="#🌍-第六阶段：域名接入" class="headerlink" title="🌍 第六阶段：域名接入"></a>🌍 第六阶段：域名接入</h3><blockquote>
+<p>把域名加入到 Cloudflare 账户，受 Cloudflare 保护</p>
+</blockquote>
+<h4 id="🌐-添加域名"><a href="#🌐-添加域名" class="headerlink" title="🌐 添加域名"></a>🌐 添加域名</h4><ul>
+<li><p>登录Cloudflare账号 → 域名&#x2F;概览 → 添加域名 → 1.已有域名选择<code>连接域名</code>，2.没有域名选择<code>注册域名</code></p>
+<img src="/images/Cloudflare/add_domains1.png" alt="image" class="max500 border1"/>
+<img src="/images/Cloudflare/add_domains2.png" alt="image" class="max500 border1"/>
+</li>
+<li><p><strong>注册域名</strong>，输入想要的域名，选择购买，填写对应的信息，支付金额即可</p>
+<ul>
+<li>但是 Cloudflare Registrar 域名结账<strong>原生无 Alipay 入口</strong>，只支持 4 类支付：<ul>
+<li>VISA&#x2F;Master&#x2F;AE 双币信用卡、银联国际卡</li>
+<li>PayPal（最常用中转）</li>
+<li>Apple Pay（仅苹果设备单次付款，不能自动续费域名）</li>
+<li>企业合同对公（个人用不了）</li>
+</ul>
+</li>
+</ul>
+<img src="/images/Cloudflare/add_domains3.png" alt="image" class="max500 border1"/>
+</li>
+<li><p><strong>连接域名 ✅</strong></p>
+<ul>
+<li><p>去其他平台购买域名，比如：国内云厂商（阿里云&#x2F;腾讯云&#x2F;华为云 ｜ 支付宝&#x2F;微信秒付 ｜ 分国内&#x2F;国际版）</p>
+<ul>
+<li>在华为云购买了域名 <strong>lqhstudy.online</strong>，10元&#x2F;年，选择不自动续费，支付宝扫码秒付<img src="/images/Cloudflare/add_domains4.png" alt="image" class="max800 border1"/></li>
+</ul>
+</li>
+<li><p>在 Cloudflare 选择连接域名 → 输入域名 lqhstudy.online，点击继续 → 选择按月付费，Free计划 → 点击<code>继续前往激活</code> → 就会得到下面图2的界面(激活步骤)</p>
+<img src="/images/Cloudflare/add_domains5.png" alt="image" class="max500 border1"/>
+<img src="/images/Cloudflare/add_domains6.png" alt="image" class="max500 border1"/></li>
+<li><p>复制好两条 NS 服务器，也就可以离开当前页面了，可以看到域名已经添加成功，但是状态还不可用</p>
+<img src="/images/Cloudflare/add_domains9.png" alt="image" class="max700 border1"/>
+</li>
+<li><p>去激活域名状态，更换域名 NS（关键生效步骤）</p>
+<ul>
+<li>复制 Cloudflare 给出的两条 NS 服务器：<code>ara.ns.cloudflare.com</code> <code>theo.ns.cloudflare.com</code></li>
+<li>进入你的域名注册商后台 → 点击域名管理 → 替换成 Cloudflare 分配的 2 条 NS 地址<img src="/images/Cloudflare/add_domains7.png" alt="image" class="max600 border1"/>
+<img src="/images/Cloudflare/add_domains8.png" alt="image" class="max600 border1"/></li>
+<li>生效时间：10 分钟～24 小时，<strong>Cloudflare 页面自动检测 NS 状态变成 Active，即域名接入成功</strong><img src="/images/Cloudflare/add_domains10.png" alt="image" class="max600 border1"/></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="Cloudflare-接入域名后"><a href="#Cloudflare-接入域名后" class="headerlink" title="Cloudflare 接入域名后"></a>Cloudflare 接入域名后</h4><blockquote>
+<p>按顺序：<strong>DNS 域名解析 → 使用域名 → SSL 证书 → CDN 缓存</strong>，一般完成前面一步就可以使用域名，后面两步一般不需要改动，一般默认</p>
+</blockquote>
+<img src="/images/Cloudflare/add_domains11.png" alt="image" class="max600 border1"/>
+
+<h5 id="DNS-配置（域名解析核心）"><a href="#DNS-配置（域名解析核心）" class="headerlink" title="DNS 配置（域名解析核心）"></a>DNS 配置（<strong>域名解析核心</strong>）</h5><ul>
+<li><p>前提：域名在别家注册、NS 已经改成 Cloudflare</p>
+</li>
+<li><p>点击域名 → 配置 DNS → 添加记录 (根据自己需要添加)</p>
+<img src="/images/Cloudflare/add_domains12.png" alt="image" class="max700 border1"/></li>
+<li><p>推荐添加的三条记录（<code>192.0.2.1</code> 是 Cloudflare 官方占位 IP，橙云开启时代理会自动转发，无需填真实服务器 IP）</p>
+<table>
+<thead>
+<tr>
+<th align="left">类型</th>
+<th align="left">主机&#x2F;名称</th>
+<th align="left">内容&#x2F;IPv4</th>
+<th align="left">云朵</th>
+<th align="left">备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">A</td>
+<td align="left">@</td>
+<td align="left">192.0.2.1</td>
+<td align="left">橙云（开启代理）</td>
+<td align="left">裸域名主站</td>
+</tr>
+<tr>
+<td align="left">CNAME</td>
+<td align="left">www</td>
+<td align="left">xxx.pages.dev</td>
+<td align="left">橙云（开启代理）</td>
+<td align="left">www 优先走 Pages，不受 <code>*</code> 影响</td>
+</tr>
+<tr>
+<td align="left">A</td>
+<td align="left">*</td>
+<td align="left">192.0.2.1</td>
+<td align="left">橙云（开启代理）</td>
+<td align="left">其余子域名兜底</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+<h5 id="绑定-Pages-自定义域名（使用域名）"><a href="#绑定-Pages-自定义域名（使用域名）" class="headerlink" title="绑定 Pages 自定义域名（使用域名）"></a>绑定 Pages 自定义域名（使用域名）</h5><ul>
+<li><p>把域名和第一阶段部署的 Pages 项目连起来</p>
+<ul>
+<li><p>Cloudflare → <strong>Workers &amp; Pages</strong> → 选择 todolist 项目 → 选择<code>域</code> → <strong>添加域名</strong></p>
+</li>
+<li><p>选择路由模式，随机添加几个路由，比如：</p>
+<img src="/images/Cloudflare/add_domains14.png" alt="image" class="max600 border1"/>
+</li>
+<li><p>等待 DNS 生效，访问 <code>https://lqhstudy.online</code>、<code>https://todos.lqhstudy.online</code> 验证，都可以打开站点</p>
+<img src="/images/Cloudflare/add_domains15.png" alt="image" class="max500 border1"/></li>
+</ul>
+</li>
+<li><p>同理，给第二阶段的 todolist-worker 自定义域名 也完美生效：<code>https://api.lqhstudy.online/api/todos</code></p>
+</li>
+<li><p>绑定域名之后的链接更稳定和美观了，之前的链接 <a target="_blank" rel="noopener" href="https://xxx.xxx/workers.dev">https://xxx.xxx/workers.dev</a> 动不动就报错 500 (网络异常加载失败)</p>
+</li>
+</ul>
+<h5 id="SSL-TLS-配置（全站-HTTPS）"><a href="#SSL-TLS-配置（全站-HTTPS）" class="headerlink" title="SSL&#x2F;TLS 配置（全站 HTTPS）"></a>SSL&#x2F;TLS 配置（<strong>全站 HTTPS</strong>）</h5><ul>
+<li><p>SSL 的作用</p>
+<ul>
+<li>浏览器 → CF 服务器加密 HTTPS，地址栏小绿锁，去除不安全警告</li>
+<li>浏览器强制 HTTPS 访问，避免手动输 http 跳转失败</li>
+<li>搜索引擎优先收录 HTTPS 站点，提升 SEO 排名</li>
+<li>防止数据窃听、劫持、广告篡改网页内容</li>
+<li>Pages 静态站必须 HTTPS，http 访问会报错</li>
+<li><strong>CF 免费自动签发全球可信 SSL 证书，域名自带小绿锁，解决 https 证书购买、续期难题</strong></li>
+</ul>
+</li>
+<li><p>点击域名 → <strong>SSL&#x2F;TLS</strong> → <strong>概述</strong> 选择加密模式（4 种模式适合不同场景）</p>
+<table>
+<thead>
+<tr>
+<th align="left">模式</th>
+<th align="left">适用场景</th>
+<th align="left">博客&#x2F;Pages 推荐</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">灵活 Flexible</td>
+<td align="left">源站只有 HTTP</td>
+<td align="left">❌ 不推荐（浏览器到 CF 加密，CF 到源站明文）</td>
+</tr>
+<tr>
+<td align="left">完全 Full</td>
+<td align="left">源站有 HTTPS 但证书可能不受信</td>
+<td align="left">⚠️ 可用</td>
+</tr>
+<tr>
+<td align="left">完全（严格）Full (strict)</td>
+<td align="left">源站有有效 HTTPS 证书</td>
+<td align="left">✅ <strong>Pages 首选</strong></td>
+</tr>
+<tr>
+<td align="left">关闭 Off</td>
+<td align="left">不加密</td>
+<td align="left">❌ 禁用</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>Pages &#x2F; Workers 托管站点选 <strong>Full (strict)</strong> 即可，证书由 Cloudflare 自动签发。</p>
+</blockquote>
+<img src="/images/Cloudflare/add_domains13.png" alt="SSL/TLS 加密模式选择" class="max700 border1"/></li>
+</ul>
+<h5 id="CDN-配置（缓存、提速、压缩）"><a href="#CDN-配置（缓存、提速、压缩）" class="headerlink" title="CDN 配置（缓存、提速、压缩）"></a>CDN 配置（<strong>缓存、提速、压缩</strong>）</h5><p>分两大模块：<strong>① Speed（速度 &#x2F; 压缩全局开关）</strong> 和 <strong>② Page Rules 页面规则（自定义缓存）</strong>。建议先做完 Speed 全局开关，再按需加 Page Rules 精细控制。</p>
+<ul>
+<li><p>① Speed —— 速度 &#x2F; 压缩全局开关</p>
+<ul>
+<li><p>入口：点击域名 → 左侧 <strong>速度 &#x2F; Speed</strong> → <strong>优化 &#x2F; Optimization</strong></p>
+</li>
+<li><p>作用：全站生效，不用写规则。适合博客、静态站这类「HTML + CSS + JS + 图片」站点，一次打开，全球边缘节点自动压缩、加速传输</p>
+</li>
+<li><p><strong>推荐开启项（免费计划可用）</strong></p>
+<table>
+<thead>
+<tr>
+<th align="left">设置项</th>
+<th align="left">路径</th>
+<th align="left">推荐值</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Brotli 压缩</td>
+<td align="left">速度 → 优化 → 内容优化</td>
+<td align="left"><strong>开启</strong></td>
+<td align="left">比 Gzip 压缩率更高，CSS&#x2F;JS&#x2F;HTML 体积更小，首屏加载更快</td>
+</tr>
+<tr>
+<td align="left">Early Hints</td>
+<td align="left">速度 → 优化 → 内容优化</td>
+<td align="left"><strong>开启</strong></td>
+<td align="left">提前告诉浏览器要加载哪些资源，减少等待时间</td>
+</tr>
+<tr>
+<td align="left">HTTP&#x2F;2</td>
+<td align="left">速度 → 优化 → 协议优化</td>
+<td align="left"><strong>开启</strong>（默认）</td>
+<td align="left">多路复用，同一连接并行加载多个文件</td>
+</tr>
+<tr>
+<td align="left">HTTP&#x2F;3 (QUIC)</td>
+<td align="left">速度 → 优化 → 协议优化</td>
+<td align="left"><strong>开启</strong>（默认）</td>
+<td align="left">弱网、移动网络下延迟更低</td>
+</tr>
+<tr>
+<td align="left">0-RTT 连接恢复</td>
+<td align="left">速度 → 优化 → 协议优化</td>
+<td align="left"><strong>开启</strong></td>
+<td align="left">回访用户握手更快（安全性要求极高时可关）</td>
+</tr>
+</tbody></table>
+</li>
+<li><p><strong>按需开启 &#x2F; 建议关闭项</strong></p>
+<table>
+<thead>
+<tr>
+<th align="left">设置项</th>
+<th align="left">推荐值</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Rocket Loader</td>
+<td align="left"><strong>关闭</strong></td>
+<td align="left">会改写 JS 加载顺序，Hexo &#x2F; Vue &#x2F; React 站点容易出白屏或交互异常</td>
+</tr>
+<tr>
+<td align="left">Auto Minify（HTML&#x2F;CSS&#x2F;JS）</td>
+<td align="left"><strong>已下线</strong></td>
+<td align="left">Cloudflare 已移除该开关；构建阶段用 Vite&#x2F;Webpack&#x2F;Hexo 压缩即可</td>
+</tr>
+<tr>
+<td align="left">Polish（图片优化）</td>
+<td align="left">免费版有限</td>
+<td align="left">付费功能，博客图片建议本地压缩 + WebP，不必强开</td>
+</tr>
+<tr>
+<td align="left">Mirage</td>
+<td align="left"><strong>关闭</strong></td>
+<td align="left">已废弃，无需配置</td>
+</tr>
+</tbody></table>
+</li>
+<li><p><strong>操作步骤</strong></p>
+<ol>
+<li>进入域名控制台 → <strong>速度 &#x2F; Speed</strong> → <strong>优化 &#x2F; Optimization</strong></li>
+<li>找到 <strong>内容优化 &#x2F; Content Optimization</strong>，打开 <strong>Brotli</strong>、<strong>Early Hints</strong></li>
+<li>找到 <strong>协议优化</strong>，确认 <strong>HTTP&#x2F;2</strong>、<strong>HTTP&#x2F;3</strong> 为开启状态</li>
+<li>找到 <strong>JavaScript</strong>，确认 <strong>Rocket Loader</strong> 为关闭</li>
+<li>保存后等 1～3 分钟生效，可用浏览器 DevTools → Network 查看响应头是否出现 <code>content-encoding: br</code></li>
+</ol>
+</li>
+<li><p><strong>验证是否生效</strong></p>
+<ul>
+<li>打开站点 → F12 → Network → 刷新 → 点任意 <code>.css</code> 或 <code>.js</code> 文件</li>
+<li>响应头里看到 <code>content-encoding: br</code> 表示 Brotli 已生效</li>
+<li>响应头里看到 <code>cf-cache-status: HIT</code> 表示 CDN 缓存命中（需配合下方 Page Rules）</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>② Page Rules —— 页面规则（自定义缓存）</p>
+<ul>
+<li><p>入口：点击域名 → 左侧 <strong>规则 &#x2F; Rules</strong> → <strong>页面规则 &#x2F; Page Rules</strong></p>
+</li>
+<li><p>作用：按 URL 模式单独控制缓存策略。Speed 是全局开关；Page Rules 用来区分「静态资源长期缓存」和「HTML 短缓存 &#x2F; 不缓存」</p>
+</li>
+<li><p>免费计划：<strong>3 条</strong> Page Rules，要精打细算，优先给静态资源</p>
+</li>
+<li><p><strong>博客 &#x2F; 静态站推荐 3 条规则（按优先级从上到下）</strong></p>
+<table>
+<thead>
+<tr>
+<th align="left">优先级</th>
+<th align="left">URL 匹配模式</th>
+<th align="left">设置项</th>
+<th align="left">值</th>
+<th align="left">用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">1</td>
+<td align="left"><code>*lqhstudy.online/css/*</code></td>
+<td align="left">缓存级别 Cache Level</td>
+<td align="left"><strong>缓存所有内容 Cache Everything</strong></td>
+<td align="left">CSS 长期缓存</td>
+</tr>
+<tr>
+<td align="left">1</td>
+<td align="left">同上</td>
+<td align="left">边缘缓存 TTL Edge Cache TTL</td>
+<td align="left"><strong>1 个月</strong></td>
+<td align="left">减少回源</td>
+</tr>
+<tr>
+<td align="left">2</td>
+<td align="left"><code>*lqhstudy.online/js/*</code></td>
+<td align="left">缓存级别</td>
+<td align="left"><strong>Cache Everything</strong></td>
+<td align="left">JS 长期缓存</td>
+</tr>
+<tr>
+<td align="left">2</td>
+<td align="left">同上</td>
+<td align="left">边缘缓存 TTL</td>
+<td align="left"><strong>1 个月</strong></td>
+<td align="left">同上</td>
+</tr>
+<tr>
+<td align="left">3</td>
+<td align="left"><code>*lqhstudy.online/images/*</code></td>
+<td align="left">缓存级别</td>
+<td align="left"><strong>Cache Everything</strong></td>
+<td align="left">图片长期缓存</td>
+</tr>
+<tr>
+<td align="left">3</td>
+<td align="left">同上</td>
+<td align="left">边缘缓存 TTL</td>
+<td align="left"><strong>1 个月</strong></td>
+<td align="left">同上</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>把 <code>lqhstudy.online</code> 换成你自己的域名。若静态资源在 <code>/assets/</code> 等路径，把 <code>css</code>、<code>js</code>、<code>images</code> 改成对应目录即可。</p>
+</blockquote>
+</li>
+<li><p><strong>如果 3 条额度不够，合并成 1 条（省额度写法）</strong></p>
+<table>
+<thead>
+<tr>
+<th align="left">URL 匹配模式</th>
+<th align="left">设置项</th>
+<th align="left">值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>*lqhstudy.online/*.&#123;css,js,png,jpg,jpeg,gif,webp,svg,ico,woff,woff2&#125;</code></td>
+<td align="left">缓存级别</td>
+<td align="left"><strong>Cache Everything</strong></td>
+</tr>
+<tr>
+<td align="left">同上</td>
+<td align="left">边缘缓存 TTL</td>
+<td align="left"><strong>1 个月</strong></td>
+</tr>
+<tr>
+<td align="left">同上</td>
+<td align="left">浏览器缓存 TTL Browser Cache TTL</td>
+<td align="left"><strong>4 小时</strong>（或按需）</td>
+</tr>
+</tbody></table>
+<p>这样 1 条规则覆盖所有静态资源，剩余 2 条可留给其他需求（如强制 HTTPS、www 跳转等）。</p>
+</li>
+<li><p><strong>HTML 页面要不要缓存？</strong></p>
+<table>
+<thead>
+<tr>
+<th align="left">场景</th>
+<th align="left">建议</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">纯静态博客，很少改内容</td>
+<td align="left">可对 <code>*lqhstudy.online/*</code> 设 Cache Everything，Edge TTL <strong>2 小时～1 天</strong></td>
+</tr>
+<tr>
+<td align="left">经常 <code>git push</code> 更新文章</td>
+<td align="left"><strong>不要</strong>给 HTML 设长期缓存；只缓存 css&#x2F;js&#x2F;images，HTML 走默认策略即可</td>
+</tr>
+<tr>
+<td align="left">有登录 &#x2F; 后台 &#x2F; API</td>
+<td align="left">对 <code>/api/*</code>、后台路径单独设 <strong>绕过缓存 Bypass</strong></td>
+</tr>
+</tbody></table>
+</li>
+<li><p><strong>操作步骤（以静态资源规则为例）</strong></p>
+<ol>
+<li>进入 <strong>规则 &#x2F; Rules</strong> → <strong>页面规则 &#x2F; Page Rules</strong> → 点击 <strong>创建页面规则 &#x2F; Create Page Rule</strong></li>
+<li><strong>URL</strong> 填入：<code>*lqhstudy.online/css/*</code>（换成你的域名和路径）</li>
+<li>点击 <strong>+ 添加设置</strong>，选择 <strong>缓存级别</strong> → 选 <strong>缓存所有内容 &#x2F; Cache Everything</strong></li>
+<li>再 <strong>+ 添加设置</strong> → <strong>边缘缓存 TTL</strong> → 选 <strong>1 个月</strong></li>
+<li>点击 <strong>保存并部署 &#x2F; Save and Deploy</strong></li>
+<li>按同样方式创建 <code>js</code>、<code>images</code> 规则（或合并为 1 条通配规则）</li>
+<li>规则按列表从上到下匹配，<strong>更具体的规则放上面</strong></li>
+</ol>
+</li>
+<li><p><strong>验证缓存是否命中</strong></p>
+<ul>
+<li>第一次访问某 CSS 文件，响应头 <code>cf-cache-status</code> 多为 <code>MISS</code> 或 <code>EXPIRED</code>（回源拉取）</li>
+<li>刷新后再访问，应变为 <code>HIT</code>（边缘节点直接返回，不再回源）</li>
+<li>若一直是 <code>DYNAMIC</code> 或 <code>BYPASS</code>，检查规则 URL 是否写错、是否开启了绕过缓存</li>
+</ul>
+</li>
+<li><p><strong>常见坑</strong></p>
+<ul>
+<li>Page Rules 免费只有 3 条，<strong>先配静态资源</strong>，别浪费在「全站一条」上</li>
+<li>URL 模式区分大小写，路径要和 Hexo 生成目录一致（如 <code>/css/</code>、<code>/js/</code>、<code>/images/</code>）</li>
+<li>更新静态资源后若用户看到旧版，可在 <strong>缓存 &#x2F; Caching</strong> → <strong>配置</strong> → <strong>清除缓存</strong> 里做「清除所有内容」</li>
+<li>新版控制台还有 <strong>缓存规则 Cache Rules</strong>（更灵活），免费计划也够用；Page Rules 够用时不必强行迁移</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="📌-Cloudflare、AWS、GCP-全面对比"><a href="#📌-Cloudflare、AWS、GCP-全面对比" class="headerlink" title="📌 Cloudflare、AWS、GCP 全面对比"></a>📌 <a target="_blank" rel="noopener" href="https://www.cloudflare.com/zh-cn/">Cloudflare</a>、<a target="_blank" rel="noopener" href="https://aws.amazon.com/cn/">AWS</a>、<a target="_blank" rel="noopener" href="https://cloud.google.com/?hl=zh-cn">GCP</a> 全面对比</h2><blockquote>
+<p>三者并不是竞争关系，更多时候是”各擅其长”，可以组合使用。理解它们的定位差异，才能在技术选型时做出合理决策。</p>
+</blockquote>
+<hr>
+<h3 id="一、🏷️-整体定位"><a href="#一、🏷️-整体定位" class="headerlink" title="一、🏷️ 整体定位"></a>一、🏷️ 整体定位</h3><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>Cloudflare</th>
+<th>AWS（Amazon Web Services）</th>
+<th>GCP（Google Cloud Platform）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>公司背景</td>
+<td>Cloudflare（独立公司）</td>
+<td>Amazon 旗下</td>
+<td>Google 旗下</td>
+</tr>
+<tr>
+<td>诞生时间</td>
+<td>2010 年</td>
+<td>2006 年</td>
+<td>2008 年</td>
+</tr>
+<tr>
+<td>核心出身</td>
+<td>CDN、安全防护、边缘网络</td>
+<td>云计算基础设施（IaaS&#x2F;PaaS）</td>
+<td>Google 内部大规模基础设施外化</td>
+</tr>
+<tr>
+<td>全球节点</td>
+<td>330+ 边缘 PoP（覆盖极广）</td>
+<td>30+ 大区（Region）</td>
+<td>40+ 大区（Region）</td>
+</tr>
+<tr>
+<td>市场份额</td>
+<td>较小但增长快，CDN 市场第一</td>
+<td>全球云计算第一（~33%）</td>
+<td>全球云计算第三（~11%）</td>
+</tr>
+<tr>
+<td>定价模式</td>
+<td>慷慨的免费套餐 + 按量计费</td>
+<td>按量计费，免费层较少</td>
+<td>按量计费，免费层居中</td>
+</tr>
+<tr>
+<td>学习曲线</td>
+<td>低（概念简洁，文档友好）</td>
+<td>高（服务繁多，概念复杂）</td>
+<td>中等</td>
+</tr>
+<tr>
+<td>独立开发者友好度</td>
+<td>⭐⭐⭐⭐⭐</td>
+<td>⭐⭐⭐</td>
+<td>⭐⭐⭐⭐</td>
+</tr>
+<tr>
+<td>企业采用率</td>
+<td>中</td>
+<td>⭐⭐⭐⭐⭐</td>
+<td>⭐⭐⭐⭐</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="二、📦-核心产品对比"><a href="#二、📦-核心产品对比" class="headerlink" title="二、📦 核心产品对比"></a>二、📦 核心产品对比</h3><table>
+<thead>
+<tr>
+<th>能力类别</th>
+<th>Cloudflare</th>
+<th>AWS</th>
+<th>GCP</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>计算（Serverless）</strong></td>
+<td>Workers（边缘 JS&#x2F;TS&#x2F;WASM，冷启动 0ms）</td>
+<td>Lambda（标准 Serverless）</td>
+<td>Cloud Functions &#x2F; Cloud Run</td>
+</tr>
+<tr>
+<td><strong>计算（虚拟机）</strong></td>
+<td>❌ 无</td>
+<td>EC2</td>
+<td>Compute Engine</td>
+</tr>
+<tr>
+<td><strong>容器</strong></td>
+<td>❌ 无</td>
+<td>ECS &#x2F; EKS（Kubernetes）</td>
+<td>GKE（Kubernetes，业界标杆）</td>
+</tr>
+<tr>
+<td><strong>对象存储</strong></td>
+<td>R2（无出流量费！）</td>
+<td>S3（出流量收费）</td>
+<td>GCS（出流量收费）</td>
+</tr>
+<tr>
+<td><strong>关系型数据库</strong></td>
+<td>D1（SQLite，边缘，免费层大）</td>
+<td>RDS &#x2F; Aurora</td>
+<td>Cloud SQL &#x2F; AlloyDB</td>
+</tr>
+<tr>
+<td><strong>KV 存储</strong></td>
+<td>Workers KV（全球复制，最终一致）</td>
+<td>DynamoDB &#x2F; ElastiCache</td>
+<td>Firestore &#x2F; Bigtable</td>
+</tr>
+<tr>
+<td><strong>CDN</strong></td>
+<td>核心产品，全球最快之一</td>
+<td>CloudFront</td>
+<td>Cloud CDN</td>
+</tr>
+<tr>
+<td><strong>DNS</strong></td>
+<td>极快 DNS（1.1.1.1），免费</td>
+<td>Route 53（收费）</td>
+<td>Cloud DNS（收费）</td>
+</tr>
+<tr>
+<td><strong>DDoS 防护</strong></td>
+<td>免费无限量防护</td>
+<td>AWS Shield（付费）</td>
+<td>Cloud Armor（付费）</td>
+</tr>
+<tr>
+<td><strong>AI 推理</strong></td>
+<td>Workers AI（边缘推理，GPU 节点）</td>
+<td>SageMaker &#x2F; Bedrock</td>
+<td>Vertex AI</td>
+</tr>
+<tr>
+<td><strong>消息队列</strong></td>
+<td>Queues</td>
+<td>SQS &#x2F; SNS &#x2F; EventBridge</td>
+<td>Pub&#x2F;Sub</td>
+</tr>
+<tr>
+<td><strong>静态站点托管</strong></td>
+<td>Pages（CI&#x2F;CD 一体，免费）</td>
+<td>S3 + CloudFront</td>
+<td>Firebase Hosting</td>
+</tr>
+<tr>
+<td><strong>实时通信</strong></td>
+<td>Durable Objects（WebSocket 状态保持）</td>
+<td>API Gateway WebSocket</td>
+<td>❌ 无原生等价</td>
+</tr>
+<tr>
+<td><strong>邮件服务</strong></td>
+<td>Email Routing（免费转发）</td>
+<td>SES</td>
+<td>❌ 无原生邮件发送</td>
+</tr>
+<tr>
+<td><strong>访问控制&#x2F;零信任</strong></td>
+<td>Access &#x2F; ZTNA（Zero Trust 领先）</td>
+<td>IAM + Cognito</td>
+<td>Cloud IAM + BeyondCorp</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="三、⚖️-优缺点对比"><a href="#三、⚖️-优缺点对比" class="headerlink" title="三、⚖️ 优缺点对比"></a>三、⚖️ 优缺点对比</h3><table>
+<thead>
+<tr>
+<th>对比项</th>
+<th>Cloudflare</th>
+<th>AWS</th>
+<th>GCP</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>核心优势</strong></td>
+<td>边缘低延迟、安全免费内置、免费层慷慨、零运维</td>
+<td>服务最全（200+）、生态最成熟、企业合规证书最齐全</td>
+<td>AI&#x2F;ML 领先、BigQuery 数仓最强、GKE 最原生</td>
+</tr>
+<tr>
+<td><strong>最大劣势</strong></td>
+<td>无虚拟机&#x2F;容器，不能跑长时任务（&gt; 30s）、复杂后端</td>
+<td>定价复杂，账单容易超支，学习曲线陡</td>
+<td>市场份额最小，部分地区无 Region</td>
+</tr>
+<tr>
+<td><strong>数据库</strong></td>
+<td>D1（SQLite），不适合高并发大型场景</td>
+<td>RDS &#x2F; Aurora，强但配置复杂</td>
+<td>Cloud SQL &#x2F; AlloyDB，强但非云原生设计</td>
+</tr>
+<tr>
+<td><strong>计算限制</strong></td>
+<td>Worker 单次 CPU 上限（免费 10ms，付费 30s）</td>
+<td>无明显上限</td>
+<td>无明显上限</td>
+</tr>
+<tr>
+<td><strong>中国大陆</strong></td>
+<td>部分功能有限制</td>
+<td>无中国 Region（北京&#x2F;宁夏独立合规）</td>
+<td>无中国 Region</td>
+</tr>
+<tr>
+<td><strong>生态成熟度</strong></td>
+<td>相对新，第三方集成少</td>
+<td>最丰富</td>
+<td>比 AWS 少，K8s 生态共享</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="四、💰-费用直观对比（以常见场景为例）"><a href="#四、💰-费用直观对比（以常见场景为例）" class="headerlink" title="四、💰 费用直观对比（以常见场景为例）"></a>四、💰 费用直观对比（以常见场景为例）</h3><table>
+<thead>
+<tr>
+<th>场景</th>
+<th>Cloudflare</th>
+<th>AWS</th>
+<th>GCP</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>100GB 存储 + 1TB 出流量&#x2F;月</td>
+<td>R2：约 <strong>$1.5</strong>（仅存储费，出流量免费）</td>
+<td>S3：约 <strong>$111</strong>（存储 $2.3 + 流量 $92 + 请求费）</td>
+<td>GCS：约 <strong>$82</strong>（存储 $2.6 + 流量 $80）</td>
+</tr>
+<tr>
+<td>每月 100 万次 API 请求</td>
+<td>Workers：<strong>免费</strong>（每天 10 万免费）</td>
+<td>Lambda + API GW：约 <strong>$4.5</strong></td>
+<td>Cloud Functions：约 <strong>$4</strong></td>
+</tr>
+<tr>
+<td>静态网站托管</td>
+<td>Pages：<strong>永久免费</strong></td>
+<td>S3 + CloudFront：约 <strong>$3–10&#x2F;月</strong></td>
+<td>Firebase Hosting 有免费层，超出收费</td>
+</tr>
+<tr>
+<td>小型 SQLite 数据库</td>
+<td>D1：<strong>免费</strong>（500MB）</td>
+<td>RDS MySQL 最低配：约 <strong>$15&#x2F;月</strong></td>
+<td>Cloud SQL 最低配：约 <strong>$10&#x2F;月</strong></td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>R2 的无出流量费是 Cloudflare 最大的”杀手锏”之一，对图片&#x2F;视频类应用节省显著。</p>
+</blockquote>
+<hr>
+<h3 id="五、🎯-适用场景对比（决策参考表）"><a href="#五、🎯-适用场景对比（决策参考表）" class="headerlink" title="五、🎯 适用场景对比（决策参考表）"></a>五、🎯 适用场景对比（决策参考表）</h3><table>
+<thead>
+<tr>
+<th>项目类型</th>
+<th>推荐平台</th>
+<th>推荐产品</th>
+<th>关键原因</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>个人博客 &#x2F; 静态网站</td>
+<td><strong>Cloudflare</strong></td>
+<td>Pages</td>
+<td>免费、全球 CDN、自动 CI&#x2F;CD，最简单</td>
+</tr>
+<tr>
+<td>个人 API &#x2F; 小工具 &#x2F; SaaS MVP</td>
+<td><strong>Cloudflare</strong></td>
+<td>Workers + D1 + R2</td>
+<td>免费层够用，边缘低延迟，零运维</td>
+</tr>
+<tr>
+<td>需要长时任务（&gt; 30s）&#x2F; 复杂后端（成本敏感）</td>
+<td><strong>AWS</strong></td>
+<td>Lambda + EC2</td>
+<td>弹性伸缩，按量付费，生态完善</td>
+</tr>
+<tr>
+<td>需要容器化部署</td>
+<td><strong>GCP &#x2F; AWS</strong></td>
+<td>Cloud Run &#x2F; ECS</td>
+<td>Cloud Run 最简单；ECS 最成熟</td>
+</tr>
+<tr>
+<td>AI 轻量边缘推理</td>
+<td><strong>Cloudflare</strong></td>
+<td>Workers AI</td>
+<td>边缘节点就近推理，延迟极低</td>
+</tr>
+<tr>
+<td>AI 大模型训练 &#x2F; 微调</td>
+<td><strong>GCP &#x2F; AWS</strong></td>
+<td>Vertex AI &#x2F; SageMaker</td>
+<td>GPU 资源丰富，训练框架完整</td>
+</tr>
+<tr>
+<td>大数据分析 &#x2F; 数仓</td>
+<td><strong>GCP</strong></td>
+<td>BigQuery</td>
+<td>业界最强云数仓，PB 级秒出结果</td>
+</tr>
+<tr>
+<td>企业级 &#x2F; 需要合规证书</td>
+<td><strong>AWS</strong></td>
+<td>全套服务</td>
+<td>SOC2 &#x2F; HIPAA &#x2F; ISO 等认证最齐全</td>
+</tr>
+<tr>
+<td>Kubernetes 应用</td>
+<td><strong>GCP</strong></td>
+<td>GKE</td>
+<td>K8s 发源地，托管最原生</td>
+</tr>
+<tr>
+<td>大量文件 &#x2F; 媒体存储</td>
+<td><strong>Cloudflare</strong></td>
+<td>R2</td>
+<td>无出流量费，省钱显著</td>
+</tr>
+<tr>
+<td>零信任安全 &#x2F; 内网穿透</td>
+<td><strong>Cloudflare</strong></td>
+<td>Access &#x2F; Tunnel</td>
+<td>免费，行业领先</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="六、🛠️-CLI-工具对比"><a href="#六、🛠️-CLI-工具对比" class="headerlink" title="六、🛠️ CLI 工具对比"></a>六、🛠️ CLI 工具对比</h3><table>
+<thead>
+<tr>
+<th>平台</th>
+<th>工具名</th>
+<th>安装方式</th>
+<th>常用命令示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Cloudflare</strong></td>
+<td><code>wrangler</code></td>
+<td><code>npm i -g wrangler</code></td>
+<td><code>wrangler deploy</code> &#x2F; <code>wrangler d1 execute</code></td>
+</tr>
+<tr>
+<td><strong>AWS</strong></td>
+<td><code>aws cli</code></td>
+<td>下载安装包</td>
+<td><code>aws s3 cp</code> &#x2F; <code>aws lambda invoke</code></td>
+</tr>
+<tr>
+<td><strong>GCP</strong></td>
+<td><code>gcloud</code></td>
+<td>下载安装包</td>
+<td><code>gcloud run deploy</code> &#x2F; <code>gsutil cp</code></td>
+</tr>
+</tbody></table>
+<ul>
+<li>Wrangler 是三者中最简洁的，命令语义直白</li>
+<li>AWS CLI 功能最全但参数繁多，很多人依赖 <code>aws configure</code> 配置多账号</li>
+<li>gcloud 设计较现代，但 Google 产品名改来改去，文档有时容易混淆</li>
+</ul>
+<hr>
+<h3 id="七、⚠️-常见误区澄清"><a href="#七、⚠️-常见误区澄清" class="headerlink" title="七、⚠️ 常见误区澄清"></a>七、⚠️ 常见误区澄清</h3><p><strong>❌ 误区一：”Cloudflare 可以完全替代 AWS”</strong></p>
+<p><strong>实际情况：</strong> 不能。Cloudflare 没有虚拟机，无法跑需要长时间执行的任务（如视频转码、AI 训练、定时脚本超过 30 秒）。两者定位不同，Cloudflare 擅长<strong>边缘轻量计算</strong>，AWS 擅长<strong>重型后端基础设施</strong>。</p>
+<p><strong>❌ 误区二：”AWS 最贵，Cloudflare 最便宜”</strong></p>
+<p><strong>实际情况：</strong> AWS 有大量免费层，合理使用并不贵。反过来，Cloudflare 的付费计划（Pro $20&#x2F;月，Business $200&#x2F;月）对某些场景也不便宜。关键是<strong>用对场景</strong>：</p>
+<ul>
+<li>静态资源大量出流量 → Cloudflare R2 便宜很多</li>
+<li>复杂后端微服务 → AWS 按量付费反而更划算</li>
+</ul>
+<p><strong>❌ 误区三：”GCP 就是 Google，所以 YouTube、Gmail 数据都在上面”</strong></p>
+<p><strong>实际情况：</strong> Google 自己的产品（Gmail、YouTube、Search）运行在 Google 内部基础设施上，和对外售卖的 GCP 是<strong>物理隔离</strong>的不同系统。GCP 是将 Google 的技术<strong>对外商业化</strong>的产品。</p>
+<p><strong>❌ 误区四：”Cloudflare Workers 就是 Node.js”</strong></p>
+<p><strong>实际情况：</strong> Workers 运行在 <strong>V8 引擎</strong>（和 Chrome 同款）上，但<strong>不是 Node.js</strong>。它没有 <code>fs</code>（文件系统）、<code>net</code>（原生 TCP）、<code>child_process</code> 等 Node.js 模块。只支持 Web 标准 API（fetch、Request、Response、crypto 等）。如果你的代码依赖 Node.js 特有模块，需要改造或换平台。</p>
+<p><strong>❌ 误区五：”用了 Cloudflare 就安全了”</strong></p>
+<p><strong>实际情况：</strong> Cloudflare 能防 DDoS、过滤恶意请求，但：</p>
+<ul>
+<li>应用层漏洞（SQL 注入、XSS）需要开发者自己修</li>
+<li>源站 IP 泄露后 Cloudflare 的防护失效</li>
+<li>WAF 规则需要正确配置才能生效</li>
+<li>安全是多层防御，Cloudflare 是其中一层，不是全部</li>
+</ul>
+<hr>
+<h3 id="八、📚-初学者推荐的学习路径"><a href="#八、📚-初学者推荐的学习路径" class="headerlink" title="八、📚 初学者推荐的学习路径"></a>八、📚 初学者推荐的学习路径</h3><table>
+<thead>
+<tr>
+<th align="center">步骤</th>
+<th>【CF】前端&#x2F;独立开发者</th>
+<th>【AWS】后端&#x2F;云原生</th>
+<th>【GCP】AI&#x2F;数据工程</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>1</strong></td>
+<td>注册 Cloudflare 账号（免费）</td>
+<td>完成 AWS 免费层的 EC2 入门（起一台虚拟机，SSH 进去）</td>
+<td>注册 GCP，领取 $300 免费额度</td>
+</tr>
+<tr>
+<td align="center"><strong>2</strong></td>
+<td>用 Cloudflare Pages 部署一个静态网站（10 分钟）</td>
+<td>学 S3 存储桶的基本操作</td>
+<td>用 BigQuery 跑一个公开数据集的 SQL 查询（体验秒级大数据）</td>
+</tr>
+<tr>
+<td align="center"><strong>3</strong></td>
+<td>写一个 Workers Hello World（5 分钟）</td>
+<td>写一个 Lambda 函数，配上 API Gateway</td>
+<td>用 Cloud Run 部署一个容器应用</td>
+</tr>
+<tr>
+<td align="center"><strong>4</strong></td>
+<td>用 Wrangler 创建 D1 数据库，写一个简单 CRUD API</td>
+<td>学 IAM 权限管理（这是 AWS 最核心也最难的部分）</td>
+<td>接触 Vertex AI 的 API，调用 Gemini 模型</td>
+</tr>
+<tr>
+<td align="center"><strong>5</strong></td>
+<td>把静态资源上传到 R2，体验无流量费存储</td>
+<td>了解 VPC 网络隔离基础</td>
+<td>—</td>
+</tr>
+<tr>
+<td align="center"><strong>完成后</strong></td>
+<td>理解了”边缘计算全栈”是什么感觉</td>
+<td>具备完整后端 + 云基础能力</td>
+<td>具备 AI 应用 + 大数据分析能力</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="九、✅-总结"><a href="#九、✅-总结" class="headerlink" title="九、✅ 总结"></a>九、✅ 总结</h3><blockquote>
+<p>三者不是互相替代，而是互补——选对工具比选贵工具更重要。</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>平台</th>
+<th>一句话定位</th>
+<th>典型用户</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Cloudflare</strong></td>
+<td>“把应用放到离用户最近的地方跑，安全免费省心”</td>
+<td>独立开发者、个人项目、初创团队</td>
+</tr>
+<tr>
+<td><strong>AWS</strong></td>
+<td>“你需要什么我都有，企业级，但请做好预算管理”</td>
+<td>中大型企业、后端工程师、需要合规的业务</td>
+</tr>
+<tr>
+<td><strong>GCP</strong></td>
+<td>“我是 Google 基础设施的外化，AI 和数据是我的主场”</td>
+<td>数据工程师、AI 团队、深度使用 Kubernetes 的团队</td>
+</tr>
+</tbody></table>
+<p><strong>常见组合：</strong></p>
+<ul>
+<li><strong>个人 &#x2F; 独立开发者</strong>：<code>Cloudflare Pages</code> + <code>Workers</code> + <code>D1</code> + <code>R2</code> → 近乎零成本跑完整应用</li>
+<li><strong>创业公司</strong>：<code>Cloudflare</code>（CDN + 安全 + 边缘 API） + <code>AWS</code>（数据库 + 后端服务） → 最佳性价比</li>
+<li><strong>AI 产品</strong>：<code>Cloudflare Workers AI</code>（边缘轻量推理） + <code>GCP Vertex AI</code>（大模型训练&#x2F;推理）</li>
+<li><strong>大型企业</strong>：多云架构，AWS 主力 + GCP 数据分析 + Cloudflare 做统一网络入口和安全层</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://lqh1003.github.io">sara</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://lqh1003.github.io/2026/05/25/Cloudflare/">https://lqh1003.github.io/2026/05/25/Cloudflare/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://lqh1003.github.io" target="_blank">😊Saraの记录</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Cloudflare/">Cloudflare</a><a class="post-meta__tags" href="/tags/Workers/">Workers</a><a class="post-meta__tags" href="/tags/D1/">D1</a><a class="post-meta__tags" href="/tags/R2/">R2</a><a class="post-meta__tags" href="/tags/Wrangler/">Wrangler</a></div><div class="post-share"><div class="social-share" data-image="/images/Cloudflare/cover.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2026/07/09/%E4%BA%86%E8%A7%A3-AI-Agent/" title="了解 AI Agent"><img class="cover" src="/images/%E4%BA%86%E8%A7%A3-AI-Agent/cover.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">了解 AI Agent</div></div><div class="info-2"><div class="info-item-1">用过的 “AI” OpenAI Codex： Codex 不是一个聊天机器人，而是一个专门面向软件开发的 Agent，是 OpenAI 提供的 Coding Agent 产品   Cursor Agent： 它是 Agent，而不仅是 Chat 聊天机器人   AI助手(聊天机器人)： deepseek chatgpt 豆包 …    未来 5～10 年，技术发展的主线如果站在 2026 年来看，技术行业已经进入了一个新的阶段：AI 不再只是一个行业，而是成为所有行业的基础设施。 未来 5～10 年，技术发展的主线可以概括为一句话：AI Agent + 云计算 + 数据 + 自动化，将重塑软件开发和企业运营。 AI 从”工具”进入”员工”阶段（最大的趋势） 2023 年以前  AI 主要是： ChatGPT Midjourney Copilot都是辅助工具     现在正在进入：  AI Agent（智能代理）   例如，Cursor 已经可以：  修改整个项目 自动修 Bug 自动写测试 自动提交代码   未来：  一个 Agent 可以完成：产品需求 → 设计数据库 → 写接...</div></div></div></a><a class="pagination-related" href="/2026/01/30/%E4%B8%BAGitHub%E8%B4%A6%E5%8F%B7%E7%94%9F%E6%88%90SSH%E5%AF%86%E9%92%A5/" title="为GitHub账号生成SSH密钥"><img class="cover" src="/images/%E4%B8%BAGitHub%E8%B4%A6%E5%8F%B7%E7%94%9F%E6%88%90SSH%E5%AF%86%E9%92%A5/cover.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">为GitHub账号生成SSH密钥</div></div><div class="info-2"><div class="info-item-1">设置和查看全局用户名和邮箱 （commit 提交记录时会显示用户名） 修改「全局」user.name&#x2F;user.email（所有仓库通用）1234# 修改全局用户名（填新GitHub账号用户名：lqh1003）git config --global user.name &quot;lqh1003&quot;# 修改全局邮箱（填新GitHub账号绑定的邮箱，必须是已验证的）git config --global user.email &quot;你的新GitHub绑定邮箱@xxx.com&quot; 验证全局配置（点击可复制） 账号1：liqinghua-ty &#x2F; liqinghua@tanyue.cc 账号2：lqh1003 &#x2F; 2933213867@qq.com  12git config --global user.namegit config --global user.email  为 GitHub 账号生成 SSH 密钥（Windows&#x2F;macOS&#x2F;Linux通用行） 打开 Git Bash &#x2F;终端（Windo...</div></div></div></a></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/theme_images/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">sara</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">29</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">44</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%93%8C-%E4%BA%86%E8%A7%A3-Cloudflare"><span class="toc-number">1.</span> <span class="toc-text">📌 了解 Cloudflare</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%8C%90-Cloudflare%EF%BC%8C%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0"><span class="toc-number">1.1.</span> <span class="toc-text">🌐 Cloudflare，开发平台</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%94%A7-Wrangler%EF%BC%8C%E5%BC%80%E5%8F%91-%E9%83%A8%E7%BD%B2%E5%B7%A5%E5%85%B7"><span class="toc-number">1.2.</span> <span class="toc-text">🔧 Wrangler，开发&#x2F;部署工具</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9A%A1-Workers%EF%BC%8C%E4%BB%A3%E7%A0%81%E8%BF%90%E8%A1%8C"><span class="toc-number">1.3.</span> <span class="toc-text">⚡ Workers，代码运行</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%92%BE-D1%EF%BC%8C%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-number">1.4.</span> <span class="toc-text">💾 D1，数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%93%81-R2%EF%BC%8C%E6%96%87%E4%BB%B6%E5%AD%98%E5%82%A8"><span class="toc-number">1.5.</span> <span class="toc-text">📁 R2，文件存储</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%93%A6-Cloudflare-%E6%A0%B8%E5%BF%83%E4%BA%A7%E5%93%81%E4%B8%80%E8%A7%88"><span class="toc-number">1.6.</span> <span class="toc-text">📦 Cloudflare 核心产品一览</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%93%8C-%E5%BC%80%E9%80%9A-Cloudflare"><span class="toc-number">2.</span> <span class="toc-text">📌 开通 Cloudflare</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%B4%E6%8E%A5%E6%B3%A8%E5%86%8C%E8%B4%A6%E5%8F%B7"><span class="toc-number">2.1.</span> <span class="toc-text">直接注册账号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%BA%E6%99%AF%E4%B8%BE%E4%BE%8B"><span class="toc-number">2.2.</span> <span class="toc-text">场景举例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%93%8C-%E4%BD%BF%E7%94%A8-Cloudflare"><span class="toc-number">3.</span> <span class="toc-text">📌 使用 Cloudflare</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%9A%80-%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5%EF%BC%9A%E5%85%88%E6%8A%8A%E2%80%9D%E9%83%A8%E7%BD%B2%E7%BD%91%E7%AB%99%E2%80%9D%E8%B7%91%E9%80%9A"><span class="toc-number">3.1.</span> <span class="toc-text">🚀 第一阶段：先把”部署网站”跑通</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%93%9D-%E6%B3%A8%E5%86%8C-Cloudflare"><span class="toc-number">3.1.1.</span> <span class="toc-text">📝 注册 Cloudflare</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%93%81-%E5%87%86%E5%A4%87%E4%B8%80%E4%B8%AA-HTML-%E9%A1%B9%E7%9B%AE-Github"><span class="toc-number">3.1.2.</span> <span class="toc-text">📁 准备一个 HTML 项目 (Github)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%94%97-Cloudflare-Pages-%E7%BB%91%E5%AE%9A-GitHub-%E8%87%AA%E5%8A%A8%E9%83%A8%E7%BD%B2"><span class="toc-number">3.1.3.</span> <span class="toc-text">🔗 Cloudflare Pages 绑定 GitHub 自动部署</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%94%84-%E5%B0%9D%E8%AF%95%E6%94%B9%E4%BB%A3%E7%A0%81%E8%87%AA%E5%8A%A8%E6%9B%B4%E6%96%B0"><span class="toc-number">3.1.4.</span> <span class="toc-text">🔄 尝试改代码自动更新</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%93%8D-%E7%BB%91%E5%AE%9A%E5%9F%9F%E5%90%8D"><span class="toc-number">3.1.5.</span> <span class="toc-text">📍 绑定域名</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9A%A1-%E7%AC%AC%E4%BA%8C%E9%98%B6%E6%AE%B5%EF%BC%9A%E5%BC%80%E5%A7%8B%E5%AD%A6-Workers"><span class="toc-number">3.2.</span> <span class="toc-text">⚡ 第二阶段：开始学 Workers</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE-npm-create-cloudflare-latest"><span class="toc-number">3.2.1.</span> <span class="toc-text">创建项目 npm create cloudflare@latest</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9C%AC%E5%9C%B0%E8%BF%90%E8%A1%8C-npm-run-dev"><span class="toc-number">3.2.2.</span> <span class="toc-text">本地运行 npm run dev</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9-src-index-js"><span class="toc-number">3.2.3.</span> <span class="toc-text">修改 src&#x2F;index.js</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%9A%80-%E9%83%A8%E7%BD%B2%E7%BA%BF%E4%B8%8A"><span class="toc-number">3.2.4.</span> <span class="toc-text">🚀 部署线上</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%93%8D-%E7%BB%91%E5%AE%9A%E5%9F%9F%E5%90%8D-1"><span class="toc-number">3.2.5.</span> <span class="toc-text">📍 绑定域名</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%92%BE-%E7%AC%AC%E4%B8%89%E9%98%B6%E6%AE%B5%EF%BC%9A%E5%8A%A0%E6%95%B0%E6%8D%AE%E5%BA%93-D1"><span class="toc-number">3.3.</span> <span class="toc-text">💾 第三阶段：加数据库 D1</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%92%BE-%E5%88%9B%E5%BB%BA-D1-%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-number">3.3.1.</span> <span class="toc-text">💾 创建 D1 数据库</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%93%8A-%E5%88%9B%E5%BB%BA%E8%A1%A8-%E6%95%B0%E6%8D%AE"><span class="toc-number">3.3.2.</span> <span class="toc-text">📊 创建表&#x2F;数据</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%94%84-todolist-%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5%E6%8E%A5%E5%8F%A3%EF%BC%8C%E4%BD%BF%E7%94%A8%E7%9C%9F%E5%AE%9E%E6%95%B0%E6%8D%AE"><span class="toc-number">3.3.3.</span> <span class="toc-text">🔄 todolist 的增删改查接口，使用真实数据</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%94%8C-%E6%8E%A5%E5%8F%A3%E5%9C%B0%E5%9D%80%E4%BD%BF%E7%94%A8"><span class="toc-number">3.3.4.</span> <span class="toc-text">🔌 接口地址使用</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%93%81-%E7%AC%AC%E5%9B%9B%E9%98%B6%E6%AE%B5%EF%BC%9A%E5%8A%A0-R2-%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0"><span class="toc-number">3.4.</span> <span class="toc-text">📁 第四阶段：加 R2 文件上传</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%93%81-%E5%88%9B%E5%BB%BA-R2-%E5%AD%98%E5%82%A8%E6%A1%B6"><span class="toc-number">3.4.1.</span> <span class="toc-text">📁 创建 R2 存储桶</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%94%97-%E7%BB%91%E5%AE%9A%E5%88%B0-wrangler-jsonc"><span class="toc-number">3.4.2.</span> <span class="toc-text">🔗 绑定到 wrangler.jsonc</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%93%A4-Worker-%E5%AE%9E%E7%8E%B0%E4%B8%8A%E4%BC%A0-%E4%B8%8B%E8%BD%BD%E6%8E%A5%E5%8F%A3"><span class="toc-number">3.4.3.</span> <span class="toc-text">📤 Worker 实现上传&#x2F;下载接口</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%92%BB-%E5%89%8D%E7%AB%AF%E5%AF%B9%E6%8E%A5"><span class="toc-number">3.4.4.</span> <span class="toc-text">💻 前端对接</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%93%8D-%E8%87%AA%E5%AE%9A%E4%B9%89%E8%B5%84%E6%BA%90%E5%9F%9F%E5%90%8D"><span class="toc-number">3.4.5.</span> <span class="toc-text">📍 自定义资源域名</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%8F%97%EF%B8%8F-%E7%AC%AC%E4%BA%94%E9%98%B6%E6%AE%B5%EF%BC%9A%E5%81%9A%E4%B8%80%E4%B8%AA%E5%AE%8C%E6%95%B4%E9%A1%B9%E7%9B%AE"><span class="toc-number">3.5.</span> <span class="toc-text">🏗️ 第五阶段：做一个完整项目</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%8F%97%EF%B8%8F-%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84"><span class="toc-number">3.5.1.</span> <span class="toc-text">🏗️ 整体架构</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%8C%8D-%E7%AC%AC%E5%85%AD%E9%98%B6%E6%AE%B5%EF%BC%9A%E5%9F%9F%E5%90%8D%E6%8E%A5%E5%85%A5"><span class="toc-number">3.6.</span> <span class="toc-text">🌍 第六阶段：域名接入</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%8C%90-%E6%B7%BB%E5%8A%A0%E5%9F%9F%E5%90%8D"><span class="toc-number">3.6.1.</span> <span class="toc-text">🌐 添加域名</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Cloudflare-%E6%8E%A5%E5%85%A5%E5%9F%9F%E5%90%8D%E5%90%8E"><span class="toc-number">3.6.2.</span> <span class="toc-text">Cloudflare 接入域名后</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#DNS-%E9%85%8D%E7%BD%AE%EF%BC%88%E5%9F%9F%E5%90%8D%E8%A7%A3%E6%9E%90%E6%A0%B8%E5%BF%83%EF%BC%89"><span class="toc-number">3.6.2.1.</span> <span class="toc-text">DNS 配置（域名解析核心）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%BB%91%E5%AE%9A-Pages-%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F%E5%90%8D%EF%BC%88%E4%BD%BF%E7%94%A8%E5%9F%9F%E5%90%8D%EF%BC%89"><span class="toc-number">3.6.2.2.</span> <span class="toc-text">绑定 Pages 自定义域名（使用域名）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#SSL-TLS-%E9%85%8D%E7%BD%AE%EF%BC%88%E5%85%A8%E7%AB%99-HTTPS%EF%BC%89"><span class="toc-number">3.6.2.3.</span> <span class="toc-text">SSL&#x2F;TLS 配置（全站 HTTPS）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#CDN-%E9%85%8D%E7%BD%AE%EF%BC%88%E7%BC%93%E5%AD%98%E3%80%81%E6%8F%90%E9%80%9F%E3%80%81%E5%8E%8B%E7%BC%A9%EF%BC%89"><span class="toc-number">3.6.2.4.</span> <span class="toc-text">CDN 配置（缓存、提速、压缩）</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%93%8C-Cloudflare%E3%80%81AWS%E3%80%81GCP-%E5%85%A8%E9%9D%A2%E5%AF%B9%E6%AF%94"><span class="toc-number">4.</span> <span class="toc-text">📌 Cloudflare、AWS、GCP 全面对比</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81%F0%9F%8F%B7%EF%B8%8F-%E6%95%B4%E4%BD%93%E5%AE%9A%E4%BD%8D"><span class="toc-number">4.1.</span> <span class="toc-text">一、🏷️ 整体定位</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%F0%9F%93%A6-%E6%A0%B8%E5%BF%83%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94"><span class="toc-number">4.2.</span> <span class="toc-text">二、📦 核心产品对比</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E2%9A%96%EF%B8%8F-%E4%BC%98%E7%BC%BA%E7%82%B9%E5%AF%B9%E6%AF%94"><span class="toc-number">4.3.</span> <span class="toc-text">三、⚖️ 优缺点对比</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%F0%9F%92%B0-%E8%B4%B9%E7%94%A8%E7%9B%B4%E8%A7%82%E5%AF%B9%E6%AF%94%EF%BC%88%E4%BB%A5%E5%B8%B8%E8%A7%81%E5%9C%BA%E6%99%AF%E4%B8%BA%E4%BE%8B%EF%BC%89"><span class="toc-number">4.4.</span> <span class="toc-text">四、💰 费用直观对比（以常见场景为例）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%94%E3%80%81%F0%9F%8E%AF-%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF%E5%AF%B9%E6%AF%94%EF%BC%88%E5%86%B3%E7%AD%96%E5%8F%82%E8%80%83%E8%A1%A8%EF%BC%89"><span class="toc-number">4.5.</span> <span class="toc-text">五、🎯 适用场景对比（决策参考表）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%AD%E3%80%81%F0%9F%9B%A0%EF%B8%8F-CLI-%E5%B7%A5%E5%85%B7%E5%AF%B9%E6%AF%94"><span class="toc-number">4.6.</span> <span class="toc-text">六、🛠️ CLI 工具对比</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E2%9A%A0%EF%B8%8F-%E5%B8%B8%E8%A7%81%E8%AF%AF%E5%8C%BA%E6%BE%84%E6%B8%85"><span class="toc-number">4.7.</span> <span class="toc-text">七、⚠️ 常见误区澄清</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%AB%E3%80%81%F0%9F%93%9A-%E5%88%9D%E5%AD%A6%E8%80%85%E6%8E%A8%E8%8D%90%E7%9A%84%E5%AD%A6%E4%B9%A0%E8%B7%AF%E5%BE%84"><span class="toc-number">4.8.</span> <span class="toc-text">八、📚 初学者推荐的学习路径</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B9%9D%E3%80%81%E2%9C%85-%E6%80%BB%E7%BB%93"><span class="toc-number">4.9.</span> <span class="toc-text">九、✅ 总结</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/07/09/%E4%BA%86%E8%A7%A3-AI-Agent/" title="了解 AI Agent">了解 AI Agent</a><time datetime="2026-07-09T16:52:54.000Z" title="发表于 2026-07-09 16:52:54">2026-07-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/05/25/Cloudflare/" title="Cloudflare">Cloudflare</a><time datetime="2026-05-25T10:44:26.000Z" title="发表于 2026-05-25 10:44:26">2026-05-25</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/30/%E4%B8%BAGitHub%E8%B4%A6%E5%8F%B7%E7%94%9F%E6%88%90SSH%E5%AF%86%E9%92%A5/" title="为GitHub账号生成SSH密钥">为GitHub账号生成SSH密钥</a><time datetime="2026-01-30T10:16:18.000Z" title="发表于 2026-01-30 10:16:18">2026-01-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/29/Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2Github-%E5%88%86%E4%BA%AB/" title="Hexo搭建个人博客Github-分享">Hexo搭建个人博客Github-分享</a><time datetime="2026-01-29T10:56:54.000Z" title="发表于 2026-01-29 10:56:54">2026-01-29</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/10/25/Webpack%E3%80%81Vite%E5%AF%B9%E6%AF%94/" title="Webpack、Vite对比">Webpack、Vite对比</a><time datetime="2025-10-25T10:00:30.000Z" title="发表于 2025-10-25 10:00:30">2025-10-25</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/theme_images/footer.jpg);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;2025 - 2026 By sara</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.4.2</a></span></div><div class="footer_custom_text">Hi, 欢迎来到我的 <a href="/">博客</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const destroyWaline = ele => ele.destroy()
+
+  const initWaline = (Fn, el = document, path = window.location.pathname) => {
+    const waline = Fn({
+      el: el.querySelector('#waline-wrap'),
+      serverURL: 'https://lqh-blog-comments.vercel.app',
+      pageview: true,
+      dark: 'html[data-theme="dark"]',
+      comment: false,
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyWaline = () => {
+        destroyWaline(waline)
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+  }
+
+  const loadWaline = (el, path) => {
+    if (initFn) initWaline(initFn, el, path)
+    else {
+      btf.getCSS('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.css')
+        .then(() => import('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.js'))
+        .then(({ init }) => {
+          initFn = init || Waline.init
+          initWaline(initFn, el, path)
+          window.walineFn = initFn
+        })
+    }
+  }
+
+  if (isShuoshuo) {
+    'Waline' === 'Waline'
+      ? window.shuoshuoComment = { loadComment: loadWaline } 
+      : window.loadOtherComment = loadWaline
+    return
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script src="/js/live2d-toggle.js"></script><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="false" data-text="厉害,强,好,wonderful,点赞,Great,棒,Good,精彩" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"use":"live2d-widget-model-hibiki","display":{"position":"left","width":230,"height":370,"hOffset":50,"vOffset":0,"zIndex":100},"mobile":{"show":false,"scale":0.5},"log":false});</script></body></html>

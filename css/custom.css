@@ -1,0 +1,66 @@
+/* 自定义样式 */
+#post #article-container img {
+    text-align: left;
+    margin: 10px 0;
+    max-width: 100%;
+    height: auto;
+}
+
+/* 表格三端适配：PC / 平板 / 手机 */
+#post #article-container th,
+#post #article-container td {
+    word-break: break-word;
+    white-space: normal;
+    vertical-align: top;
+}
+
+@media (max-width: 768px) {
+    #post #article-container table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        font-size: 0.9em;
+    }
+
+    #post #article-container table thead,
+    #post #article-container table tbody,
+    #post #article-container table tr {
+        display: table;
+        width: 100%;
+        table-layout: auto;
+    }
+
+    #post #article-container th,
+    #post #article-container td {
+        padding: 6px 8px;
+        min-width: 72px;
+    }
+}
+
+.max300 {
+    max-width: min(300px, 100%) !important;
+}
+.max400 {
+    max-width: min(400px, 100%) !important;
+}
+.max450 {
+    max-width: min(450px, 100%) !important;
+}
+.max500 {
+    max-width: min(500px, 100%) !important;
+}
+.max600 {
+    max-width: min(600px, 100%) !important;
+}
+.max700 {
+    max-width: min(700px, 100%) !important;
+}
+.max800 {
+    max-width: min(800px, 100%) !important;
+}
+.max900 {
+    max-width: min(900px, 100%) !important;
+}
+.border1 {
+    border: 1px solid #ccc;
+}

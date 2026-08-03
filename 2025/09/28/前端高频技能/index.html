@@ -1,0 +1,331 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>前端高频技能 | 😊Saraの记录</title><meta name="author" content="sara"><meta name="copyright" content="sara"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="“各端显示差异性”的兼容&#x2F;适配处理能力各端介绍： PC 端：Chrome、Firefox、IE、Microsoft Edge、UC 浏览器等 移动端：iOS Safari、Android Chrome等 平台默认浏览器： 安卓系统&#x2F;手机：默认浏览器多样化，取决于厂商和用户设置，一般是默认 QQ 浏览器 苹果 IOS 系统&#x2F;手机：统一，传统上使用 Safari，iOS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="前端高频技能">
+<meta property="og:url" content="https://lqh1003.github.io/2025/09/28/%E5%89%8D%E7%AB%AF%E9%AB%98%E9%A2%91%E6%8A%80%E8%83%BD/index.html">
+<meta property="og:site_name" content="😊Saraの记录">
+<meta property="og:description" content="“各端显示差异性”的兼容&#x2F;适配处理能力各端介绍： PC 端：Chrome、Firefox、IE、Microsoft Edge、UC 浏览器等 移动端：iOS Safari、Android Chrome等 平台默认浏览器： 安卓系统&#x2F;手机：默认浏览器多样化，取决于厂商和用户设置，一般是默认 QQ 浏览器 苹果 IOS 系统&#x2F;手机：统一，传统上使用 Safari，iOS">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://lqh1003.github.io/images/%E5%89%8D%E7%AB%AF%E9%AB%98%E9%A2%91%E6%8A%80%E8%83%BD/cover.jpg">
+<meta property="article:published_time" content="2025-09-28T10:54:29.000Z">
+<meta property="article:modified_time" content="2026-08-03T06:20:38.608Z">
+<meta property="article:author" content="sara">
+<meta property="article:tag" content="性能优化">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://lqh1003.github.io/images/%E5%89%8D%E7%AB%AF%E9%AB%98%E9%A2%91%E6%8A%80%E8%83%BD/cover.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "前端高频技能",
+  "url": "https://lqh1003.github.io/2025/09/28/%E5%89%8D%E7%AB%AF%E9%AB%98%E9%A2%91%E6%8A%80%E8%83%BD/",
+  "image": "https://lqh1003.github.io/images/%E5%89%8D%E7%AB%AF%E9%AB%98%E9%A2%91%E6%8A%80%E8%83%BD/cover.jpg",
+  "datePublished": "2025-09-28T10:54:29.000Z",
+  "dateModified": "2026-08-03T06:20:38.608Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "sara",
+      "url": "https://lqh1003.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/theme_images/f.ico"><link rel="canonical" href="https://lqh1003.github.io/2025/09/28/%E5%89%8D%E7%AB%AF%E9%AB%98%E9%A2%91%E6%8A%80%E8%83%BD/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":230,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '前端高频技能',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-color: #97bf5e42;"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/theme_images/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">29</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">44</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-book"></i><span> 页面</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link"><i class="fa-fw fas fa-link"></i><span> 链接</span></a></div><div class="menus_item"><a class="site-page" href="/about"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/images/%E5%89%8D%E7%AB%AF%E9%AB%98%E9%A2%91%E6%8A%80%E8%83%BD/cover.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">😊Saraの记录</span></a><a class="nav-page-title" href="/"><span class="site-name">前端高频技能</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-book"></i><span> 页面</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link"><i class="fa-fw fas fa-link"></i><span> 链接</span></a></div><div class="menus_item"><a class="site-page" href="/about"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">前端高频技能</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-09-28T10:54:29.000Z" title="发表于 2025-09-28 10:54:29">2025-09-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-08-03T06:20:38.608Z" title="更新于 2026-08-03 06:20:38">2026-08-03</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/">性能优化</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span class="waline-pageview-count" data-path="/2025/09/28/%E5%89%8D%E7%AB%AF%E9%AB%98%E9%A2%91%E6%8A%80%E8%83%BD/"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h3 id="“各端显示差异性”的兼容-适配处理能力"><a href="#“各端显示差异性”的兼容-适配处理能力" class="headerlink" title="“各端显示差异性”的兼容&#x2F;适配处理能力"></a>“各端显示差异性”的兼容&#x2F;适配处理能力</h3><h4 id="各端介绍："><a href="#各端介绍：" class="headerlink" title="各端介绍："></a>各端介绍：</h4><ul>
+<li>PC 端：<code>Chrome</code>、<code>Firefox</code>、<code>IE</code>、<code>Microsoft Edge</code>、<code>UC 浏览器</code>等</li>
+<li>移动端：<code>iOS Safari</code>、<code>Android Chrome</code>等<ul>
+<li>平台默认浏览器：<ul>
+<li>安卓系统&#x2F;手机：<strong>默认浏览器多样化，取决于厂商和用户设置</strong>，一般是默认 <code>QQ 浏览器</code></li>
+<li>苹果 IOS 系统&#x2F;手机：统一，传统上使用 <code>Safari</code>，iOS 14+支持更改默认浏览器</li>
+</ul>
+</li>
+<li>手机的版本 —— 截至 2025 年 9 月<ul>
+<li>安卓手机的最新版本是 <code>Android 15</code></li>
+<li>iOS 手机的最新版本是 <code>iOS 19</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>小程序：微信小程序、支付宝小程序等</li>
+</ul>
+<h4 id="问题场景："><a href="#问题场景：" class="headerlink" title="问题场景："></a>问题场景：</h4><ul>
+<li>IOS Safari 中 <code>position: fixed</code> 在滚动是抖动</li>
+<li>Firefox 中 flex: 1 计算逻辑与 Chrome 不一致</li>
+<li>IE 不支持 CSS Grid 布局</li>
+<li>盒模型差异：IE 浏览器的盒模型和 W3C 标准盒模型计算方式不同，IE 的 content 包含 border 和 padding，而标准盒模型的 content 不包含</li>
+<li>伪类&#x2F;伪元素兼容性：部分伪元素，如<code>::before</code>、<code>::after</code>在旧版浏览器中需要双冒号，而 IE8 及以下仅支持单冒号</li>
+<li>CSS 动画兼容性：@keyframes 动画在旧版 IE 中不支持，或需要特定前缀</li>
+<li>ES6+ 语法兼容性：老版本浏览器不支持 ES6 + 的新语法，如 let、const、箭头函数等，在 IE 中会报错</li>
+<li>(现代)API 兼容性：部分原生 API，如 fetch、Promise、Array.prototype.includes 在旧浏览器中不存在</li>
+<li>事件处理差异：IE 的 <code>attachEvent</code> 与标准的 <code>addEventListener</code> 不同，IE 中事件对象通过 window.event 获取，且 event 对象的属性也与标准浏览器有差异，如 IE 下 event 对象有 x、y 属性，但没有 pageX、pageY 属性，而 Firefox 下则相反</li>
+<li>DOM 操作差异：某些 DOM 方法，如<code>Element.insertAdjacentHTML()</code>在旧版浏览器中不支持</li>
+<li>语义化标签兼容性：IE8 及以下不识别<code>&lt;header&gt;</code>、<code>&lt;nav&gt;</code>、<code>&lt;footer&gt;</code>等语义化标签</li>
+<li>表单元素新特性兼容性：如 <code>input(type=&quot;date&quot;)</code> 在部分浏览器中会降级为普通文本框</li>
+</ul>
+<h4 id="解题思路："><a href="#解题思路：" class="headerlink" title="解题思路："></a>解题思路：</h4><ul>
+<li>低版本浏览器（如 IE11、旧版 Chrome&#x2F;Safari）不支持 Es6+ 和 新 API（通过工具链将高版本 JS 代码转换为低版本可识别的语法，并补充缺失的原生 API）：<ul>
+<li>核心工具链：Babel + polyfill 组合（ES6+ 兼容的核心依赖两个工具）<ul>
+<li><strong>Babel</strong>：负责将 ES6+ 语法（如箭头函数、let&#x2F;const、解构赋值、类）转换为 ES5 语法</li>
+<li><strong>Polyfill</strong>：负责补充低版本浏览器缺失的 ES6+ 原生 API（如 Promise、Array.prototype.includes、Object.assign）</li>
+</ul>
+</li>
+<li>内核判断：通过 navigator.userAgent 精准识别浏览器内核（如 Safari 对应 AppleWebKit，IE 对应 Trident），针对性加载 CSS 补丁（如给 IE 单独引入 grid-polyfil）</li>
+</ul>
+</li>
+<li>CSS 属性，浏览器兼容性处理（补充浏览器私有前缀）:<ul>
+<li><code>-webkit-</code>：用于 Chrome、Safari、新版 Opera 浏览器以及几乎所有 iOS 系统中的浏览器，简单来说，就是所有基于 WebKit 内核的浏览器</li>
+<li><code>-moz-</code>：用于 Firefox 浏览器，其内核为 Gecko</li>
+<li><code>-o-</code>：用于旧版 WebKit 之前的 Opera 浏览器，现在的 Opera 浏览器已基于 Blink 内核，一般情况下较少使用该前缀</li>
+<li><code>-ms-</code>：用于 IE 浏览器和 Chromium 之前的 Edge 浏览器</li>
+</ul>
+</li>
+<li>除此之外的其他兼容性处理（具体问题具体分析）<ul>
+<li>盒模型：<code>box-sizing</code> 控制标准盒模型 <strong>content-box</strong>、IE 盒模型 <strong>border-box</strong></li>
+<li>iOS Safari 中 fixed 抖动：改用粘性布局 sticky 代替、或其他方法</li>
+<li><code>::-webkit-scrollbar</code> 在 Firefox 和旧版本的 Edge 浏览器上兼容性不一样，无法使用纯 CSS 来自定义滚动条样式</li>
+<li>在不同浏览器上，html 根元素的默认 font-size 不一致</li>
+</ul>
+</li>
+</ul>
+<h3 id="性能优化：突破常规的”极限调优”能力"><a href="#性能优化：突破常规的”极限调优”能力" class="headerlink" title="性能优化：突破常规的”极限调优”能力"></a>性能优化：突破常规的”极限调优”能力</h3><p>常规优化（如路由懒加载、图片压缩、资源优化、Terser&#x2F;Gzip 压缩）后，页面仍存在 “首屏加载慢（&gt;3s）”、”长列表滚动卡顿（FPS&lt;30）”、”大型表单操作延迟” 等问题，需从渲染原理、浏览器底层机制切入优化</p>
+<ul>
+<li><p>问题场景：首屏依赖多个 JS&#x2F;CSS 文件，资源加载阻塞渲染，导致白屏时间长</p>
+<ul>
+<li>解决思路：<ul>
+<li>关键 CSS 内联，将首屏必须要的 CSS 内联到<code>&lt;head&gt;&lt;/head&gt;</code>中，避免外部 css 文件加载组数渲染，（非关键 CSS 用 media&#x3D;”print” 标记，延迟加载）</li>
+<li>JS 加载策略分级<ul>
+<li>核心交互 JS（如登录验证）用 async 加载（不阻塞 DOM 解析，加载完立即执行）</li>
+<li>非首屏 JS（如统计脚本）用 defer 加载（不阻塞 DOM 解析，DOM 加载完执行）</li>
+<li>超大型 JS（如可视化图表库）用 “动态 import + 按需加载”，且在首屏渲染完成后（如 window.load 事件后）再加载</li>
+</ul>
+</li>
+<li>预加载与预连接<ul>
+<li>用 <code>&lt;link rel=&quot;preload&quot; href=&quot;critical.js&quot; as=&quot;script&quot;&gt;</code> 预加载关键资源</li>
+<li>用 <code>&lt;link rel=&quot;preconnect&quot; href=&quot;https://api.xxx.com&quot;&gt;</code> 提前建立与接口域名的 TCP 连接，减少 DNS 解析和 TCP 握手时间</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>&lt;script&gt;</code> 标签用于在 HTML 中嵌入或引用 JavaScript 代码，其属性用于控制脚本的加载、执行方式及行为。以下是 <code>&lt;script&gt;</code> 标签的核心属性及用法<ul>
+<li>src 指定外部 JavaScript 文件的 URL（路径），用于引入外部脚本（替代内嵌脚本）</li>
+<li>type 指定脚本的 MIME 类型（通常用于标识脚本语言），默认值为 text&#x2F;javascript（可省略）<ul>
+<li><code>&lt;script type=&quot;module&quot; src=&quot;./module.js&quot;&gt;&lt;/script&gt;</code></li>
+<li>module：表示脚本为 ES6 模块（支持 import&#x2F;export 语法），浏览器会按模块规则加载（如延迟执行、严格模式）</li>
+</ul>
+</li>
+<li>charset 指定外部脚本文件的字符编码（如 UTF-8）</li>
+<li>async 异步加载脚本，加载期间不阻塞 HTML 解析，加载完成后<strong>立即执行</strong>（执行时可能阻塞解析）</li>
+<li>defer 延迟加载脚本，加载期间不阻塞 HTML 解析，<strong>等待 HTML 解析完成后（DOM 就绪）按顺序执行</strong></li>
+<li>…</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>问题场景：1 万条数据的列表滚动时，频繁触发重排（Reflow），导致 FPS 过低、卡顿</p>
+<ul>
+<li>解题思路：<ul>
+<li>虚拟列表进阶：在基础虚拟列表（只渲染可视区域）上，优化 “滚动位置计算”。用 requestAnimationFrame 替代 scroll 事件监听（减少触发频率），用 transform 替代 top&#x2F;left 定位（transform 仅触发复合层渲染，不触发重排）</li>
+<li>数据分片与缓存：列表数据按 “可视区域 2 倍” 分片加载，避免一次性处理大量数据；对已渲染的 DOM 节点进行缓存（如用数组存储，滚动时复用，不重复创建）</li>
+<li>禁止滚动时的耗时操作：滚动过程中暂停 console.log、DOM 查询（如 document.querySelector）等耗时操作，待滚动停止后（用 debounce 延迟 100ms）再执行</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="“复杂-高难度交互”的工程化实现能力"><a href="#“复杂-高难度交互”的工程化实现能力" class="headerlink" title="“复杂&#x2F;高难度交互”的工程化实现能力"></a>“复杂&#x2F;高难度交互”的工程化实现能力</h3><p>拖拽缩放：精准控制与边界处理</p>
+<ul>
+<li>问题场景：拖拽元素时出现 “卡顿”、”超出容器边界”、”多层元素拖拽冲突”<ul>
+<li>事件委托与阻止冒泡：将拖拽事件（<code>mousedown</code>&#x2F;<code>touchstart</code>、<code>mousemove</code>&#x2F;<code>touchmove</code>、<code>mouseup</code>&#x2F;<code>touchend</code>）委托给父容器，避免给每个子元素绑定事件；通过 <code>event.stopPropagation()</code> 阻止多层元素的事件冲突（如子元素拖拽不触发父元素滚动）；</li>
+<li>坐标计算精准化：用 clientX&#x2F;clientY（相对视口）而非 pageX&#x2F;pageY（相对文档）计算拖拽位置，避免页面滚动影响坐标；拖拽边界判断时，结合元素宽高与容器宽高，用 Math.max&#x2F;min 限制元素不超出容器（如 <code>left = Math.max(0, Math.min(clientX - offsetX, containerWidth - elementWidth))</code>）；</li>
+<li>性能优化：拖拽过程中用 requestAnimationFrame 更新元素位置，避免同步操作阻塞主线程；若元素有复杂样式（如阴影、渐变），可在拖拽时临时移除（用 class 切换），拖拽结束后恢复，减少渲染开销。</li>
+</ul>
+</li>
+</ul>
+<h3 id="工程化：搭建”高可用、可扩展”的前端基建能力"><a href="#工程化：搭建”高可用、可扩展”的前端基建能力" class="headerlink" title="工程化：搭建”高可用、可扩展”的前端基建能力"></a>工程化：搭建”高可用、可扩展”的前端基建能力</h3><h3 id="安全：防御”高级攻击”的前端安全能力"><a href="#安全：防御”高级攻击”的前端安全能力" class="headerlink" title="安全：防御”高级攻击”的前端安全能力"></a>安全：防御”高级攻击”的前端安全能力</h3><h3 id="框架深度：突破”API-使用”的框架原理应用能力"><a href="#框架深度：突破”API-使用”的框架原理应用能力" class="headerlink" title="框架深度：突破”API 使用”的框架原理应用能力"></a>框架深度：突破”API 使用”的框架原理应用能力</h3></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://lqh1003.github.io">sara</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://lqh1003.github.io/2025/09/28/%E5%89%8D%E7%AB%AF%E9%AB%98%E9%A2%91%E6%8A%80%E8%83%BD/">https://lqh1003.github.io/2025/09/28/前端高频技能/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://lqh1003.github.io" target="_blank">😊Saraの记录</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/">性能优化</a></div><div class="post-share"><div class="social-share" data-image="/images/%E5%89%8D%E7%AB%AF%E9%AB%98%E9%A2%91%E6%8A%80%E8%83%BD/cover.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related  no-desc" href="/2025/10/25/Webpack%E3%80%81Vite%E5%AF%B9%E6%AF%94/" title="Webpack、Vite对比"><img class="cover" src="/images/Webpack%E3%80%81Vite%E5%AF%B9%E6%AF%94/cover.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Webpack、Vite对比</div></div></div></a><a class="pagination-related" href="/2025/09/19/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E2%80%94%E5%AE%9E%E6%88%98%E6%80%9D%E8%B7%AF/" title="前端性能优化—实战思路"><img class="cover" src="/images/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E2%80%94%E5%AE%9E%E6%88%98%E6%80%9D%E8%B7%AF/cover.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">前端性能优化—实战思路</div></div><div class="info-2"><div class="info-item-1"> 打开速度怎么变快 —— 首屏加载优化 再次打开速度怎么变快 —— 缓存优化 操作怎么才顺滑 —— 渲染优化 动画怎么保证流畅 —— 长任务拆分  前端性能优化 —— 实战思路⚙️ 开发一个 SEO 要求高、首屏加载快的新网站 首选终极方案：SSR 服务端渲染，静态站点生成 SSG  ⚙️ 对一个现成的网站进行性能和 SEO 优化性能指标衡量 ⭐ FCP（First Contentful Paint）—— 用户导航到你页面后浏览器呈现第一块 DOM 内容所花费的时间 ⭐ LCP（Largest Contentful Paint） —— 指页面渲染出最大文本或图片的时间 SI（Speed Index） —— 指界面可见内容的显示速度 TTI（Time to Interactive） —— 指网页需要多长时间才能提供完整的交互功能 TBT（Total Blocking Time） —— 度量页面被阻止响应用户输入（如鼠标单击、屏幕点击或键盘按下）的总时间 这个综合是通过在 FCP 和可交互时间之间添加所有长任务的阻塞部分来计算的 任何执行时间超过 50ms 的任务都是长任务，50ms...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2025/09/12/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" title="前端性能优化"><img class="cover" src="/images/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/cover.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-12</div><div class="info-item-2">前端性能优化</div></div><div class="info-2"><div class="info-item-1">前端性能优化是提升用户体验的核心环节，直接影响页面加载速度、交互流畅度和用户留存率。优化需覆盖资源加载、渲染执行、运行时效率三大阶段，结合量化指标（如 Core Web Vitals）制定针对性方案。以下是系统的前端性能优化策略详解： 资源加载阶段优化（减少加载时间）加载阶段是用户对性能的第一感知，目标是降低首屏加载时间（FCP）和资源传输成本 （1）资源体积优化  代码压缩与混淆  JS：使用 Terser 压缩(移除空格&#x2F;换行&#x2F;注释，缩短变量名)，Webpack&#x2F;Vite 生产模式默认开启 CSS：通过 CSSNano 压缩，配合 PostCSS 移除冗余规则 HTML：使用 html-minifier 压缩，移除空白字符和注释👉 效果：通常可减少 30%-60% 的资源体积   图片与媒体优化  采用精灵图，减少 http 请求次数  使用 svg 图，体积小  格式转换：优先使用 WebP&#x2F;AVIF（比 JPG 小 30%-50%），通过&lt;picture&gt;标签兼容旧浏览器   12345&lt;picture&gt;	...</div></div></div></a><a class="pagination-related" href="/2025/09/19/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E2%80%94%E5%AE%9E%E6%88%98%E6%80%9D%E8%B7%AF/" title="前端性能优化—实战思路"><img class="cover" src="/images/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E2%80%94%E5%AE%9E%E6%88%98%E6%80%9D%E8%B7%AF/cover.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-19</div><div class="info-item-2">前端性能优化—实战思路</div></div><div class="info-2"><div class="info-item-1"> 打开速度怎么变快 —— 首屏加载优化 再次打开速度怎么变快 —— 缓存优化 操作怎么才顺滑 —— 渲染优化 动画怎么保证流畅 —— 长任务拆分  前端性能优化 —— 实战思路⚙️ 开发一个 SEO 要求高、首屏加载快的新网站 首选终极方案：SSR 服务端渲染，静态站点生成 SSG  ⚙️ 对一个现成的网站进行性能和 SEO 优化性能指标衡量 ⭐ FCP（First Contentful Paint）—— 用户导航到你页面后浏览器呈现第一块 DOM 内容所花费的时间 ⭐ LCP（Largest Contentful Paint） —— 指页面渲染出最大文本或图片的时间 SI（Speed Index） —— 指界面可见内容的显示速度 TTI（Time to Interactive） —— 指网页需要多长时间才能提供完整的交互功能 TBT（Total Blocking Time） —— 度量页面被阻止响应用户输入（如鼠标单击、屏幕点击或键盘按下）的总时间 这个综合是通过在 FCP 和可交互时间之间添加所有长任务的阻塞部分来计算的 任何执行时间超过 50ms 的任务都是长任务，50ms...</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/theme_images/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">sara</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">29</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">44</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%80%9C%E5%90%84%E7%AB%AF%E6%98%BE%E7%A4%BA%E5%B7%AE%E5%BC%82%E6%80%A7%E2%80%9D%E7%9A%84%E5%85%BC%E5%AE%B9-%E9%80%82%E9%85%8D%E5%A4%84%E7%90%86%E8%83%BD%E5%8A%9B"><span class="toc-number">1.</span> <span class="toc-text">“各端显示差异性”的兼容&#x2F;适配处理能力</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%90%84%E7%AB%AF%E4%BB%8B%E7%BB%8D%EF%BC%9A"><span class="toc-number">1.1.</span> <span class="toc-text">各端介绍：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E5%9C%BA%E6%99%AF%EF%BC%9A"><span class="toc-number">1.2.</span> <span class="toc-text">问题场景：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%A3%E9%A2%98%E6%80%9D%E8%B7%AF%EF%BC%9A"><span class="toc-number">1.3.</span> <span class="toc-text">解题思路：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%EF%BC%9A%E7%AA%81%E7%A0%B4%E5%B8%B8%E8%A7%84%E7%9A%84%E2%80%9D%E6%9E%81%E9%99%90%E8%B0%83%E4%BC%98%E2%80%9D%E8%83%BD%E5%8A%9B"><span class="toc-number">2.</span> <span class="toc-text">性能优化：突破常规的”极限调优”能力</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%80%9C%E5%A4%8D%E6%9D%82-%E9%AB%98%E9%9A%BE%E5%BA%A6%E4%BA%A4%E4%BA%92%E2%80%9D%E7%9A%84%E5%B7%A5%E7%A8%8B%E5%8C%96%E5%AE%9E%E7%8E%B0%E8%83%BD%E5%8A%9B"><span class="toc-number">3.</span> <span class="toc-text">“复杂&#x2F;高难度交互”的工程化实现能力</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A5%E7%A8%8B%E5%8C%96%EF%BC%9A%E6%90%AD%E5%BB%BA%E2%80%9D%E9%AB%98%E5%8F%AF%E7%94%A8%E3%80%81%E5%8F%AF%E6%89%A9%E5%B1%95%E2%80%9D%E7%9A%84%E5%89%8D%E7%AB%AF%E5%9F%BA%E5%BB%BA%E8%83%BD%E5%8A%9B"><span class="toc-number">4.</span> <span class="toc-text">工程化：搭建”高可用、可扩展”的前端基建能力</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E5%85%A8%EF%BC%9A%E9%98%B2%E5%BE%A1%E2%80%9D%E9%AB%98%E7%BA%A7%E6%94%BB%E5%87%BB%E2%80%9D%E7%9A%84%E5%89%8D%E7%AB%AF%E5%AE%89%E5%85%A8%E8%83%BD%E5%8A%9B"><span class="toc-number">5.</span> <span class="toc-text">安全：防御”高级攻击”的前端安全能力</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A1%86%E6%9E%B6%E6%B7%B1%E5%BA%A6%EF%BC%9A%E7%AA%81%E7%A0%B4%E2%80%9DAPI-%E4%BD%BF%E7%94%A8%E2%80%9D%E7%9A%84%E6%A1%86%E6%9E%B6%E5%8E%9F%E7%90%86%E5%BA%94%E7%94%A8%E8%83%BD%E5%8A%9B"><span class="toc-number">6.</span> <span class="toc-text">框架深度：突破”API 使用”的框架原理应用能力</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/07/09/%E4%BA%86%E8%A7%A3-AI-Agent/" title="了解 AI Agent">了解 AI Agent</a><time datetime="2026-07-09T16:52:54.000Z" title="发表于 2026-07-09 16:52:54">2026-07-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/05/25/Cloudflare/" title="Cloudflare">Cloudflare</a><time datetime="2026-05-25T10:44:26.000Z" title="发表于 2026-05-25 10:44:26">2026-05-25</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/30/%E4%B8%BAGitHub%E8%B4%A6%E5%8F%B7%E7%94%9F%E6%88%90SSH%E5%AF%86%E9%92%A5/" title="为GitHub账号生成SSH密钥">为GitHub账号生成SSH密钥</a><time datetime="2026-01-30T10:16:18.000Z" title="发表于 2026-01-30 10:16:18">2026-01-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/29/Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2Github-%E5%88%86%E4%BA%AB/" title="Hexo搭建个人博客Github-分享">Hexo搭建个人博客Github-分享</a><time datetime="2026-01-29T10:56:54.000Z" title="发表于 2026-01-29 10:56:54">2026-01-29</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/10/25/Webpack%E3%80%81Vite%E5%AF%B9%E6%AF%94/" title="Webpack、Vite对比">Webpack、Vite对比</a><time datetime="2025-10-25T10:00:30.000Z" title="发表于 2025-10-25 10:00:30">2025-10-25</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/theme_images/footer.jpg);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;2025 - 2026 By sara</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.4.2</a></span></div><div class="footer_custom_text">Hi, 欢迎来到我的 <a href="/">博客</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const destroyWaline = ele => ele.destroy()
+
+  const initWaline = (Fn, el = document, path = window.location.pathname) => {
+    const waline = Fn({
+      el: el.querySelector('#waline-wrap'),
+      serverURL: 'https://lqh-blog-comments.vercel.app',
+      pageview: true,
+      dark: 'html[data-theme="dark"]',
+      comment: false,
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyWaline = () => {
+        destroyWaline(waline)
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+  }
+
+  const loadWaline = (el, path) => {
+    if (initFn) initWaline(initFn, el, path)
+    else {
+      btf.getCSS('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.css')
+        .then(() => import('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.js'))
+        .then(({ init }) => {
+          initFn = init || Waline.init
+          initWaline(initFn, el, path)
+          window.walineFn = initFn
+        })
+    }
+  }
+
+  if (isShuoshuo) {
+    'Waline' === 'Waline'
+      ? window.shuoshuoComment = { loadComment: loadWaline } 
+      : window.loadOtherComment = loadWaline
+    return
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script src="/js/live2d-toggle.js"></script><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="false" data-text="厉害,强,好,wonderful,点赞,Great,棒,Good,精彩" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"use":"live2d-widget-model-hibiki","display":{"position":"left","width":230,"height":370,"hOffset":50,"vOffset":0,"zIndex":100},"mobile":{"show":false,"scale":0.5},"log":false});</script></body></html>

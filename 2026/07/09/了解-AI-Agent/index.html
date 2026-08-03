@@ -1,0 +1,572 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>了解 AI Agent | 😊Saraの记录</title><meta name="author" content="sara"><meta name="copyright" content="sara"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="用过的 “AI” OpenAI Codex： Codex 不是一个聊天机器人，而是一个专门面向软件开发的 Agent，是 OpenAI 提供的 Coding Agent 产品   Cursor Agent： 它是 Agent，而不仅是 Chat 聊天机器人   AI助手(聊天机器人)： deepseek chatgpt 豆包 …    未来 5～10 年，技术发展的主线如果站在 2026 年来看，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="了解 AI Agent">
+<meta property="og:url" content="https://lqh1003.github.io/2026/07/09/%E4%BA%86%E8%A7%A3-AI-Agent/index.html">
+<meta property="og:site_name" content="😊Saraの记录">
+<meta property="og:description" content="用过的 “AI” OpenAI Codex： Codex 不是一个聊天机器人，而是一个专门面向软件开发的 Agent，是 OpenAI 提供的 Coding Agent 产品   Cursor Agent： 它是 Agent，而不仅是 Chat 聊天机器人   AI助手(聊天机器人)： deepseek chatgpt 豆包 …    未来 5～10 年，技术发展的主线如果站在 2026 年来看，">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://lqh1003.github.io/images/%E4%BA%86%E8%A7%A3-AI-Agent/cover.png">
+<meta property="article:published_time" content="2026-07-09T16:52:54.000Z">
+<meta property="article:modified_time" content="2026-08-03T06:20:38.608Z">
+<meta property="article:author" content="sara">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="Codex">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://lqh1003.github.io/images/%E4%BA%86%E8%A7%A3-AI-Agent/cover.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "了解 AI Agent",
+  "url": "https://lqh1003.github.io/2026/07/09/%E4%BA%86%E8%A7%A3-AI-Agent/",
+  "image": "https://lqh1003.github.io/images/%E4%BA%86%E8%A7%A3-AI-Agent/cover.png",
+  "datePublished": "2026-07-09T16:52:54.000Z",
+  "dateModified": "2026-08-03T06:20:38.608Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "sara",
+      "url": "https://lqh1003.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/theme_images/f.ico"><link rel="canonical" href="https://lqh1003.github.io/2026/07/09/%E4%BA%86%E8%A7%A3-AI-Agent/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":230,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '了解 AI Agent',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-color: #97bf5e42;"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/theme_images/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">29</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">44</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-book"></i><span> 页面</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link"><i class="fa-fw fas fa-link"></i><span> 链接</span></a></div><div class="menus_item"><a class="site-page" href="/about"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/images/%E4%BA%86%E8%A7%A3-AI-Agent/cover.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">😊Saraの记录</span></a><a class="nav-page-title" href="/"><span class="site-name">了解 AI Agent</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-book"></i><span> 页面</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link"><i class="fa-fw fas fa-link"></i><span> 链接</span></a></div><div class="menus_item"><a class="site-page" href="/about"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">了解 AI Agent</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-07-09T16:52:54.000Z" title="发表于 2026-07-09 16:52:54">2026-07-09</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-08-03T06:20:38.608Z" title="更新于 2026-08-03 06:20:38">2026-08-03</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Agent/">Agent</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span class="waline-pageview-count" data-path="/2026/07/09/%E4%BA%86%E8%A7%A3-AI-Agent/"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="用过的-“AI”"><a href="#用过的-“AI”" class="headerlink" title="用过的 “AI”"></a>用过的 “AI”</h2><ul>
+<li>OpenAI Codex：<ul>
+<li>Codex 不是一个聊天机器人，而是一个专门面向软件开发的 <strong>Agent</strong>，是 OpenAI 提供的 Coding Agent 产品</li>
+</ul>
+</li>
+<li>Cursor Agent：<ul>
+<li>它是 <strong>Agent</strong>，而不仅是 Chat 聊天机器人</li>
+</ul>
+</li>
+<li>AI助手(<strong>聊天机器人</strong>)：<ul>
+<li>deepseek</li>
+<li>chatgpt</li>
+<li>豆包</li>
+<li>…</li>
+</ul>
+</li>
+</ul>
+<h2 id="未来-5～10-年，技术发展的主线"><a href="#未来-5～10-年，技术发展的主线" class="headerlink" title="未来 5～10 年，技术发展的主线"></a>未来 5～10 年，技术发展的主线</h2><p>如果站在 2026 年来看，技术行业已经进入了一个新的阶段：<strong>AI 不再只是一个行业，而是成为所有行业的基础设施。</strong> 未来 5～10 年，技术发展的主线可以概括为一句话：<strong>AI Agent + 云计算 + 数据 + 自动化，将重塑软件开发和企业运营。</strong></p>
+<h3 id="AI-从”工具”进入”员工”阶段（最大的趋势）"><a href="#AI-从”工具”进入”员工”阶段（最大的趋势）" class="headerlink" title="AI 从”工具”进入”员工”阶段（最大的趋势）"></a>AI 从”工具”进入”员工”阶段（最大的趋势）</h3><ul>
+<li><p>2023 年以前</p>
+<ul>
+<li>AI 主要是：<ul>
+<li>ChatGPT</li>
+<li>Midjourney</li>
+<li>Copilot<br>都是辅助工具</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>现在正在进入：</p>
+<ul>
+<li><strong>AI Agent（智能代理）</strong></li>
+</ul>
+</li>
+<li><p>例如，Cursor 已经可以：</p>
+<ul>
+<li>修改整个项目</li>
+<li>自动修 Bug</li>
+<li>自动写测试</li>
+<li>自动提交代码</li>
+</ul>
+</li>
+<li><p>未来：</p>
+<ul>
+<li>一个 Agent 可以完成：产品需求 → 设计数据库 → 写接口 → 写前端 → 部署 → 上线</li>
+<li>人只需要负责：<ul>
+<li>提需求</li>
+<li>做决策</li>
+<li>Review</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="软件开发方式正在改变"><a href="#软件开发方式正在改变" class="headerlink" title="软件开发方式正在改变"></a>软件开发方式正在改变</h3><ul>
+<li><p>过去：程序员 → 写代码 → 测试 → 部署</p>
+</li>
+<li><p><strong>未来：程序员 → 描述需求 → AI 写代码 → AI 测试 → AI 修 Bug → AI 部署 → 人工 Review</strong></p>
+</li>
+<li><p>所以以后：</p>
+<ul>
+<li><p>写代码的重要性会下降</p>
+</li>
+<li><p>更重要的是：</p>
+<ul>
+<li>架构能力</li>
+<li>产品思维</li>
+<li>业务理解</li>
+<li>AI 协作能力</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="全栈越来越重要"><a href="#全栈越来越重要" class="headerlink" title="全栈越来越重要"></a>全栈越来越重要</h3><ul>
+<li>以前：前端、后台、数据库、运维、测试，都是独立岗位</li>
+<li>未来：越来越像 全站 + AI，更需要<strong>能做完整产品的人</strong>，因为不会写代码，AI 可以写，但是要怎么设计系统还是需要人来决定</li>
+</ul>
+<h3 id="哪些岗位增长最快"><a href="#哪些岗位增长最快" class="headerlink" title="哪些岗位增长最快"></a>哪些岗位增长最快</h3><p>未来几年，增长潜力较大的方向包括：</p>
+<table>
+<thead>
+<tr>
+<th>方向</th>
+<th>前景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>AI 应用开发</td>
+<td>⭐⭐⭐⭐⭐</td>
+</tr>
+<tr>
+<td>AI Agent 开发</td>
+<td>⭐⭐⭐⭐⭐</td>
+</tr>
+<tr>
+<td>LLM 工程</td>
+<td>⭐⭐⭐⭐⭐</td>
+</tr>
+<tr>
+<td>数据工程</td>
+<td>⭐⭐⭐⭐⭐</td>
+</tr>
+<tr>
+<td>云原生</td>
+<td>⭐⭐⭐⭐☆</td>
+</tr>
+<tr>
+<td>网络安全</td>
+<td>⭐⭐⭐⭐⭐</td>
+</tr>
+<tr>
+<td>自动化测试（AI 驱动）</td>
+<td>⭐⭐⭐⭐☆</td>
+</tr>
+<tr>
+<td>DevOps &#x2F; Platform</td>
+<td>⭐⭐⭐⭐☆</td>
+</tr>
+<tr>
+<td>数据分析 &#x2F; BI</td>
+<td>⭐⭐⭐⭐☆</td>
+</tr>
+<tr>
+<td>传统 CRUD 开发</td>
+<td>⭐⭐☆☆☆</td>
+</tr>
+</tbody></table>
+<h2 id="如何理解-Agent"><a href="#如何理解-Agent" class="headerlink" title="如何理解 Agent"></a>如何理解 Agent</h2><h3 id="Agent-概念"><a href="#Agent-概念" class="headerlink" title="Agent 概念"></a>Agent 概念</h3><ul>
+<li>很多人以为 Agent 是一种新的 AI 模型，其实 <strong>Agent 并不是模型，而是一种让大模型能够”完成任务”的软件架构</strong></li>
+<li>一句话概括：<ul>
+<li><strong>Agent &#x3D; LLM（大模型） + Memory（记忆） + Planning（规划） + Tools（工具） + Feedback（反馈循环）</strong><ul>
+<li>LLM（大脑）：负责理解问题、推理和决策。</li>
+<li>Planning（规划）：把大目标拆成多个小步骤。</li>
+<li>Memory（记忆）：保存上下文、历史执行结果、项目知识。</li>
+<li>Tools（工具）：真正执行操作，比如读写文件、调用 API、运行命令。</li>
+<li>Loop（循环）：不断根据最新结果调整计划，直到完成任务<br>它们各司其职，职责很清晰</li>
+</ul>
+</li>
+<li>或者更简单：<strong>Agent &#x3D; 一个能够自己思考、自己调用工具、自己检查结果、直到完成目标的程序</strong></li>
+</ul>
+</li>
+</ul>
+<h3 id="我们先看看-ChatGPT-为什么不是-Agent"><a href="#我们先看看-ChatGPT-为什么不是-Agent" class="headerlink" title="我们先看看 ChatGPT 为什么不是 Agent"></a>我们先看看 ChatGPT 为什么不是 Agent</h3><p>假设你问：帮我写一个 SpringBoot 登录接口</p>
+<ul>
+<li>ChatGPT 会：收到问题 → 思考 → 生成答案 → 结束<ul>
+<li>整个过程只有一次推理</li>
+<li>它不会：创建文件、修改项目、编译、修改BUG 等等，因为它没有这个能力，<strong>更像是聊天机器人</strong></li>
+</ul>
+</li>
+<li>Agent 会发生什么？<blockquote>
+<p>收到任务 → 分析项目 → 找到对应功能&#x2F;代码位置 → 修改代码 → 运行测试 → 发现报错 → 继续修改 → 重新测试 → 成功 → 结束</p>
+</blockquote>
+<ul>
+<li>它会 思考&#x2F;行动&#x2F;观察结果&#x2F;继续思考&#x2F;继续行动…，这个循环过程就是 Agent，<strong>循环（Loop）也是 Agent 最核心的东西</strong></li>
+<li><strong>Agent 是一种让大模型能够”完成任务”的软件架构</strong><ul>
+<li>它的大脑其实还是 LLM，简单那理解为 <strong>Agent 是 LLM 的外壳</strong></li>
+<li>它为什么能够操作电脑？<ul>
+<li>因为它有 Tool</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="Agent-类型"><a href="#Agent-类型" class="headerlink" title="Agent 类型"></a>Agent 类型</h3><p>实际上，<strong>Agent 并不是一种固定产品，而是一种架构思想</strong>。 根据能力和应用场景，可以把 AI Agent 分成不同类型。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">                   AI Agent</span><br><span class="line">                       │</span><br><span class="line">    ┌──────────────────┼──────────────────┐</span><br><span class="line">    │                  │                  │</span><br><span class="line">个人助手          Coding Agent       企业 Agent</span><br><span class="line">(ChatGPT)         (Codex/Cursor)      (办公自动化)</span><br><span class="line">    │                  │                  │</span><br><span class="line">    └──────────────┬───┴──────────────────┘</span><br><span class="line">                   │</span><br><span class="line">              Multi-Agent</span><br><span class="line">           (多个 Agent 协同)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>其实，所有 Agent 都是在回答一个问题：<strong>它在替谁工作？</strong></li>
+<li>不同 Agent，它的 LLM 其实没有变，<strong>真正变化的是 Tool</strong><table>
+<thead>
+<tr>
+<th>Agent 类型</th>
+<th>Tool</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Coding Agent（编程 Agent）</td>
+<td>Git、Terminal、IDE</td>
+</tr>
+<tr>
+<td>Office Agent（办公 Agent）</td>
+<td>Outlook、Word、Excel</td>
+</tr>
+<tr>
+<td>Browser Agent（浏览器 Agent）</td>
+<td>Chrome、Playwright</td>
+</tr>
+<tr>
+<td>Data Agent（数据 Agent）</td>
+<td>MySQL、ClickHouse、Spark</td>
+</tr>
+<tr>
+<td>Research Agent（研究 Agent）</td>
+<td>Search、PDF、RAG</td>
+</tr>
+<tr>
+<td>Robot Agent（机器人 Agent）</td>
+<td>Camera、Sensor、Motor</td>
+</tr>
+<tr>
+<td>Customer Agent（客服 Agent）</td>
+<td>CRM、ERP、工单系统</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+<h4 id="Personal-Agent（个人助手）"><a href="#Personal-Agent（个人助手）" class="headerlink" title="Personal Agent（个人助手）"></a>Personal Agent（个人助手）</h4><p>最简单也最好理解的类型</p>
+<ul>
+<li><p>例如：</p>
+<ul>
+<li>ChatGPT</li>
+<li>Gemini</li>
+<li>Claude</li>
+</ul>
+</li>
+<li><p>它们主要负责：</p>
+<ul>
+<li>回答问题</li>
+<li>写文档</li>
+<li>总结会议</li>
+<li>翻译</li>
+<li>学习</li>
+</ul>
+</li>
+<li><p>例如：</p>
+<ul>
+<li><ol>
+<li>帮我写一份周报</li>
+</ol>
+</li>
+<li><ol start="2">
+<li>解释什么是 Cursor</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><p>它们一般：输入 → 回答 → 结束，几乎没有复杂的执行</p>
+</li>
+</ul>
+<h4 id="Coding-Agent（编程-Agent）"><a href="#Coding-Agent（编程-Agent）" class="headerlink" title="Coding Agent（编程 Agent）"></a>Coding Agent（编程 Agent）</h4><p>这是目前发展最快的方向</p>
+<ul>
+<li><p>例如：</p>
+<ul>
+<li>Cursor Agent</li>
+<li>OpenAI Codex</li>
+<li>Claude Code</li>
+<li>OpenHands</li>
+</ul>
+</li>
+<li><p>它们会：</p>
+<ul>
+<li>阅读整个项目</li>
+<li>修改多个文件</li>
+<li>编译</li>
+<li>跑测试</li>
+<li>修 Bug</li>
+<li>提交 Git</li>
+</ul>
+</li>
+<li><p>例如：</p>
+<ul>
+<li><ol>
+<li>给支付模块增加一个xx弹窗…</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><p>这种已经不是在聊天，而是在完成开发任务</p>
+</li>
+</ul>
+<h4 id="Office-Agent（办公-Agent）"><a href="#Office-Agent（办公-Agent）" class="headerlink" title="Office Agent（办公 Agent）"></a>Office Agent（办公 Agent）</h4><p>帮助企业员工工作</p>
+<ul>
+<li><p>例如：</p>
+<ul>
+<li>微软 Copilot</li>
+</ul>
+</li>
+<li><p>它们会：</p>
+<ul>
+<li>查看日历</li>
+<li>读取邮件</li>
+<li>生成会议纪要</li>
+<li>安排下次会议</li>
+<li>通知参会人</li>
+<li>…</li>
+</ul>
+</li>
+<li><p>例如：</p>
+<ul>
+<li><ol>
+<li>今天有哪些会议？</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="OpenAI-Codex"><a href="#OpenAI-Codex" class="headerlink" title="OpenAI Codex"></a>OpenAI Codex</h2><h3 id="OpenAI-的产品有哪些？"><a href="#OpenAI-的产品有哪些？" class="headerlink" title="OpenAI 的产品有哪些？"></a>OpenAI 的产品有哪些？</h3><ul>
+<li><p>ChatGPT（面向个人）</p>
+<ul>
+<li>Chat，基础聊天机器人</li>
+<li>Projects</li>
+<li>GPTs</li>
+<li>Canvas</li>
+<li>Deep Research</li>
+<li>Codex，定位是 Coding Agent，负责软件开发</li>
+</ul>
+</li>
+<li><p>Developer Platform（开发平台）</p>
+</li>
+<li><p>企业产品</p>
+</li>
+</ul>
+<h3 id="Codex-是什么？"><a href="#Codex-是什么？" class="headerlink" title="Codex 是什么？"></a>Codex 是什么？</h3><p><strong>Codex 是 OpenAI 面向软件开发的 AI Agent，它的目标不是回答编程问题，而是完成软件开发任务</strong></p>
+<ul>
+<li>ChatGPT &#x3D; AI 助手</li>
+<li>Codex &#x3D; AI 软件工程师</li>
+</ul>
+<h3 id="使用-Codex"><a href="#使用-Codex" class="headerlink" title="使用 Codex"></a>使用 Codex</h3><p>目前主要有几种方式</p>
+<ol>
+<li><p><a target="_blank" rel="noopener" href="https://chatgpt.com/">ChatGPT</a> 中使用（推荐）</p>
+<p>如果你的 ChatGPT 账户支持 Codex，可以直接在 ChatGPT 中启动 Codex 工作流</p>
+<p>适合：</p>
+<ul>
+<li>修复项目</li>
+<li>阅读仓库</li>
+<li>长时间开发任务</li>
+<li>Code Review</li>
+</ul>
+<p>Codex 已经集成到 ChatGPT，不需要单独安装</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://openai.com/zh-Hans-CN/codex/">Codex</a> 桌面应用</p>
+<p>OpenAI 提供了适用于开发者的 Codex 应用，可以连接本地项目并执行编码任务，根据套餐不同，可使用不同的模型和任务额度</p>
+<img src="/images/了解-AI-Agent/codex.png" alt="image" class="max700 border1"/>
+<img src="/images/了解-AI-Agent/codex_for1.png" alt="image" class="max600 border1"/>
+</li>
+<li><p>API</p>
+<p>如果你想开发自己的 AI 编程工具，可以通过 OpenAI API 使用模型，自行实现 Agent、工具调用和工作流</p>
+<p>这种方式适合：</p>
+<ul>
+<li>企业内部 Coding Agent</li>
+<li>自动修 Bug 系统</li>
+<li>PR</li>
+<li>AI DevOps</li>
+</ul>
+</li>
+</ol>
+<h3 id="Codex-费用"><a href="#Codex-费用" class="headerlink" title="Codex 费用"></a>Codex 费用</h3><img src="/images/了解-AI-Agent/codex_cost.jpg" alt="image" class="max800 border1"/>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://lqh1003.github.io">sara</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://lqh1003.github.io/2026/07/09/%E4%BA%86%E8%A7%A3-AI-Agent/">https://lqh1003.github.io/2026/07/09/了解-AI-Agent/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://lqh1003.github.io" target="_blank">😊Saraの记录</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/AI/">AI</a><a class="post-meta__tags" href="/tags/AI-Agent/">AI Agent</a><a class="post-meta__tags" href="/tags/Codex/">Codex</a></div><div class="post-share"><div class="social-share" data-image="/images/%E4%BA%86%E8%A7%A3-AI-Agent/cover.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/05/25/Cloudflare/" title="Cloudflare"><img class="cover" src="/images/Cloudflare/cover.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Cloudflare</div></div><div class="info-2"><div class="info-item-1">📌 了解 Cloudflare🌐 Cloudflare，开发平台Cloudflare 最早很多人知道它是 CDN、DNS、防护服务（抗 DDoS）。现在已经发展成一个完整的开发平台，核心思路是：把计算能力放到离用户更近的位置运行，而不是集中在几台中心服务器上。 传统模式 vs Cloudflare 模式：    维度 传统模式 Cloudflare 模式    请求路径 用户 → 服务器（东京&#x2F;新加坡&#x2F;美国）→ 数据库 用户 → 最近的边缘节点 → Worker → 数据库&#x2F;存储   延迟 如果用户在北京，而服务器在美国，请求要跨洋，延迟可能 200ms+，高峰时期可能堵 就近处理，延迟大幅降低（不用关心“服务器在哪台机器”，部署后，代码自动出现在全球边缘节点）   运维 自己维护服务器、扩容、负载均衡 零运维，部署即上线   适合场景 大型后台系统、复杂数据库、AI 训练任务 博客、工具站、API、个人 SaaS    Cloudflare 不是“全面替代服务器”，而是另一种架构选择 —— 省掉运维，降低复杂度。简称 CF  很多开发者现在会说...</div></div></div></a></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/theme_images/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">sara</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">29</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">44</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%A8%E8%BF%87%E7%9A%84-%E2%80%9CAI%E2%80%9D"><span class="toc-number">1.</span> <span class="toc-text">用过的 “AI”</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AA%E6%9D%A5-5%EF%BD%9E10-%E5%B9%B4%EF%BC%8C%E6%8A%80%E6%9C%AF%E5%8F%91%E5%B1%95%E7%9A%84%E4%B8%BB%E7%BA%BF"><span class="toc-number">2.</span> <span class="toc-text">未来 5～10 年，技术发展的主线</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#AI-%E4%BB%8E%E2%80%9D%E5%B7%A5%E5%85%B7%E2%80%9D%E8%BF%9B%E5%85%A5%E2%80%9D%E5%91%98%E5%B7%A5%E2%80%9D%E9%98%B6%E6%AE%B5%EF%BC%88%E6%9C%80%E5%A4%A7%E7%9A%84%E8%B6%8B%E5%8A%BF%EF%BC%89"><span class="toc-number">2.1.</span> <span class="toc-text">AI 从”工具”进入”员工”阶段（最大的趋势）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91%E6%96%B9%E5%BC%8F%E6%AD%A3%E5%9C%A8%E6%94%B9%E5%8F%98"><span class="toc-number">2.2.</span> <span class="toc-text">软件开发方式正在改变</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%A8%E6%A0%88%E8%B6%8A%E6%9D%A5%E8%B6%8A%E9%87%8D%E8%A6%81"><span class="toc-number">2.3.</span> <span class="toc-text">全栈越来越重要</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%93%AA%E4%BA%9B%E5%B2%97%E4%BD%8D%E5%A2%9E%E9%95%BF%E6%9C%80%E5%BF%AB"><span class="toc-number">2.4.</span> <span class="toc-text">哪些岗位增长最快</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E7%90%86%E8%A7%A3-Agent"><span class="toc-number">3.</span> <span class="toc-text">如何理解 Agent</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Agent-%E6%A6%82%E5%BF%B5"><span class="toc-number">3.1.</span> <span class="toc-text">Agent 概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%88%91%E4%BB%AC%E5%85%88%E7%9C%8B%E7%9C%8B-ChatGPT-%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E6%98%AF-Agent"><span class="toc-number">3.2.</span> <span class="toc-text">我们先看看 ChatGPT 为什么不是 Agent</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Agent-%E7%B1%BB%E5%9E%8B"><span class="toc-number">3.3.</span> <span class="toc-text">Agent 类型</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Personal-Agent%EF%BC%88%E4%B8%AA%E4%BA%BA%E5%8A%A9%E6%89%8B%EF%BC%89"><span class="toc-number">3.3.1.</span> <span class="toc-text">Personal Agent（个人助手）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Coding-Agent%EF%BC%88%E7%BC%96%E7%A8%8B-Agent%EF%BC%89"><span class="toc-number">3.3.2.</span> <span class="toc-text">Coding Agent（编程 Agent）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Office-Agent%EF%BC%88%E5%8A%9E%E5%85%AC-Agent%EF%BC%89"><span class="toc-number">3.3.3.</span> <span class="toc-text">Office Agent（办公 Agent）</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#OpenAI-Codex"><span class="toc-number">4.</span> <span class="toc-text">OpenAI Codex</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#OpenAI-%E7%9A%84%E4%BA%A7%E5%93%81%E6%9C%89%E5%93%AA%E4%BA%9B%EF%BC%9F"><span class="toc-number">4.1.</span> <span class="toc-text">OpenAI 的产品有哪些？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Codex-%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">4.2.</span> <span class="toc-text">Codex 是什么？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-Codex"><span class="toc-number">4.3.</span> <span class="toc-text">使用 Codex</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Codex-%E8%B4%B9%E7%94%A8"><span class="toc-number">4.4.</span> <span class="toc-text">Codex 费用</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/07/09/%E4%BA%86%E8%A7%A3-AI-Agent/" title="了解 AI Agent">了解 AI Agent</a><time datetime="2026-07-09T16:52:54.000Z" title="发表于 2026-07-09 16:52:54">2026-07-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/05/25/Cloudflare/" title="Cloudflare">Cloudflare</a><time datetime="2026-05-25T10:44:26.000Z" title="发表于 2026-05-25 10:44:26">2026-05-25</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/30/%E4%B8%BAGitHub%E8%B4%A6%E5%8F%B7%E7%94%9F%E6%88%90SSH%E5%AF%86%E9%92%A5/" title="为GitHub账号生成SSH密钥">为GitHub账号生成SSH密钥</a><time datetime="2026-01-30T10:16:18.000Z" title="发表于 2026-01-30 10:16:18">2026-01-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/29/Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2Github-%E5%88%86%E4%BA%AB/" title="Hexo搭建个人博客Github-分享">Hexo搭建个人博客Github-分享</a><time datetime="2026-01-29T10:56:54.000Z" title="发表于 2026-01-29 10:56:54">2026-01-29</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/10/25/Webpack%E3%80%81Vite%E5%AF%B9%E6%AF%94/" title="Webpack、Vite对比">Webpack、Vite对比</a><time datetime="2025-10-25T10:00:30.000Z" title="发表于 2025-10-25 10:00:30">2025-10-25</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/theme_images/footer.jpg);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;2025 - 2026 By sara</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.4.2</a></span></div><div class="footer_custom_text">Hi, 欢迎来到我的 <a href="/">博客</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const destroyWaline = ele => ele.destroy()
+
+  const initWaline = (Fn, el = document, path = window.location.pathname) => {
+    const waline = Fn({
+      el: el.querySelector('#waline-wrap'),
+      serverURL: 'https://lqh-blog-comments.vercel.app',
+      pageview: true,
+      dark: 'html[data-theme="dark"]',
+      comment: false,
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyWaline = () => {
+        destroyWaline(waline)
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+  }
+
+  const loadWaline = (el, path) => {
+    if (initFn) initWaline(initFn, el, path)
+    else {
+      btf.getCSS('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.css')
+        .then(() => import('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.js'))
+        .then(({ init }) => {
+          initFn = init || Waline.init
+          initWaline(initFn, el, path)
+          window.walineFn = initFn
+        })
+    }
+  }
+
+  if (isShuoshuo) {
+    'Waline' === 'Waline'
+      ? window.shuoshuoComment = { loadComment: loadWaline } 
+      : window.loadOtherComment = loadWaline
+    return
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script src="/js/live2d-toggle.js"></script><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="false" data-text="厉害,强,好,wonderful,点赞,Great,棒,Good,精彩" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"use":"live2d-widget-model-hibiki","display":{"position":"left","width":230,"height":370,"hOffset":50,"vOffset":0,"zIndex":100},"mobile":{"show":false,"scale":0.5},"log":false});</script></body></html>

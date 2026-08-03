@@ -1,0 +1,618 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>前端性能优化—实战思路 | 😊Saraの记录</title><meta name="author" content="sara"><meta name="copyright" content="sara"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="打开速度怎么变快 —— 首屏加载优化 再次打开速度怎么变快 —— 缓存优化 操作怎么才顺滑 —— 渲染优化 动画怎么保证流畅 —— 长任务拆分  前端性能优化 —— 实战思路⚙️ 开发一个 SEO 要求高、首屏加载快的新网站 首选终极方案：SSR 服务端渲染，静态站点生成 SSG  ⚙️ 对一个现成的网站进行性能和 SEO 优化性能指标衡量 ⭐ FCP（First Contentful Pain">
+<meta property="og:type" content="article">
+<meta property="og:title" content="前端性能优化—实战思路">
+<meta property="og:url" content="https://lqh1003.github.io/2025/09/19/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E2%80%94%E5%AE%9E%E6%88%98%E6%80%9D%E8%B7%AF/index.html">
+<meta property="og:site_name" content="😊Saraの记录">
+<meta property="og:description" content="打开速度怎么变快 —— 首屏加载优化 再次打开速度怎么变快 —— 缓存优化 操作怎么才顺滑 —— 渲染优化 动画怎么保证流畅 —— 长任务拆分  前端性能优化 —— 实战思路⚙️ 开发一个 SEO 要求高、首屏加载快的新网站 首选终极方案：SSR 服务端渲染，静态站点生成 SSG  ⚙️ 对一个现成的网站进行性能和 SEO 优化性能指标衡量 ⭐ FCP（First Contentful Pain">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://lqh1003.github.io/images/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E2%80%94%E5%AE%9E%E6%88%98%E6%80%9D%E8%B7%AF/cover.jpg">
+<meta property="article:published_time" content="2025-09-19T12:23:28.000Z">
+<meta property="article:modified_time" content="2026-08-03T06:20:38.608Z">
+<meta property="article:author" content="sara">
+<meta property="article:tag" content="性能优化">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://lqh1003.github.io/images/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E2%80%94%E5%AE%9E%E6%88%98%E6%80%9D%E8%B7%AF/cover.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "前端性能优化—实战思路",
+  "url": "https://lqh1003.github.io/2025/09/19/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E2%80%94%E5%AE%9E%E6%88%98%E6%80%9D%E8%B7%AF/",
+  "image": "https://lqh1003.github.io/images/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E2%80%94%E5%AE%9E%E6%88%98%E6%80%9D%E8%B7%AF/cover.jpg",
+  "datePublished": "2025-09-19T12:23:28.000Z",
+  "dateModified": "2026-08-03T06:20:38.608Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "sara",
+      "url": "https://lqh1003.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/theme_images/f.ico"><link rel="canonical" href="https://lqh1003.github.io/2025/09/19/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E2%80%94%E5%AE%9E%E6%88%98%E6%80%9D%E8%B7%AF/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":230,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '前端性能优化—实战思路',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-color: #97bf5e42;"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/theme_images/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">29</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">44</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-book"></i><span> 页面</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link"><i class="fa-fw fas fa-link"></i><span> 链接</span></a></div><div class="menus_item"><a class="site-page" href="/about"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/images/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E2%80%94%E5%AE%9E%E6%88%98%E6%80%9D%E8%B7%AF/cover.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">😊Saraの记录</span></a><a class="nav-page-title" href="/"><span class="site-name">前端性能优化—实战思路</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-book"></i><span> 页面</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link"><i class="fa-fw fas fa-link"></i><span> 链接</span></a></div><div class="menus_item"><a class="site-page" href="/about"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">前端性能优化—实战思路</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-09-19T12:23:28.000Z" title="发表于 2025-09-19 12:23:28">2025-09-19</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-08-03T06:20:38.608Z" title="更新于 2026-08-03 06:20:38">2026-08-03</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/">性能优化</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span class="waline-pageview-count" data-path="/2025/09/19/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E2%80%94%E5%AE%9E%E6%88%98%E6%80%9D%E8%B7%AF/"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><ul>
+<li>打开速度怎么变快 —— 首屏加载优化</li>
+<li>再次打开速度怎么变快 —— 缓存优化</li>
+<li>操作怎么才顺滑 —— 渲染优化</li>
+<li>动画怎么保证流畅 —— 长任务拆分</li>
+</ul>
+<h1 id="前端性能优化-——-实战思路"><a href="#前端性能优化-——-实战思路" class="headerlink" title="前端性能优化 —— 实战思路"></a>前端性能优化 —— 实战思路</h1><h2 id="⚙️-开发一个-SEO-要求高、首屏加载快的新网站"><a href="#⚙️-开发一个-SEO-要求高、首屏加载快的新网站" class="headerlink" title="⚙️ 开发一个 SEO 要求高、首屏加载快的新网站"></a>⚙️ 开发一个 SEO 要求高、首屏加载快的新网站</h2><ul>
+<li>首选终极方案：SSR 服务端渲染，静态站点生成 SSG</li>
+</ul>
+<h2 id="⚙️-对一个现成的网站进行性能和-SEO-优化"><a href="#⚙️-对一个现成的网站进行性能和-SEO-优化" class="headerlink" title="⚙️ 对一个现成的网站进行性能和 SEO 优化"></a>⚙️ 对一个现成的网站进行性能和 SEO 优化</h2><h3 id="性能指标衡量"><a href="#性能指标衡量" class="headerlink" title="性能指标衡量"></a>性能指标衡量</h3><ul>
+<li>⭐ FCP（First Contentful Paint）—— 用户导航到你页面后浏览器呈现第一块 DOM 内容所花费的时间</li>
+<li>⭐ LCP（Largest Contentful Paint） —— 指页面渲染出最大文本或图片的时间</li>
+<li>SI（Speed Index） —— 指界面可见内容的显示速度</li>
+<li>TTI（Time to Interactive） —— 指网页需要多长时间才能提供完整的交互功能</li>
+<li>TBT（Total Blocking Time） —— 度量页面被阻止响应用户输入（如鼠标单击、屏幕点击或键盘按下）的总时间<ul>
+<li>这个综合是通过在 FCP 和可交互时间之间添加所有长任务的阻塞部分来计算的</li>
+<li>任何执行时间超过 50ms 的任务都是长任务，50ms 后的时间量就是阻塞部分</li>
+</ul>
+</li>
+<li>CLS（Cumulative Layout Shift） —— 指整个页面生命周期内发生的所有单次布局偏移分数的总和</li>
+</ul>
+<p><img src="/images/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E2%80%94%E5%AE%9E%E6%88%98%E6%80%9D%E8%B7%AF/lighthouse-performance0.png"> <img src="/images/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E2%80%94%E5%AE%9E%E6%88%98%E6%80%9D%E8%B7%AF/lighthouse-performance.png"></p>
+<p><strong>Lighthouse</strong> 的性能指标时间计算：其核心原理是利用浏览器提供的 Performance API（如 performance.timing、LCP 观察者等）和自定义追踪逻辑，结合页面加载的全生命周期数据进行计算得到的<br><img src="/images/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E2%80%94%E5%AE%9E%E6%88%98%E6%80%9D%E8%B7%AF/performanceapi.png"></p>
+<h3 id="先对网站本身性能优化"><a href="#先对网站本身性能优化" class="headerlink" title="先对网站本身性能优化"></a>先对网站本身性能优化</h3><ul>
+<li><h4 id="🖼️-图片"><a href="#🖼️-图片" class="headerlink" title="🖼️ 图片"></a>🖼️ 图片</h4><ul>
+<li><p>压缩 png → webp&#x2F;avif (压缩质量 80%的用户看不出，可接受)</p>
+<ul>
+<li><p>手动转换项目中较大图片的格式，<a target="_blank" rel="noopener" href="https://squoosh.app/," title="图片格式转换在线工具">图片格式转换</a></p>
+</li>
+<li><p>项目中 <strong>批量</strong> 将图片格式修改为 Webp</p>
+<ul>
+<li><p>安装转换工具：</p>
+<ul>
+<li>Windows：使用 Google 官方的 cwebp 工具（高效且支持批量处理）<ul>
+<li>从 <a target="_blank" rel="noopener" href="https://developers.google.com/speed/webp/download?hl=zh-cn">WebP 官网</a> 下载工具包</li>
+<li>解压后，在<code>bin</code>目录下可以看到<code>cwebp.exe</code>（这是核心转换工具）</li>
+<li>配置环境变量：在「系统变量」中找到 Path 变量，双击打开 → 输入<code>cwebp.exe</code>所在的<code>bin</code>目录路径<br><img src="/images/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E2%80%94%E5%AE%9E%E6%88%98%E6%80%9D%E8%B7%AF/path_cwebp.png"></li>
+<li>重新打开 cmd，输入<code>cwebp -version</code>显示版本则配置成功</li>
+</ul>
+</li>
+<li>Mac：<code>brew install webp</code></li>
+<li>Linux：<code>sudo apt install webp</code></li>
+</ul>
+</li>
+<li><p>批量转换图片为 WebP 格式 （全局图片 WebP 化，同时保证兼容性，通常能减少 <code>40%-60%</code> 的图片体积）</p>
+<ul>
+<li><p>先手动备份图片（关键!!!），防止转换失败导致文件丢失</p>
+</li>
+<li><p><strong>编写批量转换脚本</strong>，确保路径与项目图片目录一致</p>
+<ul>
+<li>Mac&#x2F;Linux 脚本（convert-webp.sh）—— 自行搜索</li>
+<li><strong>Windows 脚本（<code>convert-webp.bat</code>）</strong></li>
+</ul>
+<figure class="highlight bat"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">@<span class="built_in">echo</span> off</span><br><span class="line"><span class="built_in">setlocal</span> enabledelayedexpansion</span><br><span class="line"></span><br><span class="line">:: 图片源目录（根据项目实际路径修改：脚本文件 .bat 与路径第一层的 src 放在同一目录）</span><br><span class="line"><span class="built_in">set</span> &quot;IMG_DIR=src\assets\images&quot;</span><br><span class="line"></span><br><span class="line">:: 检查目录是否存在</span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">exist</span> &quot;<span class="variable">%IMG_DIR%</span>&quot; (</span><br><span class="line">  <span class="built_in">echo</span> 错误：目录 <span class="variable">%IMG_DIR%</span> 不存在！</span><br><span class="line">  <span class="built_in">pause</span></span><br><span class="line">  <span class="keyword">exit</span> /b <span class="number">1</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">:: 递归转换所有图片</span><br><span class="line"><span class="keyword">for</span> /r &quot;<span class="variable">%IMG_DIR%</span>&quot; <span class="variable">%%i</span> <span class="keyword">in</span> (*.jpg, *.jpeg, *.png) <span class="keyword">do</span> (</span><br><span class="line">  <span class="built_in">set</span> &quot;output=<span class="variable">%%~</span>dpni.webp&quot;</span><br><span class="line">  cwebp -q <span class="number">80</span> -m <span class="number">6</span> &quot;<span class="variable">%%i</span>&quot; -o &quot;<span class="variable">!output!</span>&quot;</span><br><span class="line"></span><br><span class="line">  :: 检查转换结果</span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">exist</span> &quot;<span class="variable">!output!</span>&quot; (</span><br><span class="line">    <span class="built_in">echo</span> ✅ 转换成功：<span class="variable">!output!</span></span><br><span class="line">  ) <span class="keyword">else</span> (</span><br><span class="line">    <span class="built_in">echo</span> ❌ 转换失败：<span class="variable">%%i</span></span><br><span class="line">  )</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">:: 删除原图（可选）：确认转换无误后，删除原 jpg/png 文件（节省空间）</span><br><span class="line">:: <span class="built_in">del</span> /s /q src\assets\images\*.jpg</span><br><span class="line">:: <span class="built_in">del</span> /s /q src\assets\images\*.jpeg</span><br><span class="line">:: <span class="built_in">del</span> /s /q src\assets\images\*.png</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> 批量转换完成！</span><br><span class="line"><span class="built_in">pause</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>执行脚本，会在原图片同目录生成 .webp 文件</p>
+<ul>
+<li>Mac&#x2F;Linux：终端进入项目根目录，运行 chmod +x convert-webp.sh &amp;&amp; .&#x2F;convert-webp.sh。</li>
+<li>Windows：<strong>双击 <code>convert-webp.bat</code> 运行</strong>（或在 cmd 中执行）<br><img src="/images/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E2%80%94%E5%AE%9E%E6%88%98%E6%80%9D%E8%B7%AF/double_webp.png"></li>
+</ul>
+</li>
+<li><p>项目中图片全部替换 webp 格式（.vue&#x2F;.js&#x2F;.ts&#x2F;.css 等文件：仔细检查所有的图片）</p>
+<ul>
+<li>搜索内容：(<code>\.jpg|\.jpeg|\.png</code>)（正则匹配原扩展名） → 替换内容：.webp</li>
+</ul>
+</li>
+<li><p>兼容性处理（关键）</p>
+<ul>
+<li>WebP 在 IE、老旧安卓浏览器中不兼容，需使用 <code>&lt;picture&gt;</code> 标签自动降级</li>
+</ul>
+</li>
+<li><p>清理原图，打开清理原图的代码，在执行一遍 <code>convert-webp.bat</code>，验证页面效果</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>项目使用 Vite 或 Webpack，可通过插件实现 <strong>开发 &#x2F; 构建时自动转换</strong></p>
+<ul>
+<li>安装插件：<code>npm i vite-plugin-webp -D</code>、<code>npm i image-webpack-loader file-loader -D</code></li>
+<li>在配置文件中配置：<code>vite.config.js</code>、<code>webpack.config.js</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>上传图片功能：图片上传前先进行压缩，控制的压缩图片的尺寸大小</p>
+<ul>
+<li>比如：上传头像、 业务后台上传配置 app 上新闻&#x2F;轮播图等模块的图片，都不需要太大尺寸</li>
+<li>下载依赖：<code>browser-image-compression</code></li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> imageCompression <span class="keyword">from</span> <span class="string">&#x27;browser-image-compression&#x27;</span></span><br><span class="line"><span class="comment">// 上传图片</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">getResoureUrl</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">	<span class="title function_">nextTick</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">		<span class="keyword">const</span> resoUp = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;IMGUpload&#x27;</span>)</span><br><span class="line">		<span class="keyword">if</span> (!resoUp) <span class="keyword">return</span></span><br><span class="line">		resoUp.<span class="property">value</span> = <span class="string">&#x27;&#x27;</span></span><br><span class="line">		resoUp.<span class="property">onchange</span> = <span class="literal">null</span></span><br><span class="line">		resoUp?.<span class="title function_">click</span>()</span><br><span class="line"></span><br><span class="line">		resoUp.<span class="property">onchange</span> = <span class="keyword">async</span> <span class="keyword">function</span> (<span class="params">event</span>) &#123;</span><br><span class="line">			<span class="keyword">const</span> upFile = event.<span class="property">target</span>.<span class="property">files</span>[<span class="number">0</span>] <span class="comment">// 获取文件对象</span></span><br><span class="line">			<span class="keyword">if</span> (!upFile) <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">			<span class="comment">// ******* 压缩图片 *********</span></span><br><span class="line">			<span class="keyword">const</span> options = &#123;</span><br><span class="line">				<span class="attr">maxSizeMB</span>: <span class="number">1</span>, <span class="comment">// 最大文件大小(MB)</span></span><br><span class="line">				<span class="attr">maxWidthOrHeight</span>: <span class="number">500</span>, <span class="comment">// （压缩后的）最大宽/高</span></span><br><span class="line">				<span class="attr">useWebWorker</span>: <span class="literal">true</span>, <span class="comment">// 使用WebWorker加速</span></span><br><span class="line">				<span class="attr">fileType</span>: <span class="string">&#x27;image/webp&#x27;</span>, <span class="comment">// 可选转换为webp格式</span></span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">const</span> compressedFile = <span class="keyword">await</span> <span class="title function_">imageCompression</span>(upFile, options)</span><br><span class="line">			<span class="comment">// 使用压缩后的文件或原文件</span></span><br><span class="line">			<span class="keyword">const</span> file = compressedFile || upFile</span><br><span class="line"></span><br><span class="line">			<span class="comment">// ******* 对拿到的 file 进行处理 *********</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>精灵图（<a target="_blank" rel="noopener" href="https://www.toptal.com/developers/css/sprite-generator," title="在线合成精灵图工具">制作精灵图</a>）</p>
+</li>
+<li><p>svg 矢量图，直接使用，体积小</p>
+</li>
+<li><p>避免”大图小用”，按照分辨率显示不同尺寸的图片(1&#x2F;2&#x2F;3 倍图)（srcset + sizes）</p>
+</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">img</span></span></span><br><span class="line"><span class="tag">	<span class="attr">src</span>=<span class="string">&quot;pic-800.jpg&quot;</span></span></span><br><span class="line"><span class="tag">	<span class="attr">srcset</span>=<span class="string">&quot;pic-400.jpg 400w, pic-800.jpg 800w&quot;</span></span></span><br><span class="line"><span class="tag">	<span class="attr">sizes</span>=<span class="string">&quot;(max-width: 600px) 400px, 800px&quot;</span></span></span><br><span class="line"><span class="tag">/&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><h4 id="🎬-视频"><a href="#🎬-视频" class="headerlink" title="🎬 视频"></a>🎬 视频</h4><ul>
+<li>用 <code>MP4</code>（H.264）或 WebM（更小）</li>
+<li>避免加载全高清视频，按需加载 “自适应分辨率”</li>
+<li>视频上传前压缩（视频压缩会降低文件大小，但可能影响画质；建议根据需求调整参数，压缩过程在浏览器中完成，不会上传到服务器）</li>
+<li>…</li>
+</ul>
+</li>
+<li><h4 id="🧩-三方库优化"><a href="#🧩-三方库优化" class="headerlink" title="🧩 三方库优化"></a>🧩 三方库优化</h4><ul>
+<li>对大体积第三方库（如 Excel 处理、图表库），按需加载其子模块（如：<code>import &#123; Line &#125; from &#39;chart.js&#39;</code>）</li>
+<li>或用更轻量的替代库（如用 <code>dayjs</code> 替代 <code>moment.js</code>）</li>
+</ul>
+</li>
+<li><h4 id="📦-代码压缩"><a href="#📦-代码压缩" class="headerlink" title="📦 代码压缩"></a>📦 代码压缩</h4><ul>
+<li><p><strong>原生 html 项目</strong>，使用压缩版本的 min.js 文件</p>
+</li>
+<li><p><strong>vue 项目</strong></p>
+<ul>
+<li><p>手动压缩 Terser，直接在 vue.config.js 文件中配置即可（配置 Terser 压缩 + Tree Shaking 摇树优化）</p>
+<ul>
+<li>通过混淆、删除空格、合并语句、移除不需要的代码等方式，显著减小生产环境的 JS 包体积</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; defineConfig &#125; = <span class="built_in">require</span>(<span class="string">&#x27;@vue/cli-service&#x27;</span>)</span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = <span class="title function_">defineConfig</span>(&#123;</span><br><span class="line">	<span class="attr">publicPath</span>: <span class="string">&#x27;./&#x27;</span>,</span><br><span class="line">	<span class="attr">outputDir</span>: <span class="string">&#x27;distTerser&#x27;</span>,</span><br><span class="line">	<span class="attr">assetsDir</span>: <span class="string">&#x27;static&#x27;</span>,</span><br><span class="line">	<span class="attr">devServer</span>: &#123;&#125;,</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 生产环境下启用 sourceMap（可选，关闭可进一步减小体积）</span></span><br><span class="line">	<span class="attr">productionSourceMap</span>: <span class="literal">false</span>,</span><br><span class="line">	<span class="comment">// 配置 webpack 优化项</span></span><br><span class="line">	<span class="attr">configureWebpack</span>: &#123;</span><br><span class="line">		<span class="comment">// 启用 Tree-Shaking（生产环境开启，开发环境无需压缩）</span></span><br><span class="line">		<span class="attr">optimization</span>:</span><br><span class="line">			process.<span class="property">env</span>.<span class="property">NODE_ENV</span> === <span class="string">&#x27;production&#x27;</span></span><br><span class="line">				? &#123;</span><br><span class="line">						<span class="comment">// 1. 摇树优化核心配置</span></span><br><span class="line">						<span class="attr">usedExports</span>: <span class="literal">true</span>, <span class="comment">// 标记未使用的导出，为摇树提供依据</span></span><br><span class="line">						<span class="attr">sideEffects</span>: <span class="literal">true</span>, <span class="comment">// 识别 package.json 中的 sideEffects 字段，避免误删有副作用的代码</span></span><br><span class="line">						<span class="comment">// 压缩配置</span></span><br><span class="line">						<span class="attr">minimizer</span>: [</span><br><span class="line">							<span class="comment">// 2. 配置压缩工具（Terser）：压缩代码 + 彻底移除死代码</span></span><br><span class="line">							<span class="title function_">new</span> (<span class="built_in">require</span>(<span class="string">&#x27;terser-webpack-plugin&#x27;</span>))(&#123;</span><br><span class="line">								<span class="comment">// 压缩选项</span></span><br><span class="line">								<span class="attr">terserOptions</span>: &#123;</span><br><span class="line">									<span class="comment">// 删除注释（生产环境推荐开启）</span></span><br><span class="line">									<span class="attr">output</span>: &#123;</span><br><span class="line">										<span class="attr">comments</span>: <span class="literal">false</span>,</span><br><span class="line">									&#125;,</span><br><span class="line">									<span class="comment">// 压缩策略配置</span></span><br><span class="line">									<span class="attr">compress</span>: &#123;</span><br><span class="line">										<span class="comment">// 移除 console（可选，根据需求决定）</span></span><br><span class="line">										<span class="attr">drop_console</span>: <span class="literal">true</span>,</span><br><span class="line">										<span class="comment">// 移除 debugger</span></span><br><span class="line">										<span class="attr">drop_debugger</span>: <span class="literal">true</span>,</span><br><span class="line">										<span class="comment">// 合并重复代码</span></span><br><span class="line">										<span class="attr">collapse_vars</span>: <span class="literal">true</span>,</span><br><span class="line">										<span class="comment">// 提取公共代码到变量</span></span><br><span class="line">										<span class="attr">reduce_vars</span>: <span class="literal">true</span>,</span><br><span class="line">										<span class="comment">// 移除未使用的变量和函数（摇树的最终执行环节）</span></span><br><span class="line">										<span class="attr">unused</span>: <span class="literal">true</span>,</span><br><span class="line">									&#125;,</span><br><span class="line">								&#125;,</span><br><span class="line">								<span class="comment">// 删除所有注释（包括 LICENSE 等）</span></span><br><span class="line">								<span class="attr">extractComments</span>: <span class="literal">false</span>,</span><br><span class="line">							&#125;),</span><br><span class="line">						],</span><br><span class="line">						<span class="comment">// 3. 分割代码（可选，进一步提升压缩效率）</span></span><br><span class="line">						<span class="attr">splitChunks</span>: &#123;</span><br><span class="line">							<span class="attr">chunks</span>: <span class="string">&#x27;all&#x27;</span>,</span><br><span class="line">							<span class="attr">cacheGroups</span>: &#123;</span><br><span class="line">								<span class="comment">// 提取 node_modules 中的公共库</span></span><br><span class="line">								<span class="attr">vendor</span>: &#123;</span><br><span class="line">									<span class="attr">test</span>: <span class="regexp">/[\\/]node_modules[\\/]/</span>,</span><br><span class="line">									<span class="attr">name</span>: <span class="string">&#x27;vendors&#x27;</span>,</span><br><span class="line">									<span class="attr">chunks</span>: <span class="string">&#x27;all&#x27;</span>,</span><br><span class="line">								&#125;,</span><br><span class="line">							&#125;,</span><br><span class="line">						&#125;,</span><br><span class="line">				  &#125;</span><br><span class="line">				: &#123;&#125;,</span><br><span class="line">	&#125;,</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>自动压缩：利用 Gzip、Brotil 打包压缩，前端配置 Gzip 压缩，服务器端开启支持 Gzip 即可</p>
+<ul>
+<li>安装依赖：<code>compression-webpack-plugin</code></li>
+<li>在 <code>vue.config.js</code> 中配置 Gzip 压缩</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; defineConfig &#125; = <span class="built_in">require</span>(<span class="string">&#x27;@vue/cli-service&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> <span class="title class_">CompressionPlugin</span> = <span class="built_in">require</span>(<span class="string">&#x27;compression-webpack-plugin&#x27;</span>)</span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = <span class="title function_">defineConfig</span>(&#123;</span><br><span class="line">    <span class="attr">publicPath</span>: <span class="string">&#x27;./&#x27;</span>,</span><br><span class="line">    <span class="attr">outputDir</span>: <span class="string">&#x27;distTerser&#x27;</span>,</span><br><span class="line">    <span class="attr">assetsDir</span>: <span class="string">&#x27;static&#x27;</span>,</span><br><span class="line">    <span class="attr">devServer</span>: &#123;&#125;,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 配置 webpack 优化项</span></span><br><span class="line">    <span class="attr">configureWebpack</span>: &#123;</span><br><span class="line">      <span class="attr">optimization</span>:</span><br><span class="line">        process.<span class="property">env</span>.<span class="property">NODE_ENV</span> === <span class="string">&#x27;production&#x27;</span></span><br><span class="line">          ? &#123;</span><br><span class="line">              <span class="comment">// 压缩配置</span></span><br><span class="line">              <span class="attr">minimizer</span>: [</span><br><span class="line">                <span class="keyword">new</span> <span class="title class_">CompressionPlugin</span>(&#123;</span><br><span class="line">                  <span class="attr">filename</span>: <span class="string">&#x27;[path][base].gz&#x27;</span>, <span class="comment">// 必须指定输出文件名格式（关键）</span></span><br><span class="line">                  <span class="attr">test</span>: <span class="regexp">/\.(js|css|html|svg)$/</span>, <span class="comment">// 匹配需要压缩的文件类型</span></span><br><span class="line">                  <span class="attr">algorithm</span>: <span class="string">&#x27;gzip&#x27;</span>, <span class="comment">// 使用 gzip 算法</span></span><br><span class="line">                  <span class="attr">threshold</span>: <span class="number">5120</span>, <span class="comment">// 5KB 以上才压缩</span></span><br><span class="line">                  <span class="attr">minRatio</span>: <span class="number">0.8</span>, <span class="comment">// 压缩率小于 0.8 才保留</span></span><br><span class="line">                  <span class="attr">deleteOriginalAssets</span>: <span class="literal">false</span>, <span class="comment">// 保留原文件（避免服务器不支持 gzip 时出错）</span></span><br><span class="line">                &#125;),</span><br><span class="line">              ],</span><br><span class="line">          : &#123;&#125;,</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>npm run build</code> 生产环境打包，触发压缩逻辑</li>
+<li>验证是否生效：进入 <code>dist/js</code> 或 <code>dist/css</code> 目录，查看是否有 .gz 文件</li>
+<li>此时直在本地双击运行 <code>dist/index.html</code>（<code>以 file:// 协议打开</code>）时，gzip 压缩的 .gz 文件无法被浏览器正常解析，会导致页面加载失败或 JS&#x2F;CSS 等资源无法解析<ul>
+<li>这是因为本地运行不具备服务器环境，不支持 gzip 解压（报错 “语法错误” 或 “资源无法加载”），无法处理 gzip 压缩文件的解压逻辑</li>
+</ul>
+</li>
+<li>服务器配置<ul>
+<li>仅仅在前端打包生成 .gz 文件还不够，还需要服务器配置支持 Gzip 压缩<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Nginx 配置示例</span></span><br><span class="line">gzip on;</span><br><span class="line">gzip_types text/css application/javascript image/svg+xml text/html;</span><br><span class="line">gzip_min_length 10k;</span><br><span class="line">gzip_comp_level 5;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li>检查服务器部署是否生效，部署后，通过浏览器开发者工具的 Network 面板查看<ul>
+<li>响应头中是否有 <code>Content-Encoding: gzip</code>（数据的压缩格式）</li>
+<li>查看文件大小是否有明显减小</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>📌【注意】Gzip 压缩（<code>compression-webpack-plugin</code>）和 Terser 压缩（<code>terser-webpack-plugin</code>）完全不冲突，两者的优化方向不同：</p>
+<ul>
+<li><p>Terser：对 JS 代码进行语法级压缩（删除注释、混淆变量、合并语句等），生成更小的 JS 文件</p>
+</li>
+<li><p>Gzip：对打包后的静态资源（包括 JS、CSS、HTML 等）进行二进制级压缩，进一步减小传输体积</p>
+</li>
+<li><p>两者可以同时启用，且搭配使用效果更好（<strong>先经 Terser 压缩 JS，再经 Gzip 压缩所有资源</strong>），二者协同工作，先优化代码结构，再压缩传输体积，最终实现 <code>60%-80%</code> 的资源体积缩减，显著提升 Lighthouse 性能评分</p>
+</li>
+</ul>
+</li>
+<li><p>📌 <code>Transfer-Encoding: chunked</code> 和 <code>Content-Encoding: gzip</code></p>
+<ul>
+<li>分块传输（<code>Transfer-Encoding: chunked</code>）：通常由服务器自动配置，用于在无法预先确定响应数据总大小的场景（如动态生成内容、流式传输）</li>
+<li><code>Content-Encoding: gzip</code> （数据的压缩格式）</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">对比维度</th>
+<th align="left"><code>Transfer-Encoding: chunked</code></th>
+<th align="left"><code>Content-Encoding: gzip</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">核心目</td>
+<td align="left">解决「数据大小未知时如何传输」的问题</td>
+<td align="left">解决「如何减小数据</td>
+</tr>
+<tr>
+<td align="left">对数据的影响</td>
+<td align="left">不改变数据内容，仅改变传输方式</td>
+<td align="left">改变数据格式（压缩），需客户端解压</td>
+</tr>
+<tr>
+<td align="left">依赖关系</td>
+<td align="left">与数据是否压缩无关</td>
+<td align="left">可与分块传输结合使用</td>
+</tr>
+<tr>
+<td align="left">客户端处理方式</td>
+<td align="left">自动拼接分块，还原为完整数据</td>
+<td align="left">自动解压，还原为原始数据</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+</li>
+<li><h4 id="⏳-延迟加载"><a href="#⏳-延迟加载" class="headerlink" title="⏳ 延迟加载"></a>⏳ 延迟加载</h4><ul>
+<li><p>懒加载</p>
+<ul>
+<li>vue 组件&#x2F;路由懒加载：<code>const Home = () =&gt; import(&#39;./views/Home.vue&#39;);</code></li>
+<li>视频&#x2F;图片&#x2F;iframe 懒加载：<ul>
+<li>原生支持的 lazy 属性 <code>&lt;img src=&quot;image.webp&quot; alt=&quot;...&quot; loading=&quot;lazy&quot;&gt;</code> （旧浏览器不支持）</li>
+<li>使用 IntersectionObserver API（推荐，现代方案），通过 data-src 占位，监听元素进入视口后替换真实地址 <code>&lt;img data-src=&quot;image.webp&quot; alt=&quot;...&quot; class=&quot;lazy&quot;&gt;</code></li>
+<li>点击后再动态创建<code>&lt;video&gt;/&lt;img&gt;</code>标签或赋值 src，比如：先展示缩略图点击后查看清晰图、非自动播放的视频(先展示图片，点击后再播放)</li>
+</ul>
+</li>
+<li>脚本（JS）延迟加载，延迟动态创建<code> &lt;script&gt;</code> 标签，或使用 <code>async/defer</code> 异步加载</li>
+</ul>
+</li>
+<li><p>按需加载：加载首屏需要的资源(css、Font、js 等)</p>
+</li>
+</ul>
+</li>
+<li><h4 id="🔗-预加载"><a href="#🔗-预加载" class="headerlink" title="🔗 预加载"></a>🔗 预加载</h4><ul>
+<li><p>预加载关键资源 <code>&lt;link rel=&quot;preload&quot; href=&quot;hero-banner.webp&quot; as=&quot;image&quot; type=&quot;image/webp&quot;&gt;</code></p>
+<ul>
+<li>href，指定资源的路径</li>
+<li>as，指定资源类型（如 font、script、image、style、audio、video），决定浏览器的加载优先级和处理逻辑；若省略，浏览器会以低优先级加载为 “通用资源”</li>
+<li>type，指定 MIME 类型（如 font&#x2F;woff2、image&#x2F;jpeg），浏览器可提前判断是否支持该资源，避免无效加载</li>
+<li>crossorigin，加载跨域资源（如字体）时必需，否则资源加载后无法被页面使用</li>
+</ul>
+</li>
+<li><p>预加载的适用场景</p>
+<ul>
+<li>图片画廊 &#x2F; 轮播图：预加载下一张 &#x2F; 下一组图片，实现无缝切换</li>
+<li>单页应用（SPA）：路由切换前预加载目标页面的 JS&#x2F;CSS，消除切换时的白屏</li>
+<li>多媒体内容：视频 &#x2F; 音频播放前预加载部分内容，避免播放缓冲</li>
+<li>导航菜单：预加载热门导航对应的页面资源（如：电商的 “购物车”，”订单” 页面）</li>
+<li>字体资源：预加载自定义字体，解决 “无样式文本闪烁（FOIT）” 问题</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><h4 id="🐘-缓存优化"><a href="#🐘-缓存优化" class="headerlink" title="🐘 缓存优化"></a>🐘 缓存优化</h4><p>前端缓存是性能优化的核心手段之一，其本质是<strong>将频繁访问的资源（如静态文件、接口数据）存储在本地或中间层，避免重复请求与传输，从而降低延迟、减少带宽消耗、提升页面加载速度</strong><br>前端缓存体系可分为 浏览器缓存（客户端缓存）、HTTP 缓存（服务端与客户端协同）和应用层缓存（前端代码层面控制）三大类</p>
+<ul>
+<li><p>HTTP 缓存（强缓存、协商缓存）</p>
+<ul>
+<li><p>后端配置（核心）：在响应头中返回这些字段</p>
+<table>
+<thead>
+<tr>
+<th align="left">对比维度</th>
+<th align="left">强缓存 (Strong Cache)</th>
+<th align="left">协商缓存 (Conditional Cache)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">核心逻辑</td>
+<td align="left">本地判断有效则直接用，不发请求</td>
+<td align="left">必发请求，服务器判断是否用缓存</td>
+</tr>
+<tr>
+<td align="left">关键响应头</td>
+<td align="left"><code>Cache-Control</code>(优先级高)、<code>Expire</code></td>
+<td align="left"><code>Last-Modified</code>&#x2F;<code>ETag </code></td>
+</tr>
+<tr>
+<td align="left">网络请求</td>
+<td align="left">未过期时无请求</td>
+<td align="left">始终发请求（响应体可能为空）</td>
+</tr>
+<tr>
+<td align="left">命中状态码</td>
+<td align="left">200 (from cache)</td>
+<td align="left">304 Not Modified</td>
+</tr>
+<tr>
+<td align="left">更新灵活性</td>
+<td align="left">低（未过期不更新）</td>
+<td align="left">高（服务器实时控制）</td>
+</tr>
+<tr>
+<td align="left">服务器压力</td>
+<td align="left">无</td>
+<td align="left">有（需处理判断请求）</td>
+</tr>
+<tr>
+<td align="left">适用场景</td>
+<td align="left">更新慢的静态资源（图、JS&#x2F;CSS 包）</td>
+<td align="left">动态资源、更新频繁的静态资源</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>前端配置（配合后端）：前端通过 <strong>资源命名策略</strong> 和 <strong>请求头控制</strong> 配合后端缓存策略，确保缓存有效性</p>
+<ul>
+<li>静态资源版本化（解决缓存更新问题）<ul>
+<li>方案 1：文件名加哈希（推荐）</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 构建工具（Webpack/Vite）自动生成带哈希的文件名 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&quot;stylesheet&quot;</span> <span class="attr">href</span>=<span class="string">&quot;style.8f2b7.css&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;app.a3d9c.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>方案 2：URL 参数（不推荐，部分代理服务器不识别）</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;logo.png?v=202409&quot;</span> /&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li>动态资源 &#x2F; API 缓存控制，比如：axios、fetch 中实现请求缓存<ul>
+<li>默认情况下不缓存</li>
+<li>cacheTime：60, &#x2F;&#x2F; 缓存时间，60s</li>
+<li>noCache: true, &#x2F;&#x2F; 强制不使用缓存</li>
+<li>使用第三方缓存库（如 axios-cache-adapter）</li>
+<li>…</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>浏览器缓存</p>
+<ul>
+<li>localStorage</li>
+<li>sessionStorage</li>
+<li>Cookies</li>
+<li>IndexedDB（本地数据库）</li>
+</ul>
+</li>
+<li><p>应用缓存 —— 前端代码层面的 “逻辑缓存”</p>
+<ul>
+<li>keep-alive 页面缓存</li>
+<li>计算属性 computed 有缓存</li>
+<li>…</li>
+</ul>
+</li>
+<li><p>Service Worker（离线缓存）</p>
+</li>
+<li><p>服务端辅助缓存（CDN 与代理缓存）</p>
+</li>
+</ul>
+</li>
+<li><h4 id="🚀-动画卡顿优化"><a href="#🚀-动画卡顿优化" class="headerlink" title="🚀 动画卡顿优化"></a>🚀 动画卡顿优化</h4><ul>
+<li>卡顿和核心原因：动画触发了「布局」或「绘制」阶段，涉及重新计算，消耗较大</li>
+<li>为什么会卡顿，<strong>单线程</strong>， 阻塞主线程，减少长任务</li>
+<li>优化：<ul>
+<li>用 css 的位移 transform&#x2F;过渡 transition&#x2F;动画 animation 代替 js 计算直接操作 ODM</li>
+<li>减少对 DOM 的操作</li>
+<li>优化 js 代码，做好防抖&#x2F;节流等</li>
+<li>更换合适的动画方案<table>
+<thead>
+<tr>
+<th align="left">动画方案</th>
+<th align="left">性能级别</th>
+<th align="left">适用场景</th>
+<th align="left">注意事项</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">CSS<code>transform/opacity</code></td>
+<td align="left">5 星</td>
+<td align="left">基础位移、缩放、旋转、透明度动画</td>
+<td align="left">仅支持简单动画，逻辑复杂时需配合 JS</td>
+</tr>
+<tr>
+<td align="left">CSS<code>@keyframes</code></td>
+<td align="left">4 星</td>
+<td align="left">关键帧动画（如循环闪烁、路径固定）</td>
+<td align="left">避免在关键帧中使用布局属性</td>
+</tr>
+<tr>
+<td align="left">JS<code>requestAnimationFrame</code></td>
+<td align="left">4 星</td>
+<td align="left">复杂交互动画（如跟随鼠标、数据驱动）</td>
+<td align="left">避免回调中做耗时计算</td>
+</tr>
+<tr>
+<td align="left">Canvas 动画</td>
+<td align="left">3 星</td>
+<td align="left">大量元素动画（如粒子效果、图表）</td>
+<td align="left">需手动优化重绘区域，避免全量重</td>
+</tr>
+<tr>
+<td align="left">SVG 动画</td>
+<td align="left">2 星</td>
+<td align="left">矢量图形动画（如图标动效）</td>
+<td align="left">复杂 SVG 易触发高频绘制，性能较差</td>
+</tr>
+<tr>
+<td align="left">三方动画库</td>
+<td align="left"></td>
+<td align="left"><a target="_blank" rel="noopener" href="https://michalsnik.github.io/aos/">aos</a>、<a target="_blank" rel="noopener" href="https://gsap.com/">gsap</a> 等</td>
+<td align="left"></td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="再对外部因素进行优化"><a href="#再对外部因素进行优化" class="headerlink" title="再对外部因素进行优化"></a>再对外部因素进行优化</h3><ul>
+<li><p>CDN 分发静态资源<br>将 JS、CSS、图片等静态资源部署到 CDN（如 Cloudflare、阿里云 CDN），用户从最近的节点加载，减少网络延迟（尤其跨地区用户）</p>
+</li>
+<li><p><strong>启用 HTTP&#x2F;2 或 HTTP&#x2F;3</strong></p>
+<ul>
+<li>HTTP&#x2F;2：支持多路复用（同一连接并发请求），解决 HTTP&#x2F;1.1 的队头阻塞问题</li>
+<li>HTTP&#x2F;3：基于 QUIC 协议（UDP），进一步优化丢包恢复和连接建立速度</li>
+</ul>
+</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://lqh1003.github.io">sara</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://lqh1003.github.io/2025/09/19/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E2%80%94%E5%AE%9E%E6%88%98%E6%80%9D%E8%B7%AF/">https://lqh1003.github.io/2025/09/19/前端性能优化—实战思路/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://lqh1003.github.io" target="_blank">😊Saraの记录</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/">性能优化</a></div><div class="post-share"><div class="social-share" data-image="/images/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E2%80%94%E5%AE%9E%E6%88%98%E6%80%9D%E8%B7%AF/cover.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2025/09/28/%E5%89%8D%E7%AB%AF%E9%AB%98%E9%A2%91%E6%8A%80%E8%83%BD/" title="前端高频技能"><img class="cover" src="/images/%E5%89%8D%E7%AB%AF%E9%AB%98%E9%A2%91%E6%8A%80%E8%83%BD/cover.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">前端高频技能</div></div><div class="info-2"><div class="info-item-1">“各端显示差异性”的兼容&#x2F;适配处理能力各端介绍： PC 端：Chrome、Firefox、IE、Microsoft Edge、UC 浏览器等 移动端：iOS Safari、Android Chrome等 平台默认浏览器： 安卓系统&#x2F;手机：默认浏览器多样化，取决于厂商和用户设置，一般是默认 QQ 浏览器 苹果 IOS 系统&#x2F;手机：统一，传统上使用 Safari，iOS 14+支持更改默认浏览器   手机的版本 —— 截至 2025 年 9 月 安卓手机的最新版本是 Android 15 iOS 手机的最新版本是 iOS 19     小程序：微信小程序、支付宝小程序等  问题场景： IOS Safari 中 position: fixed 在滚动是抖动 Firefox 中 flex: 1 计算逻辑与 Chrome 不一致 IE 不支持 CSS Grid 布局 盒模型差异：IE 浏览器的盒模型和 W3C 标准盒模型计算方式不同，IE 的 content 包含 border 和 padding，而标准盒模型的 content 不包含 伪类&#x2F;伪元素...</div></div></div></a><a class="pagination-related" href="/2025/09/16/%E5%89%8D%E7%AB%AF%E8%B7%AF%E7%94%B1%E7%9A%84hash+history%E6%A8%A1%E5%BC%8F/" title="前端路由的hash+history模式"><img class="cover" src="/images/%E5%89%8D%E7%AB%AF%E8%B7%AF%E7%94%B1%E7%9A%84hash+history%E6%A8%A1%E5%BC%8F/cover.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">前端路由的hash+history模式</div></div><div class="info-2"><div class="info-item-1">前端路由的两种核心实现方式（hash 哈希模式、history 模式），主要用于管理 URL 与组件之间的映射关系，核心区别：  URL 格式 底层原理 服务器依赖（hash ❌ 、history ✅） 功能限制  👉 URL 格式 hash 模式  URL 包含 #，# 后面的部分为路由路径 http://example.com/#/home #及其后面的内容不会被发送到服务器，仅由前端路由解析   history 模式  URL 不包含 #，路径格式与传统 URL 一致 http://example.com/home 路径看起来更 “整洁” ，符合用户对 URL 的常规认知    👉 底层原理 hash 模式  基于浏览器的 哈希值（window.location.hash） 实现 哈希值的变化会触发 hashchange 事件，Vue Router 监听该事件并匹配对应的路由组件 特点 # 后面的内容不会被包含在 HTTP 请求中，仅在客户端解析 即使刷新页面，浏览器也不会向服务器请求该路径，而是直接加载当前页面并由前端路由处理     history 模式  基于 H...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2025/09/12/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" title="前端性能优化"><img class="cover" src="/images/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/cover.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-12</div><div class="info-item-2">前端性能优化</div></div><div class="info-2"><div class="info-item-1">前端性能优化是提升用户体验的核心环节，直接影响页面加载速度、交互流畅度和用户留存率。优化需覆盖资源加载、渲染执行、运行时效率三大阶段，结合量化指标（如 Core Web Vitals）制定针对性方案。以下是系统的前端性能优化策略详解： 资源加载阶段优化（减少加载时间）加载阶段是用户对性能的第一感知，目标是降低首屏加载时间（FCP）和资源传输成本 （1）资源体积优化  代码压缩与混淆  JS：使用 Terser 压缩(移除空格&#x2F;换行&#x2F;注释，缩短变量名)，Webpack&#x2F;Vite 生产模式默认开启 CSS：通过 CSSNano 压缩，配合 PostCSS 移除冗余规则 HTML：使用 html-minifier 压缩，移除空白字符和注释👉 效果：通常可减少 30%-60% 的资源体积   图片与媒体优化  采用精灵图，减少 http 请求次数  使用 svg 图，体积小  格式转换：优先使用 WebP&#x2F;AVIF（比 JPG 小 30%-50%），通过&lt;picture&gt;标签兼容旧浏览器   12345&lt;picture&gt;	...</div></div></div></a><a class="pagination-related" href="/2025/09/28/%E5%89%8D%E7%AB%AF%E9%AB%98%E9%A2%91%E6%8A%80%E8%83%BD/" title="前端高频技能"><img class="cover" src="/images/%E5%89%8D%E7%AB%AF%E9%AB%98%E9%A2%91%E6%8A%80%E8%83%BD/cover.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-28</div><div class="info-item-2">前端高频技能</div></div><div class="info-2"><div class="info-item-1">“各端显示差异性”的兼容&#x2F;适配处理能力各端介绍： PC 端：Chrome、Firefox、IE、Microsoft Edge、UC 浏览器等 移动端：iOS Safari、Android Chrome等 平台默认浏览器： 安卓系统&#x2F;手机：默认浏览器多样化，取决于厂商和用户设置，一般是默认 QQ 浏览器 苹果 IOS 系统&#x2F;手机：统一，传统上使用 Safari，iOS 14+支持更改默认浏览器   手机的版本 —— 截至 2025 年 9 月 安卓手机的最新版本是 Android 15 iOS 手机的最新版本是 iOS 19     小程序：微信小程序、支付宝小程序等  问题场景： IOS Safari 中 position: fixed 在滚动是抖动 Firefox 中 flex: 1 计算逻辑与 Chrome 不一致 IE 不支持 CSS Grid 布局 盒模型差异：IE 浏览器的盒模型和 W3C 标准盒模型计算方式不同，IE 的 content 包含 border 和 padding，而标准盒模型的 content 不包含 伪类&#x2F;伪元素...</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/theme_images/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">sara</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">29</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">44</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-%E2%80%94%E2%80%94-%E5%AE%9E%E6%88%98%E6%80%9D%E8%B7%AF"><span class="toc-number">1.</span> <span class="toc-text">前端性能优化 —— 实战思路</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E2%9A%99%EF%B8%8F-%E5%BC%80%E5%8F%91%E4%B8%80%E4%B8%AA-SEO-%E8%A6%81%E6%B1%82%E9%AB%98%E3%80%81%E9%A6%96%E5%B1%8F%E5%8A%A0%E8%BD%BD%E5%BF%AB%E7%9A%84%E6%96%B0%E7%BD%91%E7%AB%99"><span class="toc-number">1.1.</span> <span class="toc-text">⚙️ 开发一个 SEO 要求高、首屏加载快的新网站</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E2%9A%99%EF%B8%8F-%E5%AF%B9%E4%B8%80%E4%B8%AA%E7%8E%B0%E6%88%90%E7%9A%84%E7%BD%91%E7%AB%99%E8%BF%9B%E8%A1%8C%E6%80%A7%E8%83%BD%E5%92%8C-SEO-%E4%BC%98%E5%8C%96"><span class="toc-number">1.2.</span> <span class="toc-text">⚙️ 对一个现成的网站进行性能和 SEO 优化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%A7%E8%83%BD%E6%8C%87%E6%A0%87%E8%A1%A1%E9%87%8F"><span class="toc-number">1.2.1.</span> <span class="toc-text">性能指标衡量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%88%E5%AF%B9%E7%BD%91%E7%AB%99%E6%9C%AC%E8%BA%AB%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="toc-number">1.2.2.</span> <span class="toc-text">先对网站本身性能优化</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%96%BC%EF%B8%8F-%E5%9B%BE%E7%89%87"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">🖼️ 图片</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%8E%AC-%E8%A7%86%E9%A2%91"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">🎬 视频</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%A7%A9-%E4%B8%89%E6%96%B9%E5%BA%93%E4%BC%98%E5%8C%96"><span class="toc-number">1.2.2.3.</span> <span class="toc-text">🧩 三方库优化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%93%A6-%E4%BB%A3%E7%A0%81%E5%8E%8B%E7%BC%A9"><span class="toc-number">1.2.2.4.</span> <span class="toc-text">📦 代码压缩</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E2%8F%B3-%E5%BB%B6%E8%BF%9F%E5%8A%A0%E8%BD%BD"><span class="toc-number">1.2.2.5.</span> <span class="toc-text">⏳ 延迟加载</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%94%97-%E9%A2%84%E5%8A%A0%E8%BD%BD"><span class="toc-number">1.2.2.6.</span> <span class="toc-text">🔗 预加载</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%90%98-%E7%BC%93%E5%AD%98%E4%BC%98%E5%8C%96"><span class="toc-number">1.2.2.7.</span> <span class="toc-text">🐘 缓存优化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%9A%80-%E5%8A%A8%E7%94%BB%E5%8D%A1%E9%A1%BF%E4%BC%98%E5%8C%96"><span class="toc-number">1.2.2.8.</span> <span class="toc-text">🚀 动画卡顿优化</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%8D%E5%AF%B9%E5%A4%96%E9%83%A8%E5%9B%A0%E7%B4%A0%E8%BF%9B%E8%A1%8C%E4%BC%98%E5%8C%96"><span class="toc-number">1.2.3.</span> <span class="toc-text">再对外部因素进行优化</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/07/09/%E4%BA%86%E8%A7%A3-AI-Agent/" title="了解 AI Agent">了解 AI Agent</a><time datetime="2026-07-09T16:52:54.000Z" title="发表于 2026-07-09 16:52:54">2026-07-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/05/25/Cloudflare/" title="Cloudflare">Cloudflare</a><time datetime="2026-05-25T10:44:26.000Z" title="发表于 2026-05-25 10:44:26">2026-05-25</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/30/%E4%B8%BAGitHub%E8%B4%A6%E5%8F%B7%E7%94%9F%E6%88%90SSH%E5%AF%86%E9%92%A5/" title="为GitHub账号生成SSH密钥">为GitHub账号生成SSH密钥</a><time datetime="2026-01-30T10:16:18.000Z" title="发表于 2026-01-30 10:16:18">2026-01-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/29/Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2Github-%E5%88%86%E4%BA%AB/" title="Hexo搭建个人博客Github-分享">Hexo搭建个人博客Github-分享</a><time datetime="2026-01-29T10:56:54.000Z" title="发表于 2026-01-29 10:56:54">2026-01-29</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/10/25/Webpack%E3%80%81Vite%E5%AF%B9%E6%AF%94/" title="Webpack、Vite对比">Webpack、Vite对比</a><time datetime="2025-10-25T10:00:30.000Z" title="发表于 2025-10-25 10:00:30">2025-10-25</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/theme_images/footer.jpg);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;2025 - 2026 By sara</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.4.2</a></span></div><div class="footer_custom_text">Hi, 欢迎来到我的 <a href="/">博客</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const destroyWaline = ele => ele.destroy()
+
+  const initWaline = (Fn, el = document, path = window.location.pathname) => {
+    const waline = Fn({
+      el: el.querySelector('#waline-wrap'),
+      serverURL: 'https://lqh-blog-comments.vercel.app',
+      pageview: true,
+      dark: 'html[data-theme="dark"]',
+      comment: false,
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyWaline = () => {
+        destroyWaline(waline)
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+  }
+
+  const loadWaline = (el, path) => {
+    if (initFn) initWaline(initFn, el, path)
+    else {
+      btf.getCSS('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.css')
+        .then(() => import('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.js'))
+        .then(({ init }) => {
+          initFn = init || Waline.init
+          initWaline(initFn, el, path)
+          window.walineFn = initFn
+        })
+    }
+  }
+
+  if (isShuoshuo) {
+    'Waline' === 'Waline'
+      ? window.shuoshuoComment = { loadComment: loadWaline } 
+      : window.loadOtherComment = loadWaline
+    return
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script src="/js/live2d-toggle.js"></script><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="false" data-text="厉害,强,好,wonderful,点赞,Great,棒,Good,精彩" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"use":"live2d-widget-model-hibiki","display":{"position":"left","width":230,"height":370,"hOffset":50,"vOffset":0,"zIndex":100},"mobile":{"show":false,"scale":0.5},"log":false});</script></body></html>

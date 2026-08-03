@@ -1,0 +1,293 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>为GitHub账号生成SSH密钥 | 😊Saraの记录</title><meta name="author" content="sara"><meta name="copyright" content="sara"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="设置和查看全局用户名和邮箱 （commit 提交记录时会显示用户名） 修改「全局」user.name&#x2F;user.email（所有仓库通用）1234# 修改全局用户名（填新GitHub账号用户名：lqh1003）git config --global user.name &quot;lqh1003&quot;# 修改全局邮箱（填新GitHub账号绑定的邮箱，必须是已验证的）git conf">
+<meta property="og:type" content="article">
+<meta property="og:title" content="为GitHub账号生成SSH密钥">
+<meta property="og:url" content="https://lqh1003.github.io/2026/01/30/%E4%B8%BAGitHub%E8%B4%A6%E5%8F%B7%E7%94%9F%E6%88%90SSH%E5%AF%86%E9%92%A5/index.html">
+<meta property="og:site_name" content="😊Saraの记录">
+<meta property="og:description" content="设置和查看全局用户名和邮箱 （commit 提交记录时会显示用户名） 修改「全局」user.name&#x2F;user.email（所有仓库通用）1234# 修改全局用户名（填新GitHub账号用户名：lqh1003）git config --global user.name &quot;lqh1003&quot;# 修改全局邮箱（填新GitHub账号绑定的邮箱，必须是已验证的）git conf">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://lqh1003.github.io/images/%E4%B8%BAGitHub%E8%B4%A6%E5%8F%B7%E7%94%9F%E6%88%90SSH%E5%AF%86%E9%92%A5/cover.png">
+<meta property="article:published_time" content="2026-01-30T10:16:18.000Z">
+<meta property="article:modified_time" content="2026-08-03T06:20:38.608Z">
+<meta property="article:author" content="sara">
+<meta property="article:tag" content="github">
+<meta property="article:tag" content="SSH">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://lqh1003.github.io/images/%E4%B8%BAGitHub%E8%B4%A6%E5%8F%B7%E7%94%9F%E6%88%90SSH%E5%AF%86%E9%92%A5/cover.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "为GitHub账号生成SSH密钥",
+  "url": "https://lqh1003.github.io/2026/01/30/%E4%B8%BAGitHub%E8%B4%A6%E5%8F%B7%E7%94%9F%E6%88%90SSH%E5%AF%86%E9%92%A5/",
+  "image": "https://lqh1003.github.io/images/%E4%B8%BAGitHub%E8%B4%A6%E5%8F%B7%E7%94%9F%E6%88%90SSH%E5%AF%86%E9%92%A5/cover.png",
+  "datePublished": "2026-01-30T10:16:18.000Z",
+  "dateModified": "2026-08-03T06:20:38.608Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "sara",
+      "url": "https://lqh1003.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/theme_images/f.ico"><link rel="canonical" href="https://lqh1003.github.io/2026/01/30/%E4%B8%BAGitHub%E8%B4%A6%E5%8F%B7%E7%94%9F%E6%88%90SSH%E5%AF%86%E9%92%A5/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":230,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '为GitHub账号生成SSH密钥',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-color: #97bf5e42;"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/theme_images/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">29</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">44</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-book"></i><span> 页面</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link"><i class="fa-fw fas fa-link"></i><span> 链接</span></a></div><div class="menus_item"><a class="site-page" href="/about"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/images/%E4%B8%BAGitHub%E8%B4%A6%E5%8F%B7%E7%94%9F%E6%88%90SSH%E5%AF%86%E9%92%A5/cover.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">😊Saraの记录</span></a><a class="nav-page-title" href="/"><span class="site-name">为GitHub账号生成SSH密钥</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-book"></i><span> 页面</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link"><i class="fa-fw fas fa-link"></i><span> 链接</span></a></div><div class="menus_item"><a class="site-page" href="/about"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">为GitHub账号生成SSH密钥</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-01-30T10:16:18.000Z" title="发表于 2026-01-30 10:16:18">2026-01-30</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-08-03T06:20:38.608Z" title="更新于 2026-08-03 06:20:38">2026-08-03</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Github/">Github</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span class="waline-pageview-count" data-path="/2026/01/30/%E4%B8%BAGitHub%E8%B4%A6%E5%8F%B7%E7%94%9F%E6%88%90SSH%E5%AF%86%E9%92%A5/"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="设置和查看全局用户名和邮箱-（commit-提交记录时会显示用户名）"><a href="#设置和查看全局用户名和邮箱-（commit-提交记录时会显示用户名）" class="headerlink" title="设置和查看全局用户名和邮箱 （commit 提交记录时会显示用户名）"></a>设置和查看全局用户名和邮箱 （commit 提交记录时会显示用户名）</h2><ul>
+<li>修改「全局」user.name&#x2F;user.email（所有仓库通用）<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 修改全局用户名（填新GitHub账号用户名：lqh1003）</span></span><br><span class="line">git config --global user.name <span class="string">&quot;lqh1003&quot;</span></span><br><span class="line"><span class="comment"># 修改全局邮箱（填新GitHub账号绑定的邮箱，必须是已验证的）</span></span><br><span class="line">git config --global user.email <span class="string">&quot;你的新GitHub绑定邮箱@xxx.com&quot;</span></span><br></pre></td></tr></table></figure></li>
+<li>验证全局配置（点击可复制）<ul>
+<li>账号1：<a href="javascript:;" onclick="navigator.clipboard.writeText('git config --global user.name liqinghua-ty')">liqinghua-ty</a> &#x2F; <a href="javascript:;" onclick="navigator.clipboard.writeText('git config --global user.email liqinghua@tanyue.cc')">liqinghua@tanyue.cc</a></li>
+<li>账号2：<a href="javascript:;" onclick="navigator.clipboard.writeText('git config --global user.name lqh1003')">lqh1003</a> &#x2F; <a href="javascript:;" onclick="navigator.clipboard.writeText('git config --global user.email 2933213867@qq.com')">2933213867@qq.com</a></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --global user.name</span><br><span class="line">git config --global user.email</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="为-GitHub-账号生成-SSH-密钥（Windows-macOS-Linux通用行）"><a href="#为-GitHub-账号生成-SSH-密钥（Windows-macOS-Linux通用行）" class="headerlink" title="为 GitHub 账号生成 SSH 密钥（Windows&#x2F;macOS&#x2F;Linux通用行）"></a>为 GitHub 账号生成 SSH 密钥（Windows&#x2F;macOS&#x2F;Linux通用行）</h2><ul>
+<li><p>打开 Git Bash &#x2F;终端（Windows&#x2F;macOS&#x2F;Linux）</p>
+</li>
+<li><p>确认 GitHub 账号已绑定并验证邮箱（生成密钥需用该邮箱，后续绑定到 GitHub）</p>
+</li>
+<li><p>创建&#x2F;进入.ssh 目录（密钥默认存放目录）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> -p ~/.ssh &amp;&amp; <span class="built_in">cd</span> ~/.ssh  <span class="comment"># 创建并进入.ssh目录，所有系统通用</span></span><br></pre></td></tr></table></figure></li>
+<li><p>生成 SSH 密钥（核心命令）</p>
+<ul>
+<li>执行以下命令，替换为你的 GitHub 绑定邮箱，全程按回车（无需设置密码，免密使用，设置密码会导致每次推送都要输入）</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 生成 ed25519 类型密钥(安全度更高)，-C 是备注(填GitHub绑定邮箱)，秘钥名称自定义：id_ed25519_person</span></span><br><span class="line">ssh-keygen -t ed25519 -C <span class="string">&quot;你的GitHub绑定邮箱@xxx.com&quot;</span> -f id_ed25519_person</span><br></pre></td></tr></table></figure></li>
+<li><p>成功之后，<code>.ssh</code> 目录会出现 2 个文件</p>
+<ul>
+<li><code>id_ed25519_person</code>：私钥（核心，不可泄露、不可上传、不可修改）；</li>
+<li><code>id_ed25519_person.pub</code>：公钥（后续需要复制到 GitHub 账号中）</li>
+</ul>
+</li>
+<li><p>将公钥添加到 GitHub 账号（网页端操作）</p>
+<ul>
+<li>完整复制公钥内容</li>
+<li>登录 GitHub 账号 → 右上角头像 → Settings（设置） → 左侧菜单栏找到SSH and GPG keys → 右上角 New SSH key；</li>
+<li>配置项（按要求填，无需改其他）：<ul>
+<li>Title：填备注（如「本地电脑 - 新账号密钥」，方便识别）；</li>
+<li>Key type：选择Authentication key <strong>（认证密钥，用于仓库推送 &#x2F; 拉取）</strong>；</li>
+<li>Key：直接粘贴完整公钥内容，不要换行；</li>
+</ul>
+</li>
+<li>点击 Add SSH key → 输入 GitHub 账号密码验证，添加成功。</li>
+</ul>
+<p><img src="/images/%E4%B8%BAGitHub%E8%B4%A6%E5%8F%B7%E7%94%9F%E6%88%90SSH%E5%AF%86%E9%92%A5/ssh.png"></p>
+</li>
+</ul>
+<h2 id="验证-SSH-连接（关键，确认密钥生效）"><a href="#验证-SSH-连接（关键，确认密钥生效）" class="headerlink" title="验证 SSH 连接（关键，确认密钥生效）"></a>验证 SSH 连接（关键，确认密钥生效）</h2><ul>
+<li><p>先查看 <code>.ssh</code> 目录下是否有一个 <code>config</code> 文件(没有.txt后缀，不要修改它的格式)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 生成密钥时，config 会默认生成下面这一段配置</span></span><br><span class="line">Host github.com  <span class="comment"># Host秘钥别名默认：github.com</span></span><br><span class="line">    HostName github.com</span><br><span class="line">    User git</span><br><span class="line">    IdentityFile C:\Users\\Administrator\.ssh\id_ed25519_person  <span class="comment"># 密钥私钥路径</span></span><br><span class="line">    IdentitiesOnly <span class="built_in">yes</span>  <span class="comment"># 强制Git只使用指定密钥</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 当多个github账号时，可以生成不同名称的秘钥，在这里配置多个Host别名（更换Host别名和秘钥路径即可）</span></span><br><span class="line">Host github.com-new</span><br><span class="line">    User git</span><br><span class="line">    IdentityFile C:\Users\\Administrator\.ssh\id_ed25519_new  <span class="comment"># 密钥私钥路径</span></span><br><span class="line">    IdentitiesOnly <span class="built_in">yes</span>  <span class="comment"># 强制Git只使用指定密钥</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>验证 GitHub SSH 连接，固定命令，无需修改</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># git@xxx 这个名字是 config 中 Host 后面配置的名字，用哪个名字就代表使用哪个秘钥</span></span><br><span class="line">ssh -T git@github.com</span><br><span class="line"></span><br><span class="line"><span class="comment"># 用新账号别名，验证是否匹配新密钥</span></span><br><span class="line">ssh -T git@github.com-new</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>✅ 成功输出：Hi 你的新账号用户名! You’ve successfully authenticated, but GitHub does not provide shell access.</li>
+</ul>
+</li>
+<li><p>查看当前远程地址</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看连接远程地址</span></span><br><span class="line">git remote -v</span><br><span class="line"></span><br><span class="line"><span class="comment"># ✅输出会显示：`git@Host别名:用户名/仓库名.git`，Host别名对应秘钥，如果config中秘钥别名对应的秘钥和github账号对应的秘钥不一致，则无法成功推送代码</span></span><br><span class="line">origin  git@github.com:新用户名/仓库名.git (fetch)</span><br><span class="line">origin  git@github.com:新用户名/仓库名.git (push)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 或者删除旧远程关联，添加新的（适配新账号）</span></span><br><span class="line"><span class="comment"># 1. 删除旧的远程origin</span></span><br><span class="line">git remote remove origin</span><br><span class="line"><span class="comment"># 2. 添加新远程地址（替换为：Host别名+用户名+仓库名）</span></span><br><span class="line">git remote add origin git@github-new:用户名/仓库名.git</span><br><span class="line"><span class="comment"># 示例：git remote add origin git@github-new:zhangsan/zhangsan.github.io.git</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>我的做法：我两个github账号， 在 .ssh 文件夹下生成两个不同的秘钥</p>
+<ul>
+<li>由于我两个 github 账号下的仓库， <code>git remote -v</code> 得到的Host别名都是 <a href="mailto:&#103;&#x69;&#116;&#64;&#x67;&#105;&#x74;&#x68;&#x75;&#98;&#46;&#99;&#111;&#x6d;">git@github.com</a></li>
+<li>而我也不想去修改仓库对应的远程地址，所以我选择修改 config 中对应的秘钥路径来实现暂时的切换</li>
+<li>注意：<ul>
+<li>生成秘钥 → 秘钥名称 → config 里Host别名和对应的秘钥路径 → github账号添加 SSH 秘钥 → 检查仓库远程连接的Host别名和congfig中的配置别名和秘钥路径是否一致…</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/%E4%B8%BAGitHub%E8%B4%A6%E5%8F%B7%E7%94%9F%E6%88%90SSH%E5%AF%86%E9%92%A5/id_ssh_key.png"></p>
+</li>
+</ul>
+<h2 id="双账号切换-验证"><a href="#双账号切换-验证" class="headerlink" title="双账号切换 + 验证"></a>双账号切换 + 验证</h2><ul>
+<li>操作新账号（github用户名2，Host别名 github.com-person）<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">eval</span> <span class="string">&quot;<span class="subst">$(ssh-agent -s)</span>&quot;</span>  <span class="comment"># 启动SSH代理</span></span><br><span class="line">ssh-add -D               <span class="comment"># 清空旧密钥，避免冲突</span></span><br><span class="line">ssh-add ~/.ssh/id_ed25519_person  <span class="comment"># 加载新账号密钥</span></span><br><span class="line">ssh-add -l               <span class="comment"># 验证：仅显示新账号密钥指纹</span></span><br><span class="line">ssh -T git@github.com-person  <span class="comment"># 验证SSH连接</span></span><br></pre></td></tr></table></figure></li>
+<li>操作旧账号（github用户名1，Host别名 github.com）<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">eval</span> <span class="string">&quot;<span class="subst">$(ssh-agent -s)</span>&quot;</span>  <span class="comment"># 启动SSH代理</span></span><br><span class="line">ssh-add -D               <span class="comment"># 清空新密钥</span></span><br><span class="line">ssh-add ~/.ssh/id_ed25519  <span class="comment"># 加载旧账号密钥</span></span><br><span class="line">ssh-add -l               <span class="comment"># 验证：仅显示旧账号密钥指纹</span></span><br><span class="line">ssh -T git@github.com    <span class="comment"># 验证SSH连接</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://lqh1003.github.io">sara</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://lqh1003.github.io/2026/01/30/%E4%B8%BAGitHub%E8%B4%A6%E5%8F%B7%E7%94%9F%E6%88%90SSH%E5%AF%86%E9%92%A5/">https://lqh1003.github.io/2026/01/30/为GitHub账号生成SSH密钥/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://lqh1003.github.io" target="_blank">😊Saraの记录</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/github/">github</a><a class="post-meta__tags" href="/tags/SSH/">SSH</a></div><div class="post-share"><div class="social-share" data-image="/images/%E4%B8%BAGitHub%E8%B4%A6%E5%8F%B7%E7%94%9F%E6%88%90SSH%E5%AF%86%E9%92%A5/cover.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2026/05/25/Cloudflare/" title="Cloudflare"><img class="cover" src="/images/Cloudflare/cover.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Cloudflare</div></div><div class="info-2"><div class="info-item-1">📌 了解 Cloudflare🌐 Cloudflare，开发平台Cloudflare 最早很多人知道它是 CDN、DNS、防护服务（抗 DDoS）。现在已经发展成一个完整的开发平台，核心思路是：把计算能力放到离用户更近的位置运行，而不是集中在几台中心服务器上。 传统模式 vs Cloudflare 模式：    维度 传统模式 Cloudflare 模式    请求路径 用户 → 服务器（东京&#x2F;新加坡&#x2F;美国）→ 数据库 用户 → 最近的边缘节点 → Worker → 数据库&#x2F;存储   延迟 如果用户在北京，而服务器在美国，请求要跨洋，延迟可能 200ms+，高峰时期可能堵 就近处理，延迟大幅降低（不用关心“服务器在哪台机器”，部署后，代码自动出现在全球边缘节点）   运维 自己维护服务器、扩容、负载均衡 零运维，部署即上线   适合场景 大型后台系统、复杂数据库、AI 训练任务 博客、工具站、API、个人 SaaS    Cloudflare 不是“全面替代服务器”，而是另一种架构选择 —— 省掉运维，降低复杂度。简称 CF  很多开发者现在会说...</div></div></div></a><a class="pagination-related" href="/2026/01/29/Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2Github-%E5%88%86%E4%BA%AB/" title="Hexo搭建个人博客Github-分享"><img class="cover" src="/images/Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2Github-%E5%88%86%E4%BA%AB/cover.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Hexo搭建个人博客Github-分享</div></div><div class="info-2"><div class="info-item-1">📌 博客链接分享 自己1 https://liqinghua-ty.github.io/   项目名称：liqinghua-ty.github.io (有主题)  自己2 https://liqinghua-ty.github.io/hexo-lqh/   项目名称：hexo-lqh (最简单版本)  阮一峰的网络日志 https://www.ruanyifeng.com/blog/  阮一峰，70 后，经济学博士（上海财经大学世界经济专业），跨界自学编程成为顶级前端 &#x2F; JS&#x2F;Web 技术专家 2003～至今持续在更新，分享编程技术内容、人文 &#x2F; 社科 &#x2F; 思考(每周分享 &#x2F; 科技爱好者周刊) 技术架构：20 年不变的 “古董级稳定” CMS：Movable Type 5.2.2（Perl）（2000 年代主流博客系统） 前端：原生 HTML + CSS + 极少原生 JS（无任何框架） 部署：Nginx + Cloudflare CDN（全球加速） 渲染：纯静态 HTML → 写完 → 点发布 → 全站点生成 .html 文...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2025/09/13/hexo%E5%8D%9A%E5%AE%A2%E9%A1%B9%E7%9B%AE%E6%94%B9%E7%94%A8Github%E6%89%98%E7%AE%A1/" title="hexo博客项目改用Github托管"><img class="cover" src="/images/hexo%E5%8D%9A%E5%AE%A2%E9%A1%B9%E7%9B%AE%E6%94%B9%E7%94%A8Github%E6%89%98%E7%AE%A1/cover.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-13</div><div class="info-item-2">hexo博客项目改用Github托管</div></div><div class="info-2"><div class="info-item-1">常用的静态页面托管服务 Gitee Pages gitee.com Gitee Pages 2024.05 已暂停服务，无法使用   Gitlab Pages gitlab.com 2025.09.07 已停止向大陆内地提供服务 jihulab.com、gitlab.hk 90 天免费试用，后续需付费使用   GitHub Pages 免费版 ✅ github.com 付费版    📝 之前我使用 Gitlab 托管 hexo 博客项目，而 Gitlab.com 已暂停向大陆内地提供服务，需要迁移，我选择 Github  旧博客链接 Gitlab 新博客链接 GitHub  新建仓库&#x2F;代码迁移 github.com 登录 → 新建仓库 “用户名.github.io“ → 仓库状态设置为 public 状态  远程迁移仓库（Gitlab → GitHub） 1234git clone --mirror https://gitlab.com/oldProject.gitlab.io.git# 打开 oldProject.gitlab.io.git 命令窗口，执行以下命令g...</div></div></div></a><a class="pagination-related" href="/2026/01/29/Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2Github-%E5%88%86%E4%BA%AB/" title="Hexo搭建个人博客Github-分享"><img class="cover" src="/images/Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2Github-%E5%88%86%E4%BA%AB/cover.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-01-29</div><div class="info-item-2">Hexo搭建个人博客Github-分享</div></div><div class="info-2"><div class="info-item-1">📌 博客链接分享 自己1 https://liqinghua-ty.github.io/   项目名称：liqinghua-ty.github.io (有主题)  自己2 https://liqinghua-ty.github.io/hexo-lqh/   项目名称：hexo-lqh (最简单版本)  阮一峰的网络日志 https://www.ruanyifeng.com/blog/  阮一峰，70 后，经济学博士（上海财经大学世界经济专业），跨界自学编程成为顶级前端 &#x2F; JS&#x2F;Web 技术专家 2003～至今持续在更新，分享编程技术内容、人文 &#x2F; 社科 &#x2F; 思考(每周分享 &#x2F; 科技爱好者周刊) 技术架构：20 年不变的 “古董级稳定” CMS：Movable Type 5.2.2（Perl）（2000 年代主流博客系统） 前端：原生 HTML + CSS + 极少原生 JS（无任何框架） 部署：Nginx + Cloudflare CDN（全球加速） 渲染：纯静态 HTML → 写完 → 点发布 → 全站点生成 .html 文...</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/theme_images/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">sara</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">29</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">44</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E5%92%8C%E6%9F%A5%E7%9C%8B%E5%85%A8%E5%B1%80%E7%94%A8%E6%88%B7%E5%90%8D%E5%92%8C%E9%82%AE%E7%AE%B1-%EF%BC%88commit-%E6%8F%90%E4%BA%A4%E8%AE%B0%E5%BD%95%E6%97%B6%E4%BC%9A%E6%98%BE%E7%A4%BA%E7%94%A8%E6%88%B7%E5%90%8D%EF%BC%89"><span class="toc-number">1.</span> <span class="toc-text">设置和查看全局用户名和邮箱 （commit 提交记录时会显示用户名）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA-GitHub-%E8%B4%A6%E5%8F%B7%E7%94%9F%E6%88%90-SSH-%E5%AF%86%E9%92%A5%EF%BC%88Windows-macOS-Linux%E9%80%9A%E7%94%A8%E8%A1%8C%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">为 GitHub 账号生成 SSH 密钥（Windows&#x2F;macOS&#x2F;Linux通用行）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%AA%8C%E8%AF%81-SSH-%E8%BF%9E%E6%8E%A5%EF%BC%88%E5%85%B3%E9%94%AE%EF%BC%8C%E7%A1%AE%E8%AE%A4%E5%AF%86%E9%92%A5%E7%94%9F%E6%95%88%EF%BC%89"><span class="toc-number">3.</span> <span class="toc-text">验证 SSH 连接（关键，确认密钥生效）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%8C%E8%B4%A6%E5%8F%B7%E5%88%87%E6%8D%A2-%E9%AA%8C%E8%AF%81"><span class="toc-number">4.</span> <span class="toc-text">双账号切换 + 验证</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/07/09/%E4%BA%86%E8%A7%A3-AI-Agent/" title="了解 AI Agent">了解 AI Agent</a><time datetime="2026-07-09T16:52:54.000Z" title="发表于 2026-07-09 16:52:54">2026-07-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/05/25/Cloudflare/" title="Cloudflare">Cloudflare</a><time datetime="2026-05-25T10:44:26.000Z" title="发表于 2026-05-25 10:44:26">2026-05-25</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/30/%E4%B8%BAGitHub%E8%B4%A6%E5%8F%B7%E7%94%9F%E6%88%90SSH%E5%AF%86%E9%92%A5/" title="为GitHub账号生成SSH密钥">为GitHub账号生成SSH密钥</a><time datetime="2026-01-30T10:16:18.000Z" title="发表于 2026-01-30 10:16:18">2026-01-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/29/Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2Github-%E5%88%86%E4%BA%AB/" title="Hexo搭建个人博客Github-分享">Hexo搭建个人博客Github-分享</a><time datetime="2026-01-29T10:56:54.000Z" title="发表于 2026-01-29 10:56:54">2026-01-29</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/10/25/Webpack%E3%80%81Vite%E5%AF%B9%E6%AF%94/" title="Webpack、Vite对比">Webpack、Vite对比</a><time datetime="2025-10-25T10:00:30.000Z" title="发表于 2025-10-25 10:00:30">2025-10-25</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/theme_images/footer.jpg);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;2025 - 2026 By sara</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.4.2</a></span></div><div class="footer_custom_text">Hi, 欢迎来到我的 <a href="/">博客</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const destroyWaline = ele => ele.destroy()
+
+  const initWaline = (Fn, el = document, path = window.location.pathname) => {
+    const waline = Fn({
+      el: el.querySelector('#waline-wrap'),
+      serverURL: 'https://lqh-blog-comments.vercel.app',
+      pageview: true,
+      dark: 'html[data-theme="dark"]',
+      comment: false,
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyWaline = () => {
+        destroyWaline(waline)
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+  }
+
+  const loadWaline = (el, path) => {
+    if (initFn) initWaline(initFn, el, path)
+    else {
+      btf.getCSS('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.css')
+        .then(() => import('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.js'))
+        .then(({ init }) => {
+          initFn = init || Waline.init
+          initWaline(initFn, el, path)
+          window.walineFn = initFn
+        })
+    }
+  }
+
+  if (isShuoshuo) {
+    'Waline' === 'Waline'
+      ? window.shuoshuoComment = { loadComment: loadWaline } 
+      : window.loadOtherComment = loadWaline
+    return
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script src="/js/live2d-toggle.js"></script><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="false" data-text="厉害,强,好,wonderful,点赞,Great,棒,Good,精彩" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"use":"live2d-widget-model-hibiki","display":{"position":"left","width":230,"height":370,"hOffset":50,"vOffset":0,"zIndex":100},"mobile":{"show":false,"scale":0.5},"log":false});</script></body></html>
